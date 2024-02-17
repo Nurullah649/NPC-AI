@@ -1,2 +1,2 @@
 # NPC-AI
-sa nurullah
+
