@@ -1,9 +1,9 @@
 path: /home/nurullah/Masaüstü/NPC-AI/DENEME_DATA
-train: /home/nurullah/Masaüstü/NPC-AI/DENEME_DATA/images
-val: /home/nurullah/Masaüstü/NPC-AI/DENEME_DATA/images
+train: /home/nurullah/Masaüstü/NPC-AI/DENEME_DATA/images/train
+val: /home/nurullah/Masaüstü/NPC-AI/DENEME_DATA/images/train
 
 names:
-    0: vehicle
-    1: people
+    0: Araba
+    1: Insan
     2: UAP
-    3: UAİ
+    3: UAI
