@@ -3,16 +3,33 @@
 from xml.dom import minidom
 import os
 import glob
+from colorama import Fore, Back, Style
+
 
 lut = {}
+lut["motor"]=0
 lut["tasit"] = 0
+lut["arac"]=0
+lut["tren"]=0
+lut["ismak"]=0
+lut["bis"]=0
+lut["1"]=0
+lut["2"]=0
+lut["3"]=0
+lut["4"]=0
+lut["5"]=0
 lut["car"]=0
+lut["kam"]=0
+lut["mot"]=0
 lut["bus"]=0
 lut["insan"] = 1
+lut["yaya"]=1
 lut["ins"]=1
 lut["uuap"]=2
 lut["yuap"] = 2
+lut["yaup"]=2
 lut["uyam"] = 3
+lut["yaam"] = 3
 
 
 
@@ -32,11 +49,12 @@ def convert_coordinates(size, box):
 
 
 def convert_xml2yolo(lut):
-    for fname in glob.glob("*.xml"):
+    for fname in glob.glob("/home/nurullah/Masaüstü/traffic_birdseye/*.xml"):
 
         xmldoc = minidom.parse(fname)
 
-        fname_out = (fname[:-4] + '.txt')
+        #fname_out = (fname[:-4] + '.txt')
+        fname_out = ("/home/nurullah/Masaüstü/deneme_txt_konum/" + os.path.basename(fname)[:-4] + '.txt')
 
         with open(fname_out, "w") as f:
 
@@ -52,7 +70,7 @@ def convert_xml2yolo(lut):
                     label_str = str(lut[classid])
                 else:
                     label_str = "-1"
-                    print("warning: label '%s' not in look-up table" % classid)
+                    print(Fore.RED+"warning: label "+fname+" görselde '%s' not in look-up table" %classid+Style.RESET_ALL)
 
                 # get bbox coordinates
                 xmin = ((item.getElementsByTagName('bndbox')[0]).getElementsByTagName('xmin')[0]).firstChild.data
@@ -60,6 +78,9 @@ def convert_xml2yolo(lut):
                 xmax = ((item.getElementsByTagName('bndbox')[0]).getElementsByTagName('xmax')[0]).firstChild.data
                 ymax = ((item.getElementsByTagName('bndbox')[0]).getElementsByTagName('ymax')[0]).firstChild.data
                 b = (float(xmin), float(xmax), float(ymin), float(ymax))
+                if(width==0):
+                    print(Fore.RED + "warning:" + fname + " görselde sorun var" + Style.RESET_ALL)
+
                 bb = convert_coordinates((width, height), b)
                 # print(bb)
 
