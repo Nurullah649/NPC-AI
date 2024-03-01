@@ -1,4 +1,4 @@
-from ultralytics import YOLO
+import YOLO
 
 
 # Load a model
