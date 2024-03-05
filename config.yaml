@@ -1,6 +1,6 @@
 path: /home/nurullah/Masaüstü/DENEME_DATA
-train: /home/nurullah/Masaüstü/DENEME_DATA/images/train
-val: /home/nurullah/Masaüstü/DENEME_DATA/images/test4
+train: /home/nurullah/Masaüstü/DENEME_DATA/images/train5
+val: /home/nurullah/Masaüstü/DENEME_DATA/images/train5
 nc: 4
 names:
   - Araba
