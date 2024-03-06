@@ -7,7 +7,7 @@ from PIL import Image
 
 a=0
 model = YOLO('/home/nurullah/Masaüstü/NPC-AI/runs/detect/train/weights/best.pt')
-for fname in glob.glob("/home/nurullah/Masaüstü/DENEME_DATA/images/train5/*.jpg"):
+for fname in glob.glob("/home/nurullah/İndirilenler/VisDrone2019-VID-train/sequences/uav0000295_02300_v/*.jpg"):
 
     result=model.predict(fname,data='/home/nurullah/Masaüstü/NPC-AI/runs/detect/train/weights/best.pt',save_txt=True,save=True)
 

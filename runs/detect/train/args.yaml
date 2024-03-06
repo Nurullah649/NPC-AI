@@ -1,8 +1,8 @@
 task: detect
 mode: train
-model: /home/nurullah/Masaüstü/NPC-AI/runs/detect/train41/weights/best.pt
+model: /home/nurullah/Masaüstü/NPC-AI/runs/detect/train/weights/best.pt
 data: /home/nurullah/Masaüstü/NPC-AI/config.yaml
-epochs: 2
+epochs: 1
 time: null
 patience: 100
 batch: 16
@@ -14,7 +14,7 @@ device: null
 workers: 8
 project: null
 name: train
-exist_ok: false
+exist_ok: true
 pretrained: true
 optimizer: auto
 verbose: true

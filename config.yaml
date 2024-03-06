@@ -1,5 +1,5 @@
 path: /home/nurullah/Masaüstü/DENEME_DATA
-train: /home/nurullah/Masaüstü/DENEME_DATA/images/train5
+train: /home/nurullah/Masaüstü/DENEME_DATA/images/VisDrone2019-DET-train
 val: /home/nurullah/Masaüstü/DENEME_DATA/images/train5
 nc: 4
 names:
