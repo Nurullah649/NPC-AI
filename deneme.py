@@ -3,6 +3,7 @@ import glob
 
 def convert_line(line):
     index_of_first_space = line.find(' ')
+
     if index_of_first_space != -1:
         first_part = line[:index_of_first_space]
         second_part = line[index_of_first_space:]
