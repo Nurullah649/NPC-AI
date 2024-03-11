@@ -1,6 +1,6 @@
 path: /home/nurullah/Masaüstü/DENEME_DATA
 train: /home/nurullah/Masaüstü/DENEME_DATA/images/train
-val: /home/nurullah/İndirilenler/test_görsel/2022_valImages
+val: /home/nurullah/Masaüstü/DENEME_DATA/images/val/2022_valImages
 nc: 5
 names:
   - Araba

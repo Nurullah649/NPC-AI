@@ -1,43 +1,28 @@
-import glob
-value=0
-say=1
-result=False
-sa=''
-def is_it_first(index):
-    if index==-1:
-        print('-1 deyim')
-        return True
-    else:
-        return False
-def ekle(line,fname):
-    global value
-    if result:
-        with open('/home/nurullah/Masaüstü/video1_label/'+str(value)+'.txt','w') as file_out:
-            file_out.write(line + '\n')
+import os
 
-def convert_line(line, fname):
-    global sa
-    global result
-    global value
-    global say
-    sa=fname
-    index_of_first_space = line.find('1,')
-    result=is_it_first(index_of_first_space)
-    #print(index_of_first_space)
-    if result:
-        ekle(line,fname)
-        print('yeni başlangıç')
+
+def write_output_to_txt(output, output_file, output_path):
+    frame_index, *frame_data = output.split(',')
+        # İlk elemanı frame_index olarak alıyoruz, geri kalanlar frame_data listesine atanıyor
+
+    frame_index_padded = frame_index.zfill(6)  # Frame ID'yi 6 karaktere tamamlayacak şekilde 0'lar eklemek
+    output_file_path = os.path.join(output_path, f"{output_file}{frame_index_padded}.txt")
+
+    # Mevcut dosya varsa "a" (append) ile aç, yoksa "w" (write) ile aç
+    mode = "a" if os.path.exists(output_file_path) else "w"
+
+    with open(output_file_path, mode) as f:
+        f.write(','.join(frame_data))  # frame_data listesini tekrar stringe dönüştürüp dosyaya yazıyoruz
+
+# Dosyaları okumak için dosya yolu
+input_file_path = '/home/nurullah/İndirilenler/UAV-benchmark-MOTD_v1.0/GT/M0101_gt_whole.txt'
+output_path = '/home/nurullah/Masaüstü/video2_label/'  # Çıktı dosyalarının yazılacağı konum
+value=1
+# Okunan dosyanın içeriğini işleme
+with open(input_file_path, 'r') as input_file:
+    lines = input_file.readlines()
+    for output in lines:
+        print(output,value)
         value+=1
-        result=False
-    elif index_of_first_space !=-1:
-        ekle(line,fname)
-        print(say,'girdi')
-        say+=1
-for fname in glob.glob('/home/nurullah/Masaüstü/datasets/VisDrone/VisDrone2019-VID-train/annotations/uav0000013_00000_v.txt'):
-    #print(fname)
-    with open(fname, 'r') as file_in:
-        lines = file_in.readlines()
-        for line in lines:
-            converted_line = convert_line(line,file_in)
-            #print(converted_line)
-            #file_out.write(converted_line + '\n')
+        output_file = "img"
+        write_output_to_txt(output, output_file, output_path)
