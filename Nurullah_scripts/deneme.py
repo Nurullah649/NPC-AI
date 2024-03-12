@@ -1,4 +1,5 @@
 import glob
+import os
 
 
 def convert_line(line):
@@ -9,26 +10,26 @@ def convert_line(line):
         second_part = line[index_of_first_space:]
         for char in line[:index_of_first_space]:
             if char.isdigit():
-                if char in '12345#10##11#':
+                if char in '23456789':
                     first_part = '0 '
-                elif char in '0':
+                elif char in '01':
                     first_part = '1 '
-                elif char in '67':
-                    first_part='2'
-                else:
-                    first_part='3'
+
 
     return first_part + second_part
 
 
-for fname in glob.glob('/home/nurullah/Masaüstü/DENEME_DATA/labels/denem3/*.txt'):
+for fname in glob.glob('/home/nurullah/Masaüstü/copy/copy_labels/*.txt'):
+    input_file_path = fname
+    output_path = os.path.basename(input_file_path).replace('.txt', '')
     print(fname)
-    with open(fname, 'r') as file_in, open('/home/nurullah/Masaüstü/DENEME_DATA/labels/deneme3/' + fname.split('/')[-1], 'w') as file_out:
-        lines = file_in.readlines()
-        print(len(lines))
-        for line in lines:
-            print(line)
-            converted_line = convert_line(line.rstrip())
-            print(converted_line)
-            file_out.write(converted_line + '\n')
+    for f in glob.glob('/home/nurullah/Masaüstü/datasets/VisDrone/VisDrone2019-VID-train/labels/'+output_path+'/*.txt'):
+        print(f)
+        out=os.path.basename(f).replace('.txt', '')
+        with open(f, 'r') as file_in, open('/home/nurullah/Masaüstü/copy/convert/' + output_path+'/'+out+'.txt', 'w+') as file_out:
+            lines = file_in.readlines()
+
+            for line in lines:
+                converted_line = convert_line(line.rstrip())
+                file_out.write(converted_line + '\n')
 

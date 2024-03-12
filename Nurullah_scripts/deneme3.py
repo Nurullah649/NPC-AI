@@ -1,38 +1,20 @@
 import glob
 import os
 
-def is_number(s):
-    try:
-        int(s)
-        return True
-    except ValueError:
-        return False
+# Belirtilen dizindeki her bir .txt dosyasını işleyin
+for fname in glob.glob('/home/nurullah/Masaüstü/datasets/VisDrone/VisDrone2019-VID-train/annotations/*.txt'):
+    input_file_path =fname
+    output_path = '/home/nurullah/Masaüstü/video3_label/'+os.path.basename(input_file_path).replace('.txt','')  # Çıktı dosyalarının yazılacağı konum
+    for fname_in in glob.glob(output_path+'/*.txt'):
+        print(fname_in)
+        with open(fname_in, "r") as file:
+            # Dosyanın içeriğini okuyun
+            data = file.readlines()
 
-def move_file(input_file, output_dir):
-    # Giriş dosyasını açın
-    with open(input_file, 'r') as f:
-        lines = f.readlines()
+        # Dosyayı yazma modunda tekrar açın ve içeriği güncelleyin
+        with open(fname_in, "w") as file:
+            for line in data:
+                parts = line.split(',', 1)  # İlk virgüle kadar olan kısmı alırız
+                result = parts[1]
+                file.write(result)
 
-    # Eğer dosya boşsa, çık
-    if not lines:
-        print("Dosya boş.")
-        return
-
-    # Belirli sayıyı içeren satırları bul ve dosyayı taşı
-    for line in lines:
-        parts = line.split()
-        if parts and is_number(parts[0]) and int(parts[0]) in [4, 5, 6, 7, 8, 9, 10, 11]:
-            # Dosyayı yeni konuma taşı
-            file_name = os.path.basename(input_file)
-            new_location = os.path.join(output_dir, file_name)
-            os.rename(input_file, new_location)
-            print(f"'{file_name}' dosyası '{output_dir}' konumuna taşındı.")
-            break  # İlk uygun satırı taşıdıktan sonra döngüden çık
-
-if __name__ == "__main__":
-    for fname in glob.glob('/home/nurullah/Masaüstü/DENEME_DATA/labels/denem3/*.txt'):
-
-        input_file = fname  # Taşınacak dosyanın adı
-        output_directory = "/home/nurullah/Masaüstü/DENEME_DATA/labels/deneme3"  # Dosyanın taşınacağı yeni konum
-
-        move_file(input_file, output_directory)
