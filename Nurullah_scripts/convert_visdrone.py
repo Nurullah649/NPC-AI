@@ -43,6 +43,6 @@ def visdrone2yolo(dir):
 yaml_file_path = '/home/nurullah/Masaüstü/datasets/VisDrone/VisDrone.yaml'
 yaml_dir_path = Path(yaml_file_path).parent
 
-for d in ['VisDrone2019-VID-train']:#, 'VisDrone2019-VID-val', 'VisDrone2019-VID-test-dev']
+for d in ['VisDrone2019-VID-val']:#, 'VisDrone2019-VID-val', 'VisDrone2019-VID-test-dev']
     visdrone2yolo(yaml_dir_path / d)
 

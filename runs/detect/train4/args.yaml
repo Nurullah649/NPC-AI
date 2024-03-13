@@ -1,6 +1,6 @@
 task: detect
 mode: train
-model: /home/nurullah/Masaüstü/NPC-AI/runs/detect/train3/weights/best.pt
+model: /home/nurullah/Masaüstü/NPC-AI/runs/detect/train2/weights/best.pt
 data: /home/nurullah/Masaüstü/NPC-AI/config.yaml
 epochs: 25
 time: null
@@ -13,7 +13,7 @@ cache: false
 device: null
 workers: 8
 project: null
-name: train4
+name: train5
 exist_ok: false
 pretrained: true
 optimizer: auto
@@ -102,4 +102,4 @@ erasing: 0.4
 crop_fraction: 1.0
 cfg: null
 tracker: botsort.yaml
-save_dir: /home/nurullah/Masaüstü/NPC-AI/runs/detect/train4
+save_dir: /home/nurullah/Masaüstü/NPC-AI/runs/detect/train5

@@ -1,6 +1,6 @@
 import glob
 import os
-
+from colorama import Fore, Back, Style
 
 def convert_line(line):
     index_of_first_space = line.find(' ')
@@ -18,18 +18,25 @@ def convert_line(line):
 
     return first_part + second_part
 
-
 for fname in glob.glob('/home/nurullah/Masaüstü/copy/copy_labels/*.txt'):
-    input_file_path = fname
-    output_path = os.path.basename(input_file_path).replace('.txt', '')
-    print(fname)
-    for f in glob.glob('/home/nurullah/Masaüstü/datasets/VisDrone/VisDrone2019-VID-train/labels/'+output_path+'/*.txt'):
-        print(f)
-        out=os.path.basename(f).replace('.txt', '')
-        with open(f, 'r') as file_in, open('/home/nurullah/Masaüstü/copy/convert/' + output_path+'/'+out+'.txt', 'w+') as file_out:
-            lines = file_in.readlines()
+    output_path = os.path.basename(fname).replace('.txt', '')
+    print(Fore.BLUE, fname, Style.RESET_ALL)
+    for f in glob.glob('/home/nurullah/Masaüstü/datasets/VisDrone/VisDrone2019-VID-val/labels/' + output_path + '/*.txt'):
+        print(Fore.GREEN, f, Style.RESET_ALL)
+        out = os.path.basename(f).replace('.txt', '')
+        try:
+            # Alt dizinleri oluştur
+            output_directory = '/home/nurullah/Masaüstü/copy/convert/' + output_path + '/'
+            os.makedirs(output_directory, exist_ok=True)
 
-            for line in lines:
-                converted_line = convert_line(line.rstrip())
-                file_out.write(converted_line + '\n')
+            with open(f, 'r') as file_in, open(output_directory + out + '.txt', 'w') as file_out:
+                lines = file_in.readlines()
+
+                for line in lines:
+                    print(Fore.RED, line, Style.RESET_ALL)
+                    converted_line = convert_line(line.rstrip())
+                    print(Fore.CYAN,converted_line,Style.RESET_ALL)
+                    file_out.write(converted_line + '\n')
+        except FileNotFoundError:
+            print(Fore.RED, "Dosya bulunamadı:", f, Style.RESET_ALL)
 
