@@ -10,33 +10,36 @@ def convert_line(line):
         second_part = line[index_of_first_space:]
         for char in line[:index_of_first_space]:
             if char.isdigit():
-                if char in '23456789':
+                if char in '12345#10##11#':
                     first_part = '0 '
-                elif char in '01':
+                elif char in '0' or "insan":
                     first_part = '1 '
-
+                elif char in '67':
+                    first_part='2'
+                elif char in '89':
+                    first_part='3'
 
     return first_part + second_part
 
-for fname in glob.glob('/home/nurullah/Masaüstü/copy/copy_labels/*.txt'):
-    output_path = os.path.basename(fname).replace('.txt', '')
-    print(Fore.BLUE, fname, Style.RESET_ALL)
-    for f in glob.glob('/home/nurullah/Masaüstü/datasets/VisDrone/VisDrone2019-VID-val/labels/' + output_path + '/*.txt'):
-        print(Fore.GREEN, f, Style.RESET_ALL)
-        out = os.path.basename(f).replace('.txt', '')
-        try:
-            # Alt dizinleri oluştur
-            output_directory = '/home/nurullah/Masaüstü/copy/convert/' + output_path + '/'
-            os.makedirs(output_directory, exist_ok=True)
+def process_txt_file(txt_file_path, output_directory):
+    try:
+        output_file_path = os.path.join(output_directory, os.path.basename(txt_file_path))
+        with open(txt_file_path, 'r') as file_in, open(output_file_path, 'w') as file_out:
+            print(Fore.RED,file_in,Style.RESET_ALL)
+            lines = file_in.readlines()
+            for line in lines:
+                print(Fore.CYAN, "İşlenen satır:", line.strip(), Style.RESET_ALL)
+                converted_line = convert_line(line)
+                print(Fore.BLUE, "Değişen satır:", converted_line, Style.RESET_ALL)
+                file_out.write(converted_line)
+        print(Fore.GREEN, "İşlenen dosya:", txt_file_path, Style.RESET_ALL)
+        print(Fore.GREEN, "Yazılan dosya:", output_file_path, Style.RESET_ALL)
 
-            with open(f, 'r') as file_in, open(output_directory + out + '.txt', 'w') as file_out:
-                lines = file_in.readlines()
+    except FileNotFoundError:
+        print(Fore.RED, "Dosya bulunamadı:", txt_file_path, Style.RESET_ALL)
 
-                for line in lines:
-                    print(Fore.RED, line, Style.RESET_ALL)
-                    converted_line = convert_line(line.rstrip())
-                    print(Fore.CYAN,converted_line,Style.RESET_ALL)
-                    file_out.write(converted_line + '\n')
-        except FileNotFoundError:
-            print(Fore.RED, "Dosya bulunamadı:", f, Style.RESET_ALL)
+hedef_dizin = "/home/npc-ai/Masaüstü/2022_dataset/val/labels"
+output_directory = "/home/npc-ai/Masaüstü/train_label"
 
+for txt_file in glob.glob(os.path.join(hedef_dizin, '*.txt')):
+    process_txt_file(txt_file, output_directory)
