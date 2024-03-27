@@ -1,9 +1,7 @@
 from ultralytics import YOLO
 import gc
-
 from os.path import expanduser
 import os
-
 # Kullanıcı masaüstü dizinini al
 desktop_path = os.path.join(expanduser("~"), "Masaüstü")
 gc.collect()
