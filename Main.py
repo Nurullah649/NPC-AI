@@ -1,12 +1,14 @@
 from ultralytics import YOLO
 import gc
-import torch
 
-# GPU 1'i kullanmak için ayarlayın
-torch.cuda.device(1)
+from os.path import expanduser
+import os
+
+# Kullanıcı masaüstü dizinini al
+desktop_path = os.path.join(expanduser("~"), "Masaüstü")
 gc.collect()
-model = YOLO('/home/npc-ai/Masaüstü/NPC-AI/runs/detect/train5/weights/best.pt') #Load pretrained model
-train_yaml="/home/npc-ai/Masaüstü/NPC-AI/config.yaml"
+model = YOLO(desktop_path+'/NPC-AI/runs/detect/train5/weights/best.pt')#Load pretrained model
+train_yaml=+"/NPC-AI/config.yaml"
 model.train(data=train_yaml,exist_ok= False, batch=-1,epochs=25,imgsz=640,save=True,save_txt=True)# Train the model
 
 
