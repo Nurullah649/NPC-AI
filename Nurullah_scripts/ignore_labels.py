@@ -2,15 +2,6 @@ import gc
 import os
 import shutil
 
-
-def fix_negative_coordinates(coordinates):
-    # Koordinatlar listesindeki her bir değeri kontrol ederek negatif olanları pozitife çevirir
-    for i, coord in enumerate(coordinates):
-        if coord < 0:
-            coordinates[i] = -coord
-    return coordinates
-
-
 def check_and_move_file(txt_file_path, destination_directory):
     try:
         with open(txt_file_path, 'r') as file_in:
@@ -19,17 +10,10 @@ def check_and_move_file(txt_file_path, destination_directory):
                 values = line.split()  # Satırı boşluklara göre ayır
                 class_id = int(values[0])  # Sınıf ID'sini al
                 coordinates = [float(coord) for coord in values[1:]]  # Koordinatları al
-
-                # Negatif koordinatları düzelt
-                coordinates = fix_negative_coordinates(coordinates)
-
-                # Düzeltme yapıldıysa, dosyayı güncelle
-                with open(txt_file_path, 'w') as file_out:
-                    file_out.write(f"{class_id} {' '.join(str(coord) for coord in coordinates)}\n")
-
                 # Herhangi bir koordinat değeri 1'den büyükse, dosyayı taşı ve döngüden çık
-                if any(coord < 0 for coord in coordinates):
+                if any(coord > 1 for coord in coordinates):
                     shutil.move(txt_file_path, destination_directory)
+                    print(f"{txt_file} {destination_directory} konumuna taşındı")
                     return
     except FileNotFoundError:
         print("Dosya bulunamadı:", txt_file_path)
@@ -43,5 +27,5 @@ for txt_file in os.listdir(hedef_dizin):
     value+=1
     if value > 100:
         gc.collect()
-    print(value,' = ilk for')
+    #print(value,' = ',txt_file)
     check_and_move_file(txt_file_path, hedef_konum)

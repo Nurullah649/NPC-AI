@@ -5,15 +5,15 @@ data: /home/npc-ai/Masaüstü/NPC-AI/config.yaml
 epochs: 25
 time: null
 patience: 100
-batch: -1
-imgsz: 640
+batch: 4
+imgsz: 1280
 save: true
 save_period: -1
 cache: false
 device: null
 workers: 8
 project: null
-name: train6
+name: train8
 exist_ok: false
 pretrained: true
 optimizer: auto
@@ -68,7 +68,7 @@ int8: false
 dynamic: false
 simplify: false
 opset: null
-workspace: 12
+workspace: 4
 nms: false
 lr0: 0.01
 lrf: 0.01
@@ -94,6 +94,7 @@ shear: 0.0
 perspective: 0.0
 flipud: 0.0
 fliplr: 0.5
+bgr: 0.0
 mosaic: 1.0
 mixup: 0.0
 copy_paste: 0.0
@@ -102,4 +103,4 @@ erasing: 0.4
 crop_fraction: 1.0
 cfg: null
 tracker: botsort.yaml
-save_dir: runs/detect/train6
+save_dir: runs/detect/train8

@@ -8,6 +8,7 @@ from colorama import Fore, Back, Style
 
 lut = {}
 lut["motor"]=0
+lut["Taşıt"]=0
 lut["tasit"] = 0
 lut["arac"]=0
 lut["tren"]=0
@@ -23,12 +24,15 @@ lut["kam"]=0
 lut["mot"]=0
 lut["bus"]=0
 lut["insan"] = 1
+lut["İnsan"] = 1
 lut["yaya"]=1
 lut["ins"]=1
 lut["uuap"]=2
 lut["yuap"] = 2
 lut["yaup"]=2
+lut["UAP"]=2
 lut["uyam"] = 3
+lut["UAİ"] = 3
 lut["yaam"] = 3
 
 
@@ -49,12 +53,12 @@ def convert_coordinates(size, box):
 
 
 def convert_xml2yolo(lut):
-    for fname in glob.glob("/home/nurullah/Masaüstü/traffic_birdseye/*.xml"):
+    for fname in glob.glob("/home/npc-ai/Masaüstü/TEKNOFEST UYZ 2021 Verileri-20240331T121939Z-001/TEKNOFEST UYZ 2021 Verileri/Teknofest UYZ 2021 Etiketli Veriler-20220617T123137Z-001/Teknofest UYZ 2021 Etiketli Veriler/Teknofest_UYZ2021_Video1_1_annotations/V1_1/Annotations/Annotations/*.xml"):
 
         xmldoc = minidom.parse(fname)
 
         #fname_out = (fname[:-4] + '.txt')
-        fname_out = ("/home/nurullah/Masaüstü/deneme_txt_konum/" + os.path.basename(fname)[:-4] + '.txt')
+        fname_out = ("/home/npc-ai/Masaüstü/deneme_txt_konum/" + os.path.basename(fname)[:-4] + '.txt')
 
         with open(fname_out, "w") as f:
 

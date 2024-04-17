@@ -1,12 +1,12 @@
 task: detect
 mode: train
-model: /home/npc-ai/Masaüstü/NPC-AI/runs/detect/train5/weights/best.pt
+model: /home/npc-ai/Masaüstü/NPC-AI/runs/detect/train7/weights/best.pt
 data: /home/npc-ai/Masaüstü/NPC-AI/config.yaml
 epochs: 25
 time: null
 patience: 100
 batch: -1
-imgsz: 640
+imgsz: 1280
 save: true
 save_period: -1
 cache: false
@@ -68,7 +68,7 @@ int8: false
 dynamic: false
 simplify: false
 opset: null
-workspace: 8
+workspace: 4
 nms: false
 lr0: 0.01
 lrf: 0.01
@@ -94,6 +94,7 @@ shear: 0.0
 perspective: 0.0
 flipud: 0.0
 fliplr: 0.5
+bgr: 0.0
 mosaic: 1.0
 mixup: 0.0
 copy_paste: 0.0

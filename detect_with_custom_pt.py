@@ -1,20 +1,69 @@
-import gc
-import glob
 import os
-from ultralytics import YOLO
+import random
 from os.path import expanduser
-gc.collect()
-a=0
-# Kullanıcı masaüstü dizinini al
+
+import cv2
+from ultralytics import YOLO
+
+from tracker import Tracker
+
+value=0
+video_path = os.path.join('.', 'data', '2022_pexels-tom-fisk-9832125.mp4')
+video_out_path = os.path.join('.', 'out.mp4')
+
+cap = cv2.VideoCapture(video_path)
+ret, frame = cap.read()
+
+def save_frame(frame, output_folder, frame_count):
+    # Çıkış klasörünü kontrol et ve yoksa oluştur
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    # Kareyi kaydet
+    output_path = os.path.join(output_folder, f"frame_{frame_count}.jpg")
+    cv2.imwrite(output_path, frame)
+
+    print(f"Frame {frame_count} saved as {output_path}")
+#cap_out = cv2.VideoWriter(video_out_path, cv2.VideoWriter_fourcc('M','P','4','V'), cap.get(cv2.CAP_PROP_FPS),(frame.shape[1], frame.shape[0]))
+
+
+
 desktop_path = os.path.join(expanduser("~"), "Masaüstü")
-model = YOLO(desktop_path+'/NPC-AI/runs/detect/train5/weights/best.pt')
-#result=model.predict('/home/nurullah/İndirilenler/2022_dataset-20240308T144120Z-001/2022_dataset/train/images/2022_pexels-tom-fisk-9832125.mp4',data='/home/nurullah/Masaüstü/NPC-AI/runs/detect/train5/weights/best.pt',save_txt=True,save=True)
+model = YOLO(desktop_path+'/NPC-AI/runs/detect/train5/weights/best.pt')#Load pretrained model
+tracker = Tracker()
 
-for fname in glob.glob("/home/nurullah/Masaüstü/NPC-AI/bedir/M1201/*.jpg"):
+colors = [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) for j in range(10)]
 
-    result=model.predict(fname,data='/home/nurullah/Masaüstü/NPC-AI/runs/detect/train5/weights/best.pt',save_txt=True,save=True)
+detection_threshold = 0.5
+while ret:
 
-    a+=1
-    if(a==100):
-        gc.collect()
-        a=0
+    results=model(frame)
+
+    for result in results:
+        detections = []
+        for r in result.boxes.data.tolist():
+            x1, y1, x2, y2, score, class_id = r
+            x1 = int(x1)
+            x2 = int(x2)
+            y1 = int(y1)
+            y2 = int(y2)
+            class_id = int(class_id)
+            if score > detection_threshold:
+                detections.append([x1, y1, x2, y2, score])
+
+        tracker.update(frame, detections)
+
+        for track in tracker.tracks:
+            bbox = track.bbox
+            x1, y1, x2, y2 = bbox
+            track_id = track.track_id
+
+            cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (colors[track_id % len(colors)]), 3)
+    save_frame(frame,video_out_path,value)
+    value+=1
+    #cap_out.write(frame)
+    ret, frame = cap.read()
+
+#cap.release()
+#cap_out.release()
+cv2.destroyAllWindows()
