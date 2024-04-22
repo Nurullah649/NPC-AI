@@ -6,8 +6,8 @@ import cv2
 from matplotlib import pyplot as plt
 from colorama import Fore,Style
 
-def clahe(path):
-    output_folder = os.path.join(path[:-4], "results")
+def clahe(path,save_folder):
+    output_folder = os.path.join(path[:-13], save_folder)
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
     for fname in glob.glob(path):
@@ -37,7 +37,7 @@ def clahe(path):
 
         # --CLAHE--
         # Aynı işlemleri tekrarlayalım.
-        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))  # Ayrıca 16x16 deneyebiliriz.
+        clahe = cv2.createCLAHE(clipLimit=2, tileGridSize=(8, 8))  # Ayrıca 16x16 deneyebiliriz.
         clahe_img = clahe.apply(l)
 
         # plt.hist(clahe_img.flat, bins=100, range=(0,255))
