@@ -2,7 +2,7 @@ from ultralytics    import  YOLO
 import os
 from os.path import expanduser
 from PIL import Image
-image_path = "/home/nurullah/Masaüstü/NPC-AI/frames/frame_0690.jpg"
+image_path = "/home/npc-ai/Masaüstü/DENEME_DATA/images/val/frame_006144.jpg"
 
 
 def calculate_white_pixel_ratio(image):
@@ -16,17 +16,23 @@ def calculate_white_pixel_ratio(image):
     white_pixel_ratio = white_pixels
 
     return white_pixel_ratio
+
+
 def crop_and_convert_to_binary(image_path, x1, y1, x2, y2, threshold=128):
-                # Görseli yükle
-                image = Image.open(image_path)
+    # Görseli yükle
+    image = Image.open(image_path)
 
-                # Kareyi kırp
-                cropped_image = image.crop((x1, y1, x2, y2))
+    # Kareyi kırp
+    cropped_image = image.crop((x1, y1, x2, y2))
 
-                # Görseli binary renge çevir
-                binary_image = cropped_image.convert("L").point(lambda p: p > threshold and 255)
+    # Görseli binary renge çevir
+    binary_image = cropped_image.convert("L").point(lambda p: p > threshold and 255)
 
-                return binary_image
+    # Eğer görsel 90 derece döndürülmüşse, düzelt
+    if binary_image.width < binary_image.height:
+        binary_image = binary_image.rotate(90, expand=True)
+
+    return binary_image
 desktop_path = os.path.join(expanduser("~"), "Masaüstü")
 model = YOLO(desktop_path + '/NPC-AI/runs/detect/train9/weights/best.pt')  # Pretrained model path
 train_yaml = desktop_path + "/NPC-AI/config.yaml"

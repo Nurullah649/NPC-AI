@@ -8,7 +8,7 @@ from ultralytics import YOLO
 from tracker import Tracker
 
 value=0
-video_path = os.path.join('.', 'data', '2022_pexels-tom-fisk-9832125.mp4')
+video_path = "/home/npc-ai/Masaüstü/TUYZ_2024_Ornek_Veri-001/TUYZ_2024_Ornek_Veri/TUYZ_2024_Ornek_Video.MP4"
 video_out_path = os.path.join('.', 'out.mp4')
 
 cap = cv2.VideoCapture(video_path)
@@ -29,7 +29,7 @@ def save_frame(frame, output_folder, frame_count):
 
 
 desktop_path = os.path.join(expanduser("~"), "Masaüstü")
-model = YOLO(desktop_path+'/NPC-AI/runs/detect/train5/weights/best.pt')#Load pretrained model
+model = YOLO(desktop_path+'/NPC-AI/runs/detect/train9/weights/best.pt')#Load pretrained model
 tracker = Tracker()
 
 colors = [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) for j in range(10)]
@@ -37,7 +37,14 @@ colors = [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255
 detection_threshold = 0.5
 while ret:
 
-    results=model(frame)
+    train_yaml = desktop_path + "/NPC-AI/config.yaml"
+    results = model(
+        source=frame,
+        conf=0.40,
+        data=train_yaml,
+        save=True,
+        save_txt=True
+    )
 
     for result in results:
         detections = []
