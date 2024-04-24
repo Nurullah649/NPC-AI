@@ -2,7 +2,11 @@ from ultralytics    import  YOLO
 import os
 from os.path import expanduser
 from PIL import Image
+<<<<<<< Updated upstream
 image_path = "/home/npc-ai/Masaüstü/DENEME_DATA/images/val/frame_006144.jpg"
+=======
+image_path = "/home/nurullah/Masaüstü/frames/frame_0515.jpg"
+>>>>>>> Stashed changes
 
 
 def calculate_white_pixel_ratio(image):
