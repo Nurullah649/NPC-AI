@@ -1,80 +1,53 @@
-import cv2
-import glob
 import os
 import time
-from ultralytics import YOLO
 from os.path import expanduser
-import is_daytime
-from Nurullah_scripts import CLAHE
 from colorama import Fore, Style
-kare=[]
-# Kullanıcı masaüstü dizinini al
+from ultralytics import YOLO
+import is_daytime
+import CLAHE
+import ImageSimilarityChecker
+
+# Dosya yollarını oluşturmak
 desktop_path = os.path.join(expanduser("~"), "Masaüstü")
-model = YOLO(desktop_path + '/NPC-AI/runs/detect/train9/weights/best.pt')  # Pretrained model path
-path = "/home/nurullah/Masaüstü/NPC-AI/frames/*.jpg"
-train_yaml = desktop_path + "/NPC-AI/config.yaml"
-start_for_time = time.time()
-counter=1
-for fname in glob.glob(path):
-    if not (is_daytime.is_daytime(fname)):
-        start_time = time.time()
-        if counter == 1:
-            a = (start_time - start_for_time) * 1000
-            print(Fore.RED + f"{a}" + Style.RESET_ALL)
-        counter = 2
-        img = CLAHE.clahe(fname, "CLAHE_result")
-        print(Fore.GREEN)
+# Kaynak Lokasyonu Belirtin
+path = "/home/nurullah/Masaüstü/frames/"
+#Model konfigürasyon dosyası
+train_yaml = os.path.join(desktop_path, "NPC-AI/config.yaml")
+# Dosya konumundan görsellerin sırayla çekilmesi
+files = sorted(os.listdir(path))
+#UAP ve UAI inilebilir kontrolü yapacak olan modelin oluşturulması
+image_similarity_checker = ImageSimilarityChecker.ImageSimilarityChecker()
+
+def main():
+    # Modeli oluşturun
+    model = YOLO(os.path.join(desktop_path, 'NPC-AI/runs/detect/train9/weights/best.pt'))  # Pretrained model path
+    #başlangıç zamanı kontrolü
+    start_for_time = time.time()
+    for frame in files:
+        # Gece mi gündüz mü kontrolü
+        if not is_daytime.is_daytime(os.path.join(path, frame)):
+            img = CLAHE.apply_clahe(os.path.join(path, frame), path + "/CLAHE_result")
+        else:
+            img = os.path.join(path, frame)
+        #Model Predicti
         results = model(
             source=img,
-            conf=0.40,
+            conf=0.4,
             data=train_yaml,
             save=True,
+            iou=0.5,
             save_txt=True
         )
+        # Sonuçlara Göre UAP ve UAI tespiti sonrası uygunluk kontrolü
         for result in results:
             for r in result.boxes.data.tolist():
                 x1, y1, x2, y2, score, class_id = r
-                x1 = int(x1)
-                x2 = int(x2)
-                y1 = int(y1)
-                y2 = int(y2)
-                class_id = int(class_id)
-                if class_id == 2 or class_id==3:
-                    if (x2 - x1) == (y2 - y1):
-                        print(Fore.YELLOW,"bu bir karedir")
-                        kare.append(os.path.basename(img))
-        print(Style.RESET_ALL)
-        end_time = time.time()
-        elapsed_time = (end_time - start_time) * 1000
-        print(Fore.CYAN + f"Function took {elapsed_time} milliseconds to execute." + Style.RESET_ALL)
-    else:
-        start_time = time.time()
-        if counter == 1:
-            a = (start_time - start_for_time) * 1000
-            print(Fore.RED + f"{a}" + Style.RESET_ALL)
-        counter = 2
-        print(Fore.GREEN)
-        results = model(
-            source=fname,
-            conf=0.40,
-            data=train_yaml,
-            save=True,
-            save_txt=True
-        )
-        for result in results:
-            for r in result.boxes.data.tolist():
-                x1, y1, x2, y2, score, class_id = r
-                x1 = int(x1)
-                x2 = int(x2)
-                y1 = int(y1)
-                y2 = int(y2)
-                class_id = int(class_id)
-                if class_id == 2 or class_id==3:
-                    if (x2 - x1) == (y2 - y1):
-                        print(Fore.YELLOW,"BU BİR KAREDİR")
-                        kare.append(os.path.basename(fname))
-        print(Style.RESET_ALL)
-        end_time = time.time()
-        elapsed_time = (end_time - start_time) * 1000
-        print(Fore.CYAN + f"Function took {elapsed_time} milliseconds to execute." + Style.RESET_ALL)
-print(kare)
+                if class_id == 3 or class_id == 2:
+                    image_similarity_checker.control(x1=x1, y1=y1, x2=x2, y2=y2, image_path=os.path.join(path, frame),class_id=class_id)
+
+    end_for_time = time.time()
+    elapsed_for_time = (end_for_time - start_for_time)
+    print(Fore.GREEN + f"Total execution time: {elapsed_for_time} milliseconds" + Style.RESET_ALL)
+
+if __name__ == "__main__":
+    main()

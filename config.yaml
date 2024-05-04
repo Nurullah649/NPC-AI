@@ -2,13 +2,12 @@ path: /home/npc-ai/Masaüstü/DENEME_DATA
 train: /home/npc-ai/Masaüstü/DENEME_DATA/images/train
 val: /home/npc-ai/Masaüstü/DENEME_DATA/images/val
 
-nc: 5
+nc: 4
 names:
   - Araba
   - Insan
   - UAP
   - UAI
-  - Saha
 
 
 
