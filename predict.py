@@ -10,7 +10,8 @@ import Process_image
 # Dosya yollarını oluşturmak
 desktop_path = os.path.join(expanduser("~"), "Masaüstü")
 # Kaynak Lokasyonu Belirtin
-path = "/home/nurullah/Masaüstü/frames/"
+path="/home/nurullah/Masaüstü/tiny_person_yv8/train/images"
+#path = "/home/nurullah/Masaüstü/frames/"
 #Model konfigürasyon dosyası
 train_yaml = os.path.join(desktop_path, "NPC-AI/config.yaml")
 # Dosya konumundan görsellerin sırayla çekilmesi
@@ -25,7 +26,7 @@ def main():
         #başlangıç zamanı kontrolü
         start_for_time = time.time()
         #Resim ön işleme
-        image_path=Process_image.process_image(path+img,desktop_path)
+        image_path=Process_image.process_image(os.path.join(path, img),desktop_path)
         #Model Predicti
         results = model(
             source=image_path,

@@ -4,7 +4,10 @@ import numpy as np
 import concurrent.futures
 import is_daytime
 
-def split_image(image):
+def process_image(image_path,destkop_path):
+    # Resmi yükleyin
+    image = cv2.imread(image_path)
+    # Resmi 2x3 (6 parça) parçaya bölme
     height, width, _ = image.shape
     part_height = height // 2
     part_width = width // 3
@@ -13,22 +16,18 @@ def split_image(image):
         for j in range(3):
             part = image[i * part_height:(i + 1) * part_height, j * part_width:(j + 1) * part_width]
             parts.append(part)
-    return parts
 
-def process_part(part):
-    return is_daytime.is_daytime(part)
+    # Her parçayı ön işlemeye sokma
+    def process_part(part):
+        return is_daytime.is_daytime(part)
 
-def process_image(image_path, desktop_path):
-    image = cv2.imread(image_path)
-    parts = split_image(image)
-
-    with concurrent.futures.ProcessPoolExecutor() as executor:
+    # Parçaları paralel şekilde ön işleme sokma
+    with concurrent.futures.ThreadPoolExecutor() as executor:
         processed_parts = list(executor.map(process_part, parts))
-
     merged_image = np.vstack([np.hstack(processed_parts[:3]), np.hstack(processed_parts[3:])])
-    save_path = os.path.join(desktop_path, "results")
-    os.makedirs(save_path, exist_ok=True)
-    saved_image_path = os.path.join(save_path, os.path.basename(image_path))
+    save_path=f"{destkop_path}/results"
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+    saved_image_path=f"{destkop_path}/results/{os.path.basename(image_path)}"
     cv2.imwrite(saved_image_path, merged_image)
     return saved_image_path
-
