@@ -10,7 +10,7 @@ import Process_image
 # Dosya yollarını oluşturmak
 desktop_path = os.path.join(expanduser("~"), "Masaüstü")
 # Kaynak Lokasyonu Belirtin
-path="/home/nurullah/Masaüstü/tiny_person_yv8/train/images"
+path=  "/home/npc-ai/Masaüstü/DENEME_DATA/images/train2"
 #path = "/home/nurullah/Masaüstü/frames/"
 #Model konfigürasyon dosyası
 train_yaml = os.path.join(desktop_path, "NPC-AI/config.yaml")
@@ -21,7 +21,7 @@ image_similarity_checker = ImageSimilarityChecker.ImageSimilarityChecker()
 
 def main():
     # Modeli oluşturun
-    model = YOLO(os.path.join(desktop_path, 'NPC-AI/runs/detect/train9/weights/best.pt'))  # Pretrained model path
+    model = YOLO('runs/detect/train10/weights/best.pt')  # Pretrained model path
     for img in files:
         #başlangıç zamanı kontrolü
         start_for_time = time.time()

@@ -1,5 +1,5 @@
 path: /home/npc-ai/Masaüstü/DENEME_DATA
-train: /home/npc-ai/Masaüstü/DENEME_DATA/images/train
+train: /home/npc-ai/Masaüstü/DENEME_DATA/images/train2
 val: /home/npc-ai/Masaüstü/DENEME_DATA/images/val
 
 nc: 4

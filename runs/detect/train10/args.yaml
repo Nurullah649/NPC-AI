@@ -1,7 +1,7 @@
 task: detect
 mode: train
-model: /home/nurullah/Masaüstü/NPC-AI/runs/detect/train9/weights/best.pt
-data: /home/nurullah/Masaüstü/tiny_person_yv8/data.yaml
+model: /home/npc-ai/Masaüstü/NPC-AI/runs/detect/train9/weights/best.pt
+data: config.yaml
 epochs: 25
 time: null
 patience: 100
@@ -38,7 +38,7 @@ split: val
 save_json: false
 save_hybrid: false
 conf: null
-iou: 0.7
+iou: 0.6
 max_det: 300
 half: false
 dnn: false
@@ -103,4 +103,4 @@ erasing: 0.4
 crop_fraction: 1.0
 cfg: null
 tracker: botsort.yaml
-save_dir: /home/nurullah/Masaüstü/NPC-AI/runs/detect/train10
+save_dir: runs/detect/train10

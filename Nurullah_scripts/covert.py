@@ -53,12 +53,12 @@ def convert_coordinates(size, box):
 
 
 def convert_xml2yolo(lut):
-    for fname in glob.glob("/home/npc-ai/Masaüstü/TEKNOFEST UYZ 2021 Verileri-20240331T121939Z-001/TEKNOFEST UYZ 2021 Verileri/Teknofest UYZ 2021 Etiketli Veriler-20220617T123137Z-001/Teknofest UYZ 2021 Etiketli Veriler/Teknofest_UYZ2021_Video1_1_annotations/V1_1/Annotations/Annotations/*.xml"):
+    for fname in glob.glob("/home/npc-ai/İndirilenler/Oturum_2_Etiketler/VY2_5/Annotations/Annotations/*.xml"):
 
         xmldoc = minidom.parse(fname)
 
         #fname_out = (fname[:-4] + '.txt')
-        fname_out = ("/home/npc-ai/Masaüstü/deneme_txt_konum/" + os.path.basename(fname)[:-4] + '.txt')
+        fname_out = ("/home/npc-ai/Masaüstü/VY2_5_txt_konum/" + os.path.basename(fname)[:-4] + '.txt')
 
         with open(fname_out, "w") as f:
 
