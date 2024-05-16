@@ -3,7 +3,7 @@ import CLAHE
 import cv2
 import numpy as np
 
-def is_daytime(image, threshold=65):
+def is_daytime(image, threshold=50):
 
     # Resmi RGB formatına dönüştür
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)

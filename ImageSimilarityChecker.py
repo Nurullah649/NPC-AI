@@ -1,5 +1,5 @@
 import os
-
+from PIL import Image, ImageDraw, ImageFont
 import cv2
 from colorama import Fore
 import torch
@@ -8,6 +8,7 @@ import torchvision.transforms as transforms
 import torchvision.models as models
 from sklearn.metrics.pairwise import cosine_similarity
 
+score=0.80
 class ImageSimilarityChecker:
     def __init__(self, model_name='resnet18'):
         self.model = self.load_model(model_name)
@@ -31,8 +32,7 @@ class ImageSimilarityChecker:
         ])
         return preprocess
 
-    def get_feature_vector(self, image_path):
-        image = Image.open(image_path).convert('RGB')
+    def get_feature_vector(self, image):
         image_tensor = self.preprocess(image)
         image_tensor = image_tensor.unsqueeze(0)
 
@@ -51,28 +51,29 @@ class ImageSimilarityChecker:
 
     def control(self, x1, y1, x2, y2, class_id, image_path):
         binary_image = self.crop(image_path, x1, y1, x2, y2)
-        compared_image_path = f"/home/nurullah/Masaüstü/NPC-AI/results/{os.path.basename(image_path)}_image{class_id}.jpg"
-        binary_image.save(compared_image_path)
-
         ref_image_path = 'content/UAP.jpg' if class_id == 2 else 'content/UAI.jpg'
-        ref_feature_vector = self.get_feature_vector(ref_image_path)
-        compared_feature_vector = self.get_feature_vector(compared_image_path)
-
+        ref_image = Image.open(ref_image_path)
+        ref_feature_vector = self.get_feature_vector(ref_image)
+        compared_feature_vector = self.get_feature_vector(binary_image)
         similarity_score = self.similarity(ref_feature_vector, compared_feature_vector)
-
+        image = Image.open(image_path)
+        draw = ImageDraw.Draw(image)
+        font = ImageFont.truetype("content/ARIALBD.TTF", 45)  # Yazı tipi ve boyutu ayarla
         if class_id == 2:
             print(Fore.CYAN)
             print(f"UAP Similarity score: {similarity_score}")
-            if similarity_score > 0.81:
-                image = Image.open(image_path)
-                image.show()
-                print(Fore.GREEN,"UAP İNİLEBİLİR")
+            if similarity_score > score:
+                print(Fore.GREEN, "UAP İNİLEBİLİR")
+                # Skoru resmin sol üst köşesine beyaz renkte ve daha belirgin yazdır
+                draw.text((10, 10), text= f"{class_id}  Score: {similarity_score:.2f}", fill="cyan", font=font)
+                image.show()  # Resmi göster
                 return True
         else:
             print(Fore.LIGHTRED_EX)
             print(f"UAI Similarity score: {similarity_score}")
-            if similarity_score > 0.81:
-                image = Image.open(image_path)
-                image.show()
+            if similarity_score > score:
                 print(Fore.GREEN, "UAI İNİLEBİLİR")
+                # Skoru resmin sol üst köşesine siyah renkte ve daha belirgin yazdır
+                draw.text((10, 10), text= f"{class_id}  Score:  {similarity_score:.2f}", fill="red", font=font)
+                image.show()  # Resmi göster
                 return True
