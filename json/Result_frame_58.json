@@ -1,0 +1,34 @@
+{
+  "id": "frame_58",
+  "user": "NPC-A\u0130",
+  "frame": "frame_58",
+  "detected_objects": [
+    {
+      "cls": 1.0,
+      "top_left_x": 1297.82373046875,
+      "top_left_y": 210.5833282470703,
+      "bottom_right_x": 1331.33056640625,
+      "bottom_right_y": 245.3047637939453
+    },
+    {
+      "cls": 1.0,
+      "top_left_x": 1715.959716796875,
+      "top_left_y": 788.2626953125,
+      "bottom_right_x": 1740.925048828125,
+      "bottom_right_y": 802.0218505859375
+    },
+    {
+      "cls": 1.0,
+      "top_left_x": 1693.73388671875,
+      "top_left_y": 768.8151245117188,
+      "bottom_right_x": 1735.4150390625,
+      "bottom_right_y": 795.0996704101562
+    }
+  ],
+  "detected_translations": [
+    {
+      "translation_x": 0.129400634765625,
+      "translation_y": 0.47753448486328126
+    }
+  ]
+}

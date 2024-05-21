@@ -1,0 +1,48 @@
+{
+  "id": "frame_980",
+  "user": "NPC-A\u0130",
+  "frame": "frame_980",
+  "detected_objects": [
+    {
+      "cls": 0.0,
+      "top_left_x": 409.16900634765625,
+      "top_left_y": 412.0775146484375,
+      "bottom_right_x": 593.3910522460938,
+      "bottom_right_y": 502.5445556640625
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 1115.762939453125,
+      "top_left_y": 814.0999755859375,
+      "bottom_right_x": 1225.960205078125,
+      "bottom_right_y": 1048.0682373046875
+    },
+    {
+      "cls": 1.0,
+      "top_left_x": 1725.3878173828125,
+      "top_left_y": 335.7249450683594,
+      "bottom_right_x": 1793.4000244140625,
+      "bottom_right_y": 368.2233581542969
+    },
+    {
+      "cls": 1.0,
+      "top_left_x": 1750.075439453125,
+      "top_left_y": 808.405029296875,
+      "bottom_right_x": 1813.188720703125,
+      "bottom_right_y": 846.815673828125
+    },
+    {
+      "cls": 1.0,
+      "top_left_x": 1593.1881103515625,
+      "top_left_y": 325.4961242675781,
+      "bottom_right_x": 1655.3004150390625,
+      "bottom_right_y": 359.4171447753906
+    }
+  ],
+  "detected_translations": [
+    {
+      "translation_x": 60.467340087890626,
+      "translation_y": 117.08355407714843
+    }
+  ]
+}

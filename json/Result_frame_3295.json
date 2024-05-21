@@ -1,0 +1,20 @@
+{
+  "id": "frame_3295",
+  "user": "NPC-A\u0130",
+  "frame": "frame_3295",
+  "detected_objects": [
+    {
+      "cls": 1.0,
+      "top_left_x": 1031.605712890625,
+      "top_left_y": 230.85723876953125,
+      "bottom_right_x": 1066.070068359375,
+      "bottom_right_y": 272.46649169921875
+    }
+  ],
+  "detected_translations": [
+    {
+      "translation_x": 24.236538314819335,
+      "translation_y": -36.34768829345703
+    }
+  ]
+}

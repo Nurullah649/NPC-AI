@@ -1,0 +1,139 @@
+{
+  "id": "frame_1647",
+  "user": "NPC-A\u0130",
+  "frame": "frame_1647",
+  "detected_objects": [
+    {
+      "cls": 0.0,
+      "top_left_x": 1759.5106201171875,
+      "top_left_y": 427.09490966796875,
+      "bottom_right_x": 1902.0509033203125,
+      "bottom_right_y": 650.0859985351562
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 469.6204833984375,
+      "top_left_y": 281.4849853515625,
+      "bottom_right_x": 566.4583740234375,
+      "bottom_right_y": 489.2225341796875
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 108.21147918701172,
+      "top_left_y": 268.0386047363281,
+      "bottom_right_x": 216.90411376953125,
+      "bottom_right_y": 461.8905334472656
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 595.855712890625,
+      "top_left_y": 280.64044189453125,
+      "bottom_right_x": 685.7001953125,
+      "bottom_right_y": 465.88690185546875
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 349.0137939453125,
+      "top_left_y": 272.55206298828125,
+      "bottom_right_x": 444.522216796875,
+      "bottom_right_y": 456.90814208984375
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 173.49603271484375,
+      "top_left_y": 933.0096435546875,
+      "bottom_right_x": 276.79107666015625,
+      "bottom_right_y": 1079.6824951171875
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 0.0,
+      "top_left_y": 274.656494140625,
+      "bottom_right_x": 98.79983520507812,
+      "bottom_right_y": 458.2117919921875
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 717.455078125,
+      "top_left_y": 291.20318603515625,
+      "bottom_right_x": 803.884033203125,
+      "bottom_right_y": 473.74560546875
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 438.959716796875,
+      "top_left_y": 951.998046875,
+      "bottom_right_x": 532.47314453125,
+      "bottom_right_y": 1080.0
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 1494.99609375,
+      "top_left_y": 286.3668212890625,
+      "bottom_right_x": 1595.31884765625,
+      "bottom_right_y": 483.1517333984375
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 549.7470703125,
+      "top_left_y": 964.724365234375,
+      "bottom_right_x": 641.9520263671875,
+      "bottom_right_y": 1080.0
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 46.57728958129883,
+      "top_left_y": 939.4417724609375,
+      "bottom_right_x": 165.4048309326172,
+      "bottom_right_y": 1079.8494873046875
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 287.27301025390625,
+      "top_left_y": 940.697021484375,
+      "bottom_right_x": 387.48541259765625,
+      "bottom_right_y": 1080.0
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 0.0,
+      "top_left_y": 953.515380859375,
+      "bottom_right_x": 57.4383544921875,
+      "bottom_right_y": 1080.0
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 1789.4093017578125,
+      "top_left_y": 777.0565185546875,
+      "bottom_right_x": 1898.2886962890625,
+      "bottom_right_y": 974.44287109375
+    },
+    {
+      "cls": 1.0,
+      "top_left_x": 621.6221923828125,
+      "top_left_y": 132.94573974609375,
+      "bottom_right_x": 655.5897216796875,
+      "bottom_right_y": 166.6500244140625
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 213.66969299316406,
+      "top_left_y": 275.86041259765625,
+      "bottom_right_x": 315.881103515625,
+      "bottom_right_y": 451.77655029296875
+    },
+    {
+      "cls": 0.0,
+      "top_left_x": 119.80044555664062,
+      "top_left_y": 782.3104248046875,
+      "bottom_right_x": 336.91900634765625,
+      "bottom_right_y": 868.66015625
+    }
+  ],
+  "detected_translations": [
+    {
+      "translation_x": 77.12499351501465,
+      "translation_y": -77.14335479736329
+    }
+  ]
+}
