@@ -26,14 +26,13 @@ def video_to_frames(video_path, output_folder="frames", fps=7.5):
     vidcap.release()
 
 
-"""if __name__ == "__main__":
+if __name__ == "__main__":
     # Video dosya yolu
-    video_path = "/home/nurullah/İndirilenler/2021 Örnek Video.mp4"
-
+    video_path = "/home/nurullah/Masaüstü/TUYZ_2024_Ornek_Veri/TUYZ_2024_Ornek_Video.MP4"
     # Çıktı klasörü
-    output_folder = "frames"
+    output_folder = "frames_2024"
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
     # Videoyu frame'lere ayır
-    video_to_frames(video_path, output_folder)"""
+    video_to_frames(video_path, output_folder)

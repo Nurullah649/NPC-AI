@@ -1,12 +1,12 @@
 task: detect
 mode: train
-model: /home/nurullah/Masaüstü/NPC-AI/runs/detect/train/weights/best.pt
-data: /home/nurullah/Masaüstü/NPC-AI/config.yaml
-epochs: 1
+model: runs/detect/train/weights/best.pt
+data: config.yaml
+epochs: 25
 time: null
 patience: 100
-batch: 16
-imgsz: 640
+batch: -1
+imgsz: 1920
 save: true
 save_period: -1
 cache: false
@@ -38,7 +38,7 @@ split: val
 save_json: false
 save_hybrid: false
 conf: null
-iou: 0.7
+iou: 0.6
 max_det: 300
 half: false
 dnn: false
@@ -94,6 +94,7 @@ shear: 0.0
 perspective: 0.0
 flipud: 0.0
 fliplr: 0.5
+bgr: 0.0
 mosaic: 1.0
 mixup: 0.0
 copy_paste: 0.0
@@ -102,4 +103,4 @@ erasing: 0.4
 crop_fraction: 1.0
 cfg: null
 tracker: botsort.yaml
-save_dir: /home/nurullah/Masaüstü/NPC-AI/runs/detect/train
+save_dir: runs/detect/train
