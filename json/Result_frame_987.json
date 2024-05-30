@@ -1,0 +1,77 @@
+{
+  "id": "frame_987",
+  "user": "NPC-AI",
+  "frame": "frame_987",
+  "detected_objects": [
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 210.05636596679688,
+      "top_left_y": 415.94415283203125,
+      "bottom_right_x": 391.0242614746094,
+      "bottom_right_y": 502.7025146484375
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 1021.250244140625,
+      "top_left_y": 816.684814453125,
+      "bottom_right_x": 1120.0185546875,
+      "bottom_right_y": 1023.0731201171875
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 1615.958251953125,
+      "top_left_y": 342.0078125,
+      "bottom_right_x": 1689.223388671875,
+      "bottom_right_y": 375.765869140625
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 1644.137451171875,
+      "top_left_y": 815.611572265625,
+      "bottom_right_x": 1716.65185546875,
+      "bottom_right_y": 852.195068359375
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 1724.355224609375,
+      "top_left_y": 253.0635986328125,
+      "bottom_right_x": 1803.31689453125,
+      "bottom_right_y": 289.99755859375
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 1732.4140625,
+      "top_left_y": 294.0205993652344,
+      "bottom_right_x": 1804.008544921875,
+      "bottom_right_y": 332.4078063964844
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 1495.011962890625,
+      "top_left_y": 332.42877197265625,
+      "bottom_right_x": 1557.539794921875,
+      "bottom_right_y": 366.33441162109375
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 1671.3245849609375,
+      "top_left_y": 687.2901000976562,
+      "bottom_right_x": 1706.1024169921875,
+      "bottom_right_y": 709.1845092773438
+    }
+  ],
+  "detected_translations": [
+    {
+      "translation_x": 63.285133361816406,
+      "translation_y": 117.34375762939453
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "frame_2428",
+  "user": "NPC-AI",
+  "frame": "frame_2428",
+  "detected_objects": [
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 510.60821533203125,
+      "top_left_y": 597.6472778320312,
+      "bottom_right_x": 535.0421752929688,
+      "bottom_right_y": 623.5889282226562
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 20.242881774902344,
+      "top_left_y": 581.95947265625,
+      "bottom_right_x": 72.28728485107422,
+      "bottom_right_y": 609.3134765625
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 16.961942672729492,
+      "top_left_y": 454.7134094238281,
+      "bottom_right_x": 68.22006225585938,
+      "bottom_right_y": 477.0555725097656
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 312.9757995605469,
+      "top_left_y": 456.10626220703125,
+      "bottom_right_x": 354.8176574707031,
+      "bottom_right_y": 482.84307861328125
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 187.38174438476562,
+      "top_left_y": 73.99949645996094,
+      "bottom_right_x": 221.928466796875,
+      "bottom_right_y": 94.53408813476562
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 115.14952087402344,
+      "top_left_y": 639.8572387695312,
+      "bottom_right_x": 153.58631896972656,
+      "bottom_right_y": 663.9354858398438
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 432.7225341796875,
+      "top_left_y": 79.11624145507812,
+      "bottom_right_x": 465.6767578125,
+      "bottom_right_y": 109.64476013183594
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 0.1056671142578125,
+      "top_left_y": 857.3494262695312,
+      "bottom_right_x": 37.58604431152344,
+      "bottom_right_y": 883.7993774414062
+    }
+  ],
+  "detected_translations": [
+    {
+      "translation_x": -40.3643253326416,
+      "translation_y": -13.438943481445312
+    }
+  ]
+}

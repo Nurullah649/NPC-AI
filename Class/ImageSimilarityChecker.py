@@ -56,9 +56,9 @@ class ImageSimilarityChecker:
         ref_feature_vector = self.get_feature_vector(ref_image)
         compared_feature_vector = self.get_feature_vector(binary_image)
         similarity_score = self.similarity(ref_feature_vector, compared_feature_vector)
-        image = Image.open(image_path)
-        draw = ImageDraw.Draw(image)
-        font = ImageFont.truetype("content/ARIALBD.TTF", 45)  # Yazı tipi ve boyutu ayarla
+        #image = Image.open(image_path)
+        #draw = ImageDraw.Draw(image)
+        #font = ImageFont.truetype("content/ARIALBD.TTF", 45)  # Yazı tipi ve boyutu ayarla
         if class_id == 2:
             print(Fore.CYAN)
             print(f"UAP Similarity score: {similarity_score}")

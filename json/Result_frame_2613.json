@@ -1,0 +1,93 @@
+{
+  "id": "frame_2613",
+  "user": "NPC-AI",
+  "frame": "frame_2613",
+  "detected_objects": [
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 1740.5048828125,
+      "top_left_y": 528.9407958984375,
+      "bottom_right_x": 1785.75732421875,
+      "bottom_right_y": 550.9312744140625
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 1430.251220703125,
+      "top_left_y": 189.52154541015625,
+      "bottom_right_x": 1459.732666015625,
+      "bottom_right_y": 211.95877075195312
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 917.6395263671875,
+      "top_left_y": 100.11415100097656,
+      "bottom_right_x": 949.3726806640625,
+      "bottom_right_y": 129.73721313476562
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 771.2373046875,
+      "top_left_y": 351.24981689453125,
+      "bottom_right_x": 802.0775146484375,
+      "bottom_right_y": 379.64849853515625
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 681.0565795898438,
+      "top_left_y": 355.82989501953125,
+      "bottom_right_x": 702.4778442382812,
+      "bottom_right_y": 386.45758056640625
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 880.3565063476562,
+      "top_left_y": 178.99264526367188,
+      "bottom_right_x": 910.2802124023438,
+      "bottom_right_y": 210.15078735351562
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 855.46240234375,
+      "top_left_y": 490.94720458984375,
+      "bottom_right_x": 880.69189453125,
+      "bottom_right_y": 522.9823608398438
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 1098.697998046875,
+      "top_left_y": 216.12799072265625,
+      "bottom_right_x": 1118.45849609375,
+      "bottom_right_y": 242.54684448242188
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 1115.616455078125,
+      "top_left_y": 258.24676513671875,
+      "bottom_right_x": 1143.910888671875,
+      "bottom_right_y": 279.04315185546875
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 1236.317138671875,
+      "top_left_y": 350.3485412597656,
+      "bottom_right_x": 1264.968994140625,
+      "bottom_right_y": 366.7151794433594
+    }
+  ],
+  "detected_translations": [
+    {
+      "translation_x": -70.67112312316894,
+      "translation_y": -20.160018157958984
+    }
+  ]
+}

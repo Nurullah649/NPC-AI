@@ -1,0 +1,29 @@
+{
+  "id": "frame_922",
+  "user": "NPC-AI",
+  "frame": "frame_922",
+  "detected_objects": [
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 369.4283447265625,
+      "top_left_y": 3.5281524658203125,
+      "bottom_right_x": 464.331787109375,
+      "bottom_right_y": 184.10308837890625
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 690.447509765625,
+      "top_left_y": 256.87872314453125,
+      "bottom_right_x": 722.1201171875,
+      "bottom_right_y": 291.79119873046875
+    }
+  ],
+  "detected_translations": [
+    {
+      "translation_x": 38.097216796875,
+      "translation_y": 116.04403839111328
+    }
+  ]
+}

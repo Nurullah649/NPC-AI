@@ -1,0 +1,149 @@
+{
+  "id": "frame_1886",
+  "user": "NPC-AI",
+  "frame": "frame_1886",
+  "detected_objects": [
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 1390.5537109375,
+      "top_left_y": 239.3302459716797,
+      "bottom_right_x": 1623.69189453125,
+      "bottom_right_y": 337.53057861328125
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 683.6972045898438,
+      "top_left_y": 343.928955078125,
+      "bottom_right_x": 868.6892700195312,
+      "bottom_right_y": 434.44769287109375
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 433.40899658203125,
+      "top_left_y": 617.5694580078125,
+      "bottom_right_x": 536.9795532226562,
+      "bottom_right_y": 826.7806396484375
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 370.225830078125,
+      "top_left_y": 181.26651000976562,
+      "bottom_right_x": 593.38720703125,
+      "bottom_right_y": 271.9290466308594
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 322.6556396484375,
+      "top_left_y": 633.4163818359375,
+      "bottom_right_x": 424.1444091796875,
+      "bottom_right_y": 850.6656494140625
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 921.0172119140625,
+      "top_left_y": 196.3302001953125,
+      "bottom_right_x": 1119.623779296875,
+      "bottom_right_y": 286.3873596191406
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 147.72201538085938,
+      "top_left_y": 178.94683837890625,
+      "bottom_right_x": 337.3290100097656,
+      "bottom_right_y": 274.26910400390625
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 209.60589599609375,
+      "top_left_y": 615.5318603515625,
+      "bottom_right_x": 320.8023681640625,
+      "bottom_right_y": 818.7520751953125
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 547.8604736328125,
+      "top_left_y": 620.9424438476562,
+      "bottom_right_x": 647.1231689453125,
+      "bottom_right_y": 839.1123657226562
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 785.684814453125,
+      "top_left_y": 624.0810546875,
+      "bottom_right_x": 881.24951171875,
+      "bottom_right_y": 822.1937255859375
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 1641.476318359375,
+      "top_left_y": 240.0794677734375,
+      "bottom_right_x": 1870.511962890625,
+      "bottom_right_y": 338.8084716796875
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 0.258056640625,
+      "top_left_y": 597.6593017578125,
+      "bottom_right_x": 102.26075744628906,
+      "bottom_right_y": 809.8387451171875
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 674.509033203125,
+      "top_left_y": 625.4329833984375,
+      "bottom_right_x": 769.1258544921875,
+      "bottom_right_y": 842.4775390625
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 99.80709075927734,
+      "top_left_y": 613.4076538085938,
+      "bottom_right_x": 214.23959350585938,
+      "bottom_right_y": 800.3396606445312
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 899.62939453125,
+      "top_left_y": 658.3843994140625,
+      "bottom_right_x": 991.140380859375,
+      "bottom_right_y": 875.4437255859375
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 1006.555419921875,
+      "top_left_y": 651.811767578125,
+      "bottom_right_x": 1094.49462890625,
+      "bottom_right_y": 852.98046875
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 319.1205139160156,
+      "top_left_y": 557.6078491210938,
+      "bottom_right_x": 366.7197570800781,
+      "bottom_right_y": 592.2813110351562
+    }
+  ],
+  "detected_translations": [
+    {
+      "translation_x": 7.128852462768554,
+      "translation_y": -76.24402313232422
+    }
+  ]
+}

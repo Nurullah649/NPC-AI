@@ -5,7 +5,7 @@ matplotlib.use('GTK3Cairo')
 
 
 # Verileri okuma ve listelere ayırma
-with open('/home/nurullah/Masaüstü/NPC-AI/Class/Sonuc2.txt', 'r') as file:
+with open('/home/nurullah/Desktop/NPC-AI/Sonuc2.txt', 'r') as file:
     data = file.readlines()
 
 x_values = []

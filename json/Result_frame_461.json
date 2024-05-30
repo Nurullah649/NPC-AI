@@ -1,0 +1,21 @@
+{
+  "id": "frame_461",
+  "user": "NPC-AI",
+  "frame": "frame_461",
+  "detected_objects": [
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 1638.9287109375,
+      "top_left_y": 964.3129272460938,
+      "bottom_right_x": 1677.111328125,
+      "bottom_right_y": 992.2769165039062
+    }
+  ],
+  "detected_translations": [
+    {
+      "translation_x": -1.016229248046875,
+      "translation_y": 48.67048034667969
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "frame_824",
+  "user": "NPC-AI",
+  "frame": "frame_824",
+  "detected_objects": [
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 1557.95654296875,
+      "top_left_y": 297.8106994628906,
+      "bottom_right_x": 1778.72509765625,
+      "bottom_right_y": 389.0510559082031
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 1560.587646484375,
+      "top_left_y": 955.798828125,
+      "bottom_right_x": 1650.843994140625,
+      "bottom_right_y": 1078.4951171875
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 1601.203857421875,
+      "top_left_y": 198.11929321289062,
+      "bottom_right_x": 1659.763427734375,
+      "bottom_right_y": 234.35284423828125
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 296.610595703125,
+      "top_left_y": 511.992431640625,
+      "bottom_right_x": 354.5513916015625,
+      "bottom_right_y": 541.8271484375
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 283.11602783203125,
+      "top_left_y": 121.52175903320312,
+      "bottom_right_x": 322.871826171875,
+      "bottom_right_y": 150.239013671875
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 437.58062744140625,
+      "top_left_y": 537.7103271484375,
+      "bottom_right_x": 489.84796142578125,
+      "bottom_right_y": 561.2344970703125
+    },
+    {
+      "cls": 1,
+      "landing_status": -1,
+      "top_left_x": 312.2473449707031,
+      "top_left_y": 554.29248046875,
+      "bottom_right_x": 358.4040832519531,
+      "bottom_right_y": 579.8487548828125
+    },
+    {
+      "cls": 0,
+      "landing_status": -1,
+      "top_left_x": 268.490966796875,
+      "top_left_y": 158.29098510742188,
+      "bottom_right_x": 313.1385498046875,
+      "bottom_right_y": 185.47586059570312
+    }
+  ],
+  "detected_translations": [
+    {
+      "translation_x": 8.141763305664062,
+      "translation_y": 113.27666473388672
+    }
+  ]
+}
