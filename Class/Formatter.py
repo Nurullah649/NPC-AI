@@ -1,9 +1,10 @@
 import cv2
 import os
 
+import predict_with_server
 from Class.Positioning import CameraMovementTracker
 import json
-from Class import ImageSimilarityChecker
+from Class import ImageSimilarityChecker,Does_it_intersect
 import re
 
 tracker = CameraMovementTracker()
@@ -12,6 +13,17 @@ detected_objects = []
 
 # UAP ve UAI inilebilir kontrolü yapacak olan modelin oluşturulması
 image_similarity_checker = ImageSimilarityChecker.ImageSimilarityChecker()
+
+
+def extract_number_from_url(url):
+    # URL'deki sayıyı aramak için regex deseni
+    pattern = re.compile(r'\d+')
+    match = pattern.search(url)
+
+    if match:
+        return match.group(0)  # Eşleşen sayıyı döndür
+    else:
+        return None  # Eğer sayı bulunamazsa None döndür
 def formatter(results,path,data,name):
     tracker.process_frame(cv2.imread(path))
     print(tracker.get_positions())
@@ -19,15 +31,17 @@ def formatter(results,path,data,name):
     # Algılanan nesnelerin JSON formatına dönüştürüleceği listeyi oluştur
     detected_objects_json = []
     for result in results:
-        for r in result.boxes.data.tolist():
-            x1, y1, x2, y2, score, class_id = r
+        objects=result.boxes.data.tolist()
+        for i in range(0,1,len(objects)):
+            x1, y1, x2, y2, score, class_id, id = objects[i]
+            print(objects[i])
             obj = {
-                "cls": "/".join(data["url"].split("/")[:3]) + f"/classes/{int(class_id)}/",
+                "cls": "/".join(data["frame_data"]["url"].split("/")[:3]) + f"/classes/{int(class_id)}/",
                 "landing_status": None,
-                "top_left_x": str(x1),
-                "top_left_y": str(y1),
-                "bottom_right_x": str(x2),
-                "bottom_right_y": str(y2)
+                "top_left_x": x1,
+                "top_left_y": y1,
+                "bottom_right_x": x2,
+                "bottom_right_y": y2
             }
             if class_id == 3 or class_id == 2:
                 if image_similarity_checker.control(x1=x1, y1=y1, x2=x2, y2=y2, image_path=os.path.join(path),class_id=class_id):
@@ -40,17 +54,21 @@ def formatter(results,path,data,name):
             detected_objects_json.append(obj)
 
     # Algılanan çevirilerin JSON formatına dönüştürüleceği listeyi oluştur
-    if data["health_status"] == "0":
+    if data["trasnlation_data"]["health_status"] == "0":
         translation = tracker.get_positions().tolist()  # Get the current position
         x, y = translation  # Unpack the translation
     else:
         x, y = data["translation_x"], data["translation_y"]
-
+    detected_translation = {
+        "x": x,
+        "y": y
+    }
     json_data = {
-        "frame": data["image_url"],
+        "id": extract_number_from_url(data["frame_data"]["url"]),
+        "user": predict_with_server.USER_URL,
+        "frame": f"{data['frame_data']['image_url']}",
         "detected_objects": detected_objects_json,
-        "translation_x": x,
-        "translation_y": y
+        "detected_translation": detected_translation
     }
     if not os.path.exists("json"):
         os.makedirs("json")

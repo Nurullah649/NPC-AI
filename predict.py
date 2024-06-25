@@ -18,7 +18,7 @@ def main(frames,model):
         # Resim ön işleme
         image_path = Process_image.process_image(os.path.join(path, img), desktop_path)
         # Model Predicti
-        results = model.predict(
+        results = model.track(
             source=image_path,
             conf=0.4,
             data=train_yaml,
@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     # Model konfigürasyon dosyası ve Model konumu
     train_yaml = "content/config.yaml"
-    v10_model_path='/home/nurullah/Masaüstü/train8/weights/best.pt'
+    v10_model_path='/home/nurullah/Masaüstü/NPC-AI/runs/detect/yolov10-1920/weights/best.pt'
     model_path = "runs/detect/train9/weights/best.pt"
     # Modeli oluşturun
     model = YOLO(model=model_path) # Pretrained model path

@@ -1,24 +1,25 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.use('GTK3Cairo')
+
 
 
 # Verileri okuma ve listelere ayırma
-with open('/home/nurullah/Desktop/NPC-AI/Sonuc2.txt', 'r') as file:
+with open('kesin_sonuc', 'r') as file:
     data = file.readlines()
 
 x_values = []
 y_values = []
+deger = ""
 
 for line in data:
     # Her satırın boşluklarını kaldırma ve parantezleri temizleme
-    line = line.strip().strip('[]')
+    #line = line.strip().strip('[]')
     # Satırı boşluklara göre bölme
     values = line.split(",")
     # Eğer satırda 2 değer varsa, x ve y değerlerini al
-    if len(values) == 2:
-        x, y = map(float, values)
+    if len(values) == 3:
+        x, y, deger = values
         x_values.append(x)
         y_values.append(y)
 
