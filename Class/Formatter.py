@@ -9,6 +9,7 @@ import re
 
 tracker = CameraMovementTracker()
 detected_objects = []
+BASE_URL = "http://teknofest.cezerirobot.com:1025/"
 
 
 # UAP ve UAI inilebilir kontrolü yapacak olan modelin oluşturulması
@@ -33,10 +34,10 @@ def formatter(results,path,data,name):
     for result in results:
         objects=result.boxes.data.tolist()
         for i in range(0,1,len(objects)):
-            x1, y1, x2, y2, score, class_id, id = objects[i]
+            x1, y1, x2, y2, score, class_id = objects[i]
             print(objects[i])
             obj = {
-                "cls": "/".join(data["frame_data"]["url"].split("/")[:3]) + f"/classes/{int(class_id)}/",
+                "cls": f"{BASE_URL}classes/{str(int(class_id+1))}/",
                 "landing_status": None,
                 "top_left_x": x1,
                 "top_left_y": y1,
@@ -54,21 +55,22 @@ def formatter(results,path,data,name):
             detected_objects_json.append(obj)
 
     # Algılanan çevirilerin JSON formatına dönüştürüleceği listeyi oluştur
-    if data["trasnlation_data"]["health_status"] == "0":
+    if data["translation_data"]["health_status"] == "0":
         translation = tracker.get_positions().tolist()  # Get the current position
         x, y = translation  # Unpack the translation
     else:
-        x, y = data["translation_x"], data["translation_y"]
-    detected_translation = {
-        "x": x,
-        "y": y
+        x, y = data["translation_data"]["translation_x"], data["translation_data"]["translation_y"]
+    detected_translation = [{
+        "translation_x": x,
+        "translation_y": y
     }
+    ]
     json_data = {
         "id": extract_number_from_url(data["frame_data"]["url"]),
         "user": predict_with_server.USER_URL,
-        "frame": f"{data['frame_data']['image_url']}",
+        "frame": f"{data['frame_data']['url']}",
         "detected_objects": detected_objects_json,
-        "detected_translation": detected_translation
+        "detected_translations": detected_translation
     }
     if not os.path.exists("json"):
         os.makedirs("json")

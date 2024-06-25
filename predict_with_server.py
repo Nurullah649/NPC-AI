@@ -104,7 +104,7 @@ def get_frames_data(headers):
 
 # Helper function to download image
 def download_image(url,video_name,image_url, save_path):
-    full_image_url = f"{url}{video_name}{image_url}"
+    full_image_url = f"{BASE_URL}media{image_url}"
     logging.info(f"Downloading image from {full_image_url}...")
     response = requests.get(full_image_url)
     if response.status_code == 200:
@@ -140,7 +140,7 @@ def process_frames(headers, frames_data, translation_data):
         image_url = frame["image_url"]
         video_name = frame["video_name"]
         image_filename = os.path.basename(image_url)
-        save_path = os.path.join(FRAMES_DIR, f"{video_name}/{image_filename}")
+        save_path = os.path.join(FRAMES_DIR, f"frames/{image_filename}")
 
         # Download image
         try:
