@@ -28,31 +28,32 @@ def extract_number_from_url(url):
 def formatter(results,path,data,name):
     tracker.process_frame(cv2.imread(path))
     print(tracker.get_positions())
-
-    # Algılanan nesnelerin JSON formatına dönüştürüleceği listeyi oluştur
     detected_objects_json = []
-    for result in results:
-        objects=result.boxes.data.tolist()
-        for i in range(0,1,len(objects)):
-            x1, y1, x2, y2, score, class_id = objects[i]
-            print(objects[i])
-            obj = {
-                "cls": f"{BASE_URL}classes/{str(int(class_id+1))}/",
-                "landing_status": None,
-                "top_left_x": x1,
-                "top_left_y": y1,
-                "bottom_right_x": x2,
-                "bottom_right_y": y2
-            }
-            if class_id == 3 or class_id == 2:
-                if image_similarity_checker.control(x1=x1, y1=y1, x2=x2, y2=y2, image_path=os.path.join(path),class_id=class_id):
+    # Algılanan nesnelerin JSON formatına dönüştürüleceği listeyi oluştur
+    if results is None:
+        detected_objects_json.append(None)
+    else:
+        for result in results:
+            objects=result.boxes.data.tolist()
+            for r in objects:
+                x1, y1, x2, y2, score, class_id = r
+                obj = {
+                    "cls": f"{BASE_URL}classes/{str(int(class_id+1))}/",
+                    "landing_status": None,
+                    "top_left_x": x1,
+                    "top_left_y": y1,
+                    "bottom_right_x": x2,
+                    "bottom_right_y": y2
+                }
+                if class_id == 3 or class_id == 2:
+                    if image_similarity_checker.control(x1=x1, y1=y1, x2=x2, y2=y2, image_path=os.path.join(path),class_id=class_id):
 
-                    obj["landing_status"] = "1"
+                        obj["landing_status"] = "1"
+                    else:
+                        obj["landing_status"] = "0"
                 else:
-                    obj["landing_status"] = "0"
-            else:
-                obj["landing_status"] = "-1"
-            detected_objects_json.append(obj)
+                    obj["landing_status"] = "-1"
+                detected_objects_json.append(obj)
 
     # Algılanan çevirilerin JSON formatına dönüştürüleceği listeyi oluştur
     if data["translation_data"]["health_status"] == "0":

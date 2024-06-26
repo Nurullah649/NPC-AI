@@ -18,7 +18,7 @@ def main(frames,model):
         # Resim ön işleme
         image_path = Process_image.process_image(os.path.join(path, img), desktop_path)
         # Model Predicti
-        results = model.track(
+        results = model.predict(
             source=image_path,
             conf=0.4,
             data=train_yaml,
@@ -27,7 +27,7 @@ def main(frames,model):
             
 
         )
-        positions.append(Formatter.formatter(results=results,path=path))
+
         end_for_time = time.time()
         elapsed_for_time = (end_for_time - start_for_time) * 1000
         print(Fore.GREEN + f"Total execution time: {elapsed_for_time} milliseconds" + Style.RESET_ALL)
@@ -40,13 +40,13 @@ if __name__ == "__main__":
     desktop_path = os.path.join(expanduser("~"), "Masaüstü")
     # Kaynak Lokasyonu Belirtin
     # path=  "/home/nurullah/İndirilenler/TEKNOFEST UYZ 2022 Verileri/Oturum_2-006/lmtdnswenfjtylbjd_VY2_4"
-    path = "/home/nurullah/Masaüstü/Teknofest UYZ 2021 Etiketli Veriler/Teknofest_UYZ2021_Video1_1/ljfgpemcvkmuadhxabwn_V1_1"
+    path = "/home/nurullah/Masaüstü/tekno_server/tekno_server/frames1/"
     # Dosya konumundan görsellerin sırayla çekilmesi
     frames = sorted(os.listdir(path), key=lambda x: int(x.split('_')[1].split('.')[0]))
 
     # Model konfigürasyon dosyası ve Model konumu
     train_yaml = "content/config.yaml"
-    v10_model_path='/home/nurullah/Masaüstü/NPC-AI/runs/detect/yolov10-1920/weights/best.pt'
+    v10_model_path='/home/nurullah/Masaüstü/yolov10x-1088/best.pt'
     model_path = "runs/detect/train9/weights/best.pt"
     # Modeli oluşturun
     model = YOLO(model=model_path) # Pretrained model path
