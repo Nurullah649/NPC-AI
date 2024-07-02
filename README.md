@@ -2,6 +2,7 @@
     Teknofest bünyesinde yapılan bu yarışma için oluşturulmuş bu deponun amacı yarışmaya yeni katılacak insanlara yardımcı olmaktır.
     Bu depoda yarışma hakkında bilgiler, yarışma için gerekli olan kaynaklar ve yarışma için temel gereksinimlerin tamamı bulunmaktadır.
 # Deponun İçeriği
+
     Eğitilmiş V10X(imgsz=1920)/Eğitilmiş V10X(imgsz=1080)
     Eğitilmiş V10B(imgsz=1920)/Eğitilmiş V10B(imgsz=1080)
     Yolo'nun versiyon 10'una kadar olan her modeli custom data setiniz ile eğitebilmeniz için requirements.txt'si
@@ -30,16 +31,16 @@
 # Eğitimi Başlatmak İçin:
     Şimdide Ana klasördeki content Klasörünü açın ve bir adet Config.yaml dosyası oluşturun ve içine aşağıdaki gibi bilgileri girin:
         path: /path/to/data_set
-                    # Path klasörünün içinde bulunan train ve val eğer bu şekilde çalışmaz ve hata verirse klasörlerin tam konumunu yazınız
-                    train: /train_data_Set
-                    val:   /val_data_set
-                    # İsteğe ve kullanılacak veri setine göre daha fazla class ekleyebilirsiniz
-                    nc: 4
-                    names:
-                        - Araba
-                        - Insan
-                        - UAP
-                        - UAI
+        # Path klasörünün içinde bulunan train ve val eğer bu şekilde çalışmaz ve hata verirse klasörlerin tam konumunu yazınız
+        train: /train_data_Set
+        val:   /val_data_set
+        # İsteğe ve kullanılacak veri setine göre daha fazla class ekleyebilirsiniz
+        nc: 4
+        names:
+            - Araba
+            - Insan
+            - UAP
+            - UAI
         
             
 # Biz Kimiz
