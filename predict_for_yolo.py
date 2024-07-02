@@ -12,9 +12,9 @@ from Class import Formatter_for_yolo
 from Class import Process_image
 
 
+
 def main(frames,model):
     global positions
-
     for img in frames:
         # Başlangıç zamanı kontrolü
         start_for_time = time.time()
@@ -41,13 +41,14 @@ if __name__ == "__main__":
     desktop_path = os.path.join(expanduser("~"), "Masaüstü")
     # Kaynak Lokasyonu Belirtin
     # path=  "/home/nurullah/İndirilenler/TEKNOFEST UYZ 2022 Verileri/Oturum_2-006/lmtdnswenfjtylbjd_VY2_4"
-    path = "/home/nurullah/Masaüstü/tekno_server/tekno_server/frames1/"
+    path = "/home/nurullah/Masaüstü/iptal olan oturum/downloaded_frames/frames/2024_TUYZ_Online_Yarisma_Ana/"
     # Dosya konumundan görsellerin sırayla çekilmesi
     frames = sorted(os.listdir(path), key=lambda x: int(x.split('_')[1].split('.')[0]))
 
     # Model konfigürasyon dosyası ve Model konumu
     train_yaml = "content/config.yaml"
-    v10_model_path='/home/nurullah/Masaüstü/yolov10x-1920/best.pt'
+    v10_model_path="runs/detect/yolov10-1920/weights/best.pt"
+    v10X_model_path='/home/nurullah/Masaüstü/yolov10x-1920/best.pt'
     model_path = "runs/detect/train9/weights/best.pt"
     # Modeli oluşturun
     model = YOLO(model=model_path) # Pretrained model path

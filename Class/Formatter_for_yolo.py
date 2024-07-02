@@ -25,7 +25,7 @@ def formatter(results,path,name):
             for r in objects:
                 x1, y1, x2, y2, score, class_id = r
                 obj = {
-                    "cls": f"{str(int(class_id+1))}/",
+                    "cls": f"{str(int(class_id))}",
                     "landing_status": None,
                     "top_left_x": x1,
                     "top_left_y": y1,
