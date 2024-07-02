@@ -1,0 +1,12 @@
+{
+  "id": "201",
+  "user": "http://teknofest.cezerirobot.com:1025/users/ailabnpcai/",
+  "frame": "http://teknofest.cezerirobot.com/frames/201/",
+  "detected_objects": [],
+  "detected_translations": [
+    {
+      "translation_x": "101.40240169489816",
+      "translation_y": "-13.04719517701435"
+    }
+  ]
+}

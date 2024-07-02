@@ -1,0 +1,45 @@
+{
+  "id": "305",
+  "user": "http://teknofest.cezerirobot.com:1025/users/ailabnpcai/",
+  "frame": "http://teknofest.cezerirobot.com/frames/305/",
+  "detected_objects": [
+    {
+      "cls": "http://teknofest.cezerirobot.com:1025/classes/1/",
+      "landing_status": "-1",
+      "top_left_x": 0.0,
+      "top_left_y": 396.28875732421875,
+      "bottom_right_x": 291.6446228027344,
+      "bottom_right_y": 561.7821044921875
+    },
+    {
+      "cls": "http://teknofest.cezerirobot.com:1025/classes/1/",
+      "landing_status": "-1",
+      "top_left_x": 0.0,
+      "top_left_y": 78.92438507080078,
+      "bottom_right_x": 337.12091064453125,
+      "bottom_right_y": 248.7984619140625
+    },
+    {
+      "cls": "http://teknofest.cezerirobot.com:1025/classes/1/",
+      "landing_status": "-1",
+      "top_left_x": 0.0,
+      "top_left_y": 744.9072265625,
+      "bottom_right_x": 366.293701171875,
+      "bottom_right_y": 901.89306640625
+    },
+    {
+      "cls": "http://teknofest.cezerirobot.com:1025/classes/1/",
+      "landing_status": "-1",
+      "top_left_x": 0.0,
+      "top_left_y": 744.7197265625,
+      "bottom_right_x": 364.92291259765625,
+      "bottom_right_y": 903.1600341796875
+    }
+  ],
+  "detected_translations": [
+    {
+      "translation_x": "158.75591713086834",
+      "translation_y": "-21.001018819141805"
+    }
+  ]
+}

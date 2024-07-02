@@ -20,11 +20,9 @@ def main(frames,model):
         # Model Predicti
         results = model.predict(
             source=image_path,
-            conf=0.4,
             data=train_yaml,
             save=True,
             save_txt=True,
-            
 
         )
 
@@ -46,7 +44,7 @@ if __name__ == "__main__":
 
     # Model konfigürasyon dosyası ve Model konumu
     train_yaml = "content/config.yaml"
-    v10_model_path='/home/nurullah/Masaüstü/yolov10x-1088/best.pt'
+    v10_model_path='/home/nurullah/Masaüstü/yolov10x-1920/best.pt'
     model_path = "runs/detect/train9/weights/best.pt"
     # Modeli oluşturun
     model = YOLO(model=model_path) # Pretrained model path

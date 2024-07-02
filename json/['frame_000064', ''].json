@@ -1,0 +1,21 @@
+{
+  "id": "17",
+  "user": "http://teknofest.cezerirobot.com:1025/users/ailabnpcai/",
+  "frame": "http://teknofest.cezerirobot.com/frames/17/",
+  "detected_objects": [
+    {
+      "cls": "http://teknofest.cezerirobot.com:1025/classes/4/",
+      "landing_status": "1",
+      "top_left_x": 1629.175048828125,
+      "top_left_y": 360.28826904296875,
+      "bottom_right_x": 1841.126220703125,
+      "bottom_right_y": 565.8024291992188
+    }
+  ],
+  "detected_translations": [
+    {
+      "translation_x": "0.1054657023496132",
+      "translation_y": "0.0861227205589862"
+    }
+  ]
+}

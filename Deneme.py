@@ -13,8 +13,8 @@ with open(input_file_path, 'r', encoding='utf-8') as file:
 for line in lines:
     match = re.search(r'Geçerli pozisyon: \(([^,]+), ([^\)]+)\)', line)
     if match:
-        x = float(match.group(1))
-        y = float(match.group(2))
+        x = float(match.group(1)) * -25
+        y = float(match.group(2)) * -25
         coordinates.append((x, y))
 
 # Koordinatları ayır
@@ -32,4 +32,5 @@ plt.ylabel('Y Koordinatı')
 
 # Grafiği göster
 plt.grid(True)
+plt.savefig('Sonuc.png')
 plt.show()

@@ -9,6 +9,7 @@ from PIL import Image
 import torchvision.transforms as transforms
 import torchvision.models as models
 from sklearn.metrics.pairwise import cosine_similarity
+from torchvision.models import ResNet18_Weights
 
 score=0.80
 class ImageSimilarityChecker:
@@ -18,7 +19,7 @@ class ImageSimilarityChecker:
 
     def load_model(self, model_name):
         if model_name == 'resnet18':
-            model = models.resnet18(pretrained=True)
+            model = models.resnet18(weights=ResNet18_Weights.DEFAULT)
             model = torch.nn.Sequential(*(list(model.children())[:-1]))
             model.eval()
             return model

@@ -1,0 +1,3 @@
+2024-06-29 16:17:25,617 - INFO - Authentication successful
+2024-06-29 16:17:25,617 - INFO - Fetching new translation data...
+2024-06-29 16:17:32,243 - INFO - Data saved to ./downloaded_frames/translation.json

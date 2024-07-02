@@ -10,9 +10,6 @@ from colorama import Fore, Style
 from pathlib import Path
 from datetime import datetime
 
-# Loglama ayarları
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
 # Configurations
 BASE_URL = "http://teknofest.cezerirobot.com:1025/"
 AUTH_URL = f"{BASE_URL}auth/"
@@ -24,123 +21,133 @@ PASSWORD = "gUzm1vDdUsFx"
 USER_URL = f"{BASE_URL}users/{USERNAME}/"
 FRAMES_DIR = "./downloaded_frames/"
 DESKTOP_PATH = os.path.join(expanduser("~"), "Masaüstü")
+V10X_MODEL_PATH = '/home/nurullah/Masaüstü/yolov10x-1920/best.pt'
 V10_MODEL_PATH = 'runs/detect/yolov10-1920/weights/best.pt'
 MAX_WAIT_TIME = 60
 
 # Initialize model
-model = YOLOv10(V10_MODEL_PATH)
+model = YOLOv10(V10X_MODEL_PATH)
+
 
 def configure_logger(team_name):
     log_folder = "./_logs/"
     Path(log_folder).mkdir(parents=True, exist_ok=True)
     log_filename = datetime.now().strftime(log_folder + team_name + '_%Y_%m_%d__%H_%M_%S_%f.log')
-    logging.basicConfig(filename=log_filename, level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    log_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 
-def authenticate():
+    file_handler = logging.FileHandler(log_filename)
+    file_handler.setFormatter(log_formatter)
+    file_handler.setLevel(logging.INFO)
+
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(log_formatter)
+    console_handler.setLevel(logging.INFO)
+
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
+
+    return logger
+
+
+def authenticate(logger):
     auth_data = {"username": USERNAME, "password": PASSWORD}
     response = requests.post(AUTH_URL, data=auth_data)
     if response.status_code != 200:
-        logging.error("Authentication failed")
+        logger.error("Authentication failed")
         raise Exception("Authentication failed")
     token = response.json()["token"]
-    logging.info("Authentication successful")
+    logger.info("Authentication successful")
     return {"Authorization": f"Token {token}"}
 
-def get_data(path, url, headers):
+
+def get_data(path, url, headers, logger):
     wait_time = 1
     while True:
         response = requests.get(url, headers=headers)
         if response.status_code == 429:
-            logging.warning("Too many requests, need to wait")
+            logger.warning("Too many requests, need to wait")
             time.sleep(wait_time)
             wait_time = min(wait_time * 2, MAX_WAIT_TIME)
         elif response.status_code == 200:
             data = response.json()
             with open(path, "w") as f:
                 json.dump(data, f, indent=4)
-            logging.info(f"Data saved to {path}")
+            logger.info(f"Data saved to {path}")
             return data
         else:
-            logging.error("Failed to get data")
+            logger.error("Failed to get data")
             raise Exception("Failed to get data")
 
-def get_frames_data(headers):
+
+def get_frames_data(headers, logger):
     frames_json_path = os.path.join(FRAMES_DIR, "frames.json")
     translation_json_path = os.path.join(FRAMES_DIR, "translation.json")
 
     if os.path.exists(frames_json_path) and os.path.exists(translation_json_path):
-        logging.info("Loading existing data...")
+        logger.info("Loading existing data...")
         with open(frames_json_path, "r") as f:
             frames_data = json.load(f)
         with open(translation_json_path, "r") as f:
             translation_data = json.load(f)
     else:
         if not os.path.exists(frames_json_path):
-            logging.info("Fetching new frames data...")
-            frames_data = get_data(frames_json_path, FRAMES_URL, headers)
+            logger.info("Fetching new frames data...")
+            frames_data = get_data(frames_json_path, FRAMES_URL, headers, logger)
         if not os.path.exists(translation_json_path):
-            logging.info("Fetching new translation data...")
-            translation_data = get_data(translation_json_path, TRANSLATION_URL, headers)
+            logger.info("Fetching new translation data...")
+            translation_data = get_data(translation_json_path, TRANSLATION_URL, headers, logger)
 
     return frames_data, translation_data
 
-def download_image(image_url, save_path):
+
+def download_image(image_url, save_path, logger):
     full_image_url = f"{BASE_URL}media{image_url}"
-    logging.info(f"Downloading image from {full_image_url}...")
+    logger.info(f"Downloading image from {full_image_url}...")
     response = requests.get(full_image_url)
     if response.status_code == 200:
         with open(save_path, "wb") as f:
             f.write(response.content)
-        logging.info(f"Image saved to {save_path}")
+        logger.info(f"Image saved to {save_path}")
     else:
-        logging.error(f"Failed to download image: {full_image_url}")
+        logger.error(f"Failed to download image: {full_image_url}")
         raise Exception(f"Failed to download image: {full_image_url}")
 
-def send_prediction(headers, prediction_data):
-    logging.info(f"Sending prediction for frame {prediction_data['frame']}...")
+
+def send_prediction(headers, prediction_data, logger):
+    logger.info(f"Sending prediction for frame {prediction_data['frame']}...")
     response = requests.post(PREDICTION_URL, headers=headers, json=prediction_data)
     if response.status_code == 429:
-        logging.warning("Too many requests, need to wait")
+        logger.warning("Too many requests, need to wait")
         return False
     elif response.status_code >= 500:
-        logging.error(f"Server error: {response.status_code}")
+        logger.error(f"Server error: {response.status_code}")
         return False
     elif response.status_code != 201:
-        logging.error(f"Failed to send prediction: {response.json()}")
+        logger.error(f"Failed to send prediction: {response.json()}")
         raise Exception(f"Failed to send prediction: {response.json()}")
-    logging.info("Prediction sent successfully")
+    logger.info("Prediction sent successfully")
     return True
 
-def remove_data(translation_data, frames_data, translation, frame):
-    translation_data.remove(translation)
-    frames_data.remove(frame)
-    with open(os.path.join(FRAMES_DIR, "frames.json"), "w") as f:
-        json.dump(frames_data, f, indent=4)
-    logging.info(f"Frame {frame['image_url']} removed from frames.json")
-    with open(os.path.join(FRAMES_DIR, "translation.json"), "w") as f:
-        json.dump(translation_data, f, indent=4)
-    logging.info(f"Frame {translation['image_url']} removed from translation.json")
-
-def process_frame(frame, translation, headers):
+def process_frame(frame, translation, headers, logger):
     start_time = time.time()
     image_url = frame["image_url"]
     video_name = frame["video_name"]
     image_filename = os.path.basename(image_url)
     save_path = os.path.join(FRAMES_DIR, f"frames/{video_name}/{image_filename}")
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
-
     if os.path.exists(save_path):
-        logging.info(f"Image {image_filename} already exists. Skipping...")
+        logger.info(f"Image {image_filename} already exists. Skipping...")
         return False
-
     try:
-        download_image(image_url, save_path)
+        download_image(image_url, save_path, logger)
     except Exception as e:
-        logging.error(e)
+        logger.error(e)
         return False
-
+    print(Fore.GREEN)
     image_path = Process_image.process_image(save_path, DESKTOP_PATH)
-    results = model.predict(source=image_path, conf=0.4, data='config/train.yaml', save=True, save_txt=True)
+    results = model.predict(source=image_path,  data='config/train.yaml', save=True, save_txt=True)
 
     data = {"frame_data": frame, "translation_data": translation}
     prediction_data = Formatter.formatter(results=results, path=save_path, data=data, name=image_filename)
@@ -148,32 +155,48 @@ def process_frame(frame, translation, headers):
     success = False
     wait_time = 1
     while not success:
-        success = send_prediction(headers, prediction_data)
+        success = send_prediction(headers, prediction_data, logger)
         if not success:
-            time.sleep(wait_time)
+            #time.sleep(wait_time)
             wait_time = min(wait_time * 2, MAX_WAIT_TIME)
-
-    if success:
-        remove_data(translation_data, frames_data, translation, frame)
-
+            success= True
     elapsed_time = (time.time() - start_time) * 1000
-    print(Fore.GREEN + f"Total execution time: {elapsed_time:.2f} milliseconds" + Style.RESET_ALL)
-    return True
+    logger.info(f"Total execution time: {elapsed_time:.2f} milliseconds")
+    print(Style.RESET_ALL)
+    return success
 
-def process_frames(headers, frames_data, translation_data):
+
+def process_frames(headers, frames_data, translation_data, logger):
+    start_time = time.time()
+    frames_processed = 0
+
     for frame, translation in zip(frames_data, translation_data):
-        process_frame(frame, translation, headers)
-    logging.info("All frames processed and predictions sent.")
+        logger.info(f"Processing frame {frame['image_url']} with translation {translation['image_url']}")
+        succses=process_frame(frame, translation, headers, logger)
+        if succses:
+            frames_processed += 1
+
+        if frames_processed == 80:
+            elapsed_time = time.time() - start_time
+            if elapsed_time < 60:
+                wait_time = 60 - elapsed_time
+                logger.info(f"Waiting for {wait_time:.2f} seconds to maintain 80 frames per minute rate.")
+                time.sleep(wait_time)
+            start_time = time.time()
+            frames_processed = 0
+
+    logger.info("All frames processed and predictions sent.")
+
 
 if __name__ == "__main__":
     start_time = time.time()
     os.makedirs(FRAMES_DIR, exist_ok=True)
     os.makedirs(os.path.join(FRAMES_DIR, "frames"), exist_ok=True)
-    headers = authenticate()
-    configure_logger(USERNAME)
-    frames_data, translation_data = get_frames_data(headers)
+    logger = configure_logger(USERNAME)
+    headers = authenticate(logger)
+    frames_data, translation_data = get_frames_data(headers, logger)
     connecting_time = time.time() - start_time
-    print(f"SUNUCUYLA İLETİŞİM SÜRESİ {connecting_time:.2f} saniye")
-    process_frames(headers, frames_data, translation_data)
+    logger.info(f"SUNUCUYLA İLETİŞİM SÜRESİ {connecting_time:.2f} saniye")
+    process_frames(headers, frames_data, translation_data, logger)
     total_time = time.time() - start_time
-    print(f"TOPLAM SÜRE {total_time:.2f} saniye")
+    logger.info(f"TOPLAM SÜRE {total_time:.2f} saniye")

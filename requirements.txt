@@ -1,9 +1,12 @@
+catkin-pkg==1.0.0
 certifi==2024.6.2
 cffi==1.16.0
 charset-normalizer==3.3.2
 colorama==0.4.6
 contourpy==1.2.1
 cycler==0.12.1
+distro==1.9.0
+docutils==0.21.2
 filelock==3.14.0
 fonttools==4.53.0
 fsspec==2024.6.0
@@ -42,6 +45,8 @@ python-dateutil==2.9.0.post0
 pytz==2024.1
 PyYAML==6.0.1
 requests==2.32.3
+rospkg==1.5.1
+rpg-trajectory-evaluation @ file:///home/nurullah/catkin_ws/src/rpg_trajectory_evaluation
 scikit-learn==1.5.0
 scipy==1.13.1
 seaborn==0.13.2
