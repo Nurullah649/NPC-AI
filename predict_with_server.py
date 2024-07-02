@@ -5,7 +5,7 @@ import time
 from os.path import expanduser
 import requests
 from yolov10.ultralytics.models import YOLOv10
-from Class import Process_image, Formatter
+from Class import Process_image, Formatter_for_server
 from colorama import Fore, Style
 from pathlib import Path
 from datetime import datetime

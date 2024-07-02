@@ -4,10 +4,13 @@ import time
 from os.path import expanduser
 import torch
 from colorama import Fore, Style
-#from ultralytics import YOLO
-from Class import Formatter
-from Class import Process_image
+#Eğer yolov10 kullanılmayacaksa alttaki satırın yorum satırı olması gerekmektedir.
 from yolov10.ultralytics import YOLOv10,YOLO
+#V10'un kullanılmayacağı durumda alttaki satırı yorum satırı olmaktan çıkarın.
+#from ultralytics import YOLO
+from Class import Formatter_for_yolo
+from Class import Process_image
+
 
 def main(frames,model):
     global positions
@@ -25,7 +28,7 @@ def main(frames,model):
             save_txt=True,
 
         )
-
+        positions.append(Formatter_for_yolo.formatter(results, os.path.join(path, img), name=img))
         end_for_time = time.time()
         elapsed_for_time = (end_for_time - start_for_time) * 1000
         print(Fore.GREEN + f"Total execution time: {elapsed_for_time} milliseconds" + Style.RESET_ALL)
