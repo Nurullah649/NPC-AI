@@ -23,8 +23,7 @@ def main(frames,model):
             source=image_path,
             data=train_yaml,
             save=True,
-            project='runs/detect/deneme/',
-            name="deneme"
+
         )
         positions.append((Formatter_for_yolo.formatter(results, os.path.join(path, img), name=img),img))
         end_for_time = time.time()

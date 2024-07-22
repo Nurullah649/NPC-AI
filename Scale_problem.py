@@ -33,7 +33,7 @@ sonuc2_translations = sonuc2_translations[:min_length]
 # Calculate the scale factor
 gt_distances = np.sqrt(gt_translations['translation_x']**2 + gt_translations['translation_y']**2)
 sonuc2_distances = np.sqrt(sonuc2_translations['translation_x']**2 + sonuc2_translations['translation_y']**2)
-scale_factor = np.mean(sonuc2_distances/40.200010002181806 / gt_distances/40.200010002181806)
+scale_factor = np.mean(sonuc2_distances/(40.200010002181806* 0.0693181110729561) / gt_distances/(40.200010002181806* 0.0693181110729561))
 
 # Calculate the angular difference
 gt_angles = np.arctan2(gt_translations['translation_y'], gt_translations['translation_x'])
