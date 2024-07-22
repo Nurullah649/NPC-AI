@@ -2,7 +2,7 @@ import cv2
 import os
 
 
-def video_to_frames(video_path, output_folder="frames", fps=7.5):
+def video_to_frames(video_path, output_folder="frames", fps=25):
     # Video dosyasını oku
     vidcap = cv2.VideoCapture(video_path)
     success, image = vidcap.read()
@@ -28,9 +28,9 @@ def video_to_frames(video_path, output_folder="frames", fps=7.5):
 
 if __name__ == "__main__":
     # Video dosya yolu
-    video_path = "/home/nurullah/Masaüstü/TUYZ_2024_Ornek_Veri/TUYZ_2024_Ornek_Video.MP4"
+    video_path = "/home/nurullah/İndirilenler/video/epm.mp4"
     # Çıktı klasörü
-    output_folder = "frames_2024"
+    output_folder = "/home/nurullah/Masaüstü/zenoda-videolar-frame//"
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 

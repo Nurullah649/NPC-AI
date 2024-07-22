@@ -21,8 +21,8 @@ PASSWORD = "gUzm1vDdUsFx"
 USER_URL = f"{BASE_URL}users/{USERNAME}/"
 FRAMES_DIR = "./downloaded_frames/"
 DESKTOP_PATH = os.path.join(expanduser("~"), "Masaüstü")
-V10X_MODEL_PATH = '/home/nurullah/Masaüstü/yolov10x-1920/best.pt'
-V10_MODEL_PATH = 'runs/detect/yolov10-1920/weights/best.pt'
+V10X_MODEL_PATH = DESKTOP_PATH+'/NPC-AI/runs/detect/yolov10x-1920/best.pt'
+#V10_MODEL_PATH = 'runs/detect/yolov10-1920/weights/best.pt'
 MAX_WAIT_TIME = 60
 
 # Initialize model
@@ -150,7 +150,7 @@ def process_frame(frame, translation, headers, logger):
     results = model.predict(source=image_path,  data='config/train.yaml', save=True, save_txt=True)
 
     data = {"frame_data": frame, "translation_data": translation}
-    prediction_data = Formatter.formatter(results=results, path=save_path, data=data, name=image_filename)
+    prediction_data = Formatter_for_server.formatter(results=results, path=save_path, data=data, name=image_filename)
 
     success = False
     wait_time = 1
@@ -166,16 +166,23 @@ def process_frame(frame, translation, headers, logger):
     return success
 
 
+# Global değişken tanımlama
+first_translation_data = None
+
 def process_frames(headers, frames_data, translation_data, logger):
+    global first_translation_data  # Global değişkeni kullanmak için
     start_time = time.time()
     frames_processed = 0
 
     for frame, translation in zip(frames_data, translation_data):
-        logger.info(f"Processing frame {frame['image_url']} with translation {translation['image_url']}")
-        succses=process_frame(frame, translation, headers, logger)
-        if succses:
-            frames_processed += 1
+        # İlk translation verisini saklama
+        if first_translation_data is None:
+            first_translation_data = translation
 
+        logger.info(f"Processing frame {frame['image_url']} with translation {translation['image_url']}")
+        success = process_frame(frame, translation, headers, logger)
+        if success:
+            frames_processed += 1
         if frames_processed == 80:
             elapsed_time = time.time() - start_time
             if elapsed_time < 60:

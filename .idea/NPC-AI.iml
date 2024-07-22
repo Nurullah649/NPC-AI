@@ -9,6 +9,7 @@
       <excludeFolder url="file://$MODULE_DIR$/python2" />
       <excludeFolder url="file://$MODULE_DIR$/python3" />
       <excludeFolder url="file://$MODULE_DIR$/uyz" />
+      <excludeFolder url="file://$MODULE_DIR$/yolov10/ultralytics.egg-info" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.10 (NPC-AI) (2)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the CSV file
-file_path = '/home/nurullah/Masaüstü/tekno_server/tekno_server/GT_Translations.csv'  # replace with the actual file path
+file_path = '/data/Sonuc2.txt'  # replace with the actual file path
 data = pd.read_csv(file_path)
 
 # Extracting the columns

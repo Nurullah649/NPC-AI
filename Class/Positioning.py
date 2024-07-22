@@ -5,11 +5,12 @@ import numpy as np
 
 
 class CameraMovementTracker:
-    def __init__(self):
-        self.orb = cv2.ORB_create()
+    def __init__(
+            self, current_position=np.array([0.0, 0.0])):
+        self.orb = cv2.ORB.create()
         self.positions = np.array([0.0, 0.0])
-        self.current_position = np.array([0.0, 0.0])
-        self.current_angle = 0.0
+        self.current_position = current_position
+        self.current_angle = 39.0
         self.is_first_frame = True
 
     def process_frame(self, frame):
@@ -34,11 +35,11 @@ class CameraMovementTracker:
                     self.current_angle += np.degrees(angle_rad)
 
                     # Pozisyonları güncelle
-                    self.positions = (self.current_position.copy() * np.array([-1, 1]) / 40)
+                    self.positions = ((self.current_position.copy() * np.array([-1, -1])) / 45.20138768)
                 else:
-                    self.positions = (self.current_position.copy() * np.array([-1, 1]) / 40)
+                    self.positions = (self.current_position.copy() * np.array([-1, -1]) / 45.20138768)
             else:
-                self.positions = (self.current_position.copy() * np.array([-1, 1]) / 40)
+                self.positions = (self.current_position.copy() * np.array([-1, -1]) / 45.20138768)
         else:
             self.positions = np.array([0.0, 0.0])
 
@@ -55,5 +56,3 @@ class CameraMovementTracker:
         if self.is_first_frame:
             return 0.0
         return self.current_angle
-
-

@@ -1,24 +1,27 @@
-
 import re
-
 import numpy as np
+import pandas as pd
 import matplotlib
 matplotlib.use('GTK3Cairo')
 
 coordinates = []
-# Verileri okuma ve listelere ayırma
-with open('filtrelenmis_dosya.txt', 'r') as file:
+# Read and parse data from Sonuc2.txt
+with open('/home/nurullah/Masaüstü/NPC-AI/data/Sonuc2.txt', 'r') as file:
     data = file.readlines()
     for line in data:
-        match = re.search(r'Geçerli pozisyon: \(([^,]+), ([^\)]+)\)', line)
-        if match:
-            x = float(match.group(1)) * -25
-            y = float(match.group(2)) * -25
-            coordinates.append((x, y))
+        line = line.strip().strip('[]')
+        try:
+            parts = line.split(',')
+            x = float(parts[0])
+            y = float(parts[1].split(']')[0])
+            print(f"Translation X: {x}, Translation Y: {y}")
+            coordinates.append((x/40.200010002181806, y/40.200010002181806))
+        except (ValueError, IndexError) as e:
+            print(f"Error parsing line: {line}")
+            print(e)
 
 x_vals = [coord[0] for coord in coordinates]
 y_vals = [coord[1] for coord in coordinates]
-
 
 def calculate_E(x_hat, y_hat, x, y):
     N = len(x_hat)
@@ -31,13 +34,18 @@ def calculate_E(x_hat, y_hat, x, y):
     E = total_sum / N
     return E
 
-# Dosyadan veriyi okuma
-filename = 'content/kesin_sonuc'  # Dosya adını değiştirebilirsiniz
-data = np.genfromtxt(filename, delimiter=',')
+# Read data from GT_Translations.csv file
+gt_translations = pd.read_csv('/home/nurullah/Masaüstü/NPC-AI/data/GT_Translations.csv')
 
-# Veriyi x ve y dizilerine ayırma
-x = data[:, 0]
-y = data[:, 1]
+# Ensure both datasets have the same length
+min_length = min(len(gt_translations), len(x_vals))
+gt_translations = gt_translations[:min_length]
+x_vals = x_vals[:min_length]
+y_vals = y_vals[:min_length]
 
-E=calculate_E(x,y,x_vals,y_vals)
+# Separate the x and y values from gt_translations
+x_gt = gt_translations['translation_x'].values
+y_gt = gt_translations['translation_y'].values
+
+E = calculate_E(x_gt, y_gt, x_vals, y_vals)
 print(E)

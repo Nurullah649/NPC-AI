@@ -1,36 +1,45 @@
-import re
-import matplotlib.pyplot as plt
+import glob
+import os
+from colorama import Fore, Back, Style
 
-# Dosya yolu
-input_file_path = 'Sonuc.txt'
+def convert_line(line):
+    index_of_first_space = line.find(' ')
 
-# Dosyayı oku ve koordinatları çıkar
-coordinates = []
+    if index_of_first_space != -1:
+        first_part = line[:index_of_first_space]
+        second_part = line[index_of_first_space:]
+        for char in line[:index_of_first_space]:
+            if char.isdigit():
+                if char in '12345#10##11#':
+                    first_part = '0 '
+                elif char in '0' or "insan":
+                    first_part = '1 '
+                elif char in '67':
+                    first_part='2'
+                elif char in '89':
+                    first_part='3'
 
-with open(input_file_path, 'r', encoding='utf-8') as file:
-    lines = file.readlines()
+    return first_part + second_part
 
-for line in lines:
-    match = re.search(r'Geçerli pozisyon: \(([^,]+), ([^\)]+)\)', line)
-    if match:
-        x = float(match.group(1)) * -25
-        y = float(match.group(2)) * -25
-        coordinates.append((x, y))
+def process_txt_file(txt_file_path, output_directory):
+    try:
+        output_file_path = os.path.join(output_directory, os.path.basename(txt_file_path))
+        with open(txt_file_path, 'r') as file_in, open(output_file_path, 'w') as file_out:
+            print(Fore.RED,file_in,Style.RESET_ALL)
+            lines = file_in.readlines()
+            for line in lines:
+                print(Fore.CYAN, "İşlenen satır:", line.strip(), Style.RESET_ALL)
+                converted_line = convert_line(line)
+                print(Fore.BLUE, "Değişen satır:", converted_line, Style.RESET_ALL)
+                file_out.write(converted_line)
+        print(Fore.GREEN, "İşlenen dosya:", txt_file_path, Style.RESET_ALL)
+        print(Fore.GREEN, "Yazılan dosya:", output_file_path, Style.RESET_ALL)
 
-# Koordinatları ayır
-x_vals = [coord[0] for coord in coordinates]
-y_vals = [coord[1] for coord in coordinates]
+    except FileNotFoundError:
+        print(Fore.RED, "Dosya bulunamadı:", txt_file_path, Style.RESET_ALL)
 
-# Grafiği oluştur
-plt.figure(figsize=(10, 6))
-plt.plot(x_vals, y_vals, marker='o', linestyle='-', color='b')
+hedef_dizin = "/home/npc-ai/Masaüstü/2022_dataset/val/labels"
+output_directory = "/home/npc-ai/Masaüstü/train_label"
 
-# Grafiğe başlık ve etiketler ekle
-plt.title('Geçerli Pozisyonlar Grafiği')
-plt.xlabel('X Koordinatı')
-plt.ylabel('Y Koordinatı')
-
-# Grafiği göster
-plt.grid(True)
-plt.savefig('Sonuc.png')
-plt.show()
+for txt_file in glob.glob(os.path.join(hedef_dizin, '*.txt')):
+    process_txt_file(txt_file, output_directory)

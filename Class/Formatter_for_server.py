@@ -7,7 +7,7 @@ import json
 from Class import ImageSimilarityChecker,Does_it_intersect
 import re
 
-tracker = CameraMovementTracker()
+tracker = CameraMovementTracker(predict_with_server.first_translation_data)
 detected_objects = []
 BASE_URL = "http://teknofest.cezerirobot.com:1025/"
 
@@ -26,6 +26,7 @@ def extract_number_from_url(url):
     else:
         return None  # Eğer sayı bulunamazsa None döndür
 def formatter(results,path,data,name):
+
     tracker.process_frame(cv2.imread(path))
     print(tracker.get_positions())
     detected_objects_json = []
@@ -33,6 +34,7 @@ def formatter(results,path,data,name):
     if results is None:
         detected_objects_json.append(None)
     else:
+        Does_it_intersect.does_it_intersect(results)
         for result in results:
             objects=result.boxes.data.tolist()
             for r in objects:

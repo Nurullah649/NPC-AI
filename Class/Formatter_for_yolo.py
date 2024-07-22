@@ -14,12 +14,13 @@ image_similarity_checker = ImageSimilarityChecker.ImageSimilarityChecker()
 
 def formatter(results,path,name):
     tracker.process_frame(cv2.imread(path))
-    print(tracker.get_positions())
+    print(tracker.get_positions()," ",tracker.get_angle())
     detected_objects_json = []
     # Algılanan nesnelerin JSON formatına dönüştürüleceği listeyi oluştur
     if results is None:
         detected_objects_json.append(None)
     else:
+        #Does_it_intersect.does_it_intersect(results)
         for result in results:
             objects=result.boxes.data.tolist()
             for r in objects:
@@ -62,8 +63,8 @@ def formatter(results,path,name):
     if not os.path.exists("json"):
         os.makedirs("json")
     # JSON dosyasına yazma işlemi
-    json_file_path = f"json/{name.split('.jpg')}.json"  # Dilediğiniz dosya adını ve yolunu belirleyebilirsiniz
+    json_file_path = f"json/{name.split('.jpg')[0]}.json"  # Dilediğiniz dosya adını ve yolunu belirleyebilirsiniz
     with open(json_file_path, 'w') as json_file:
         json.dump(json_data, json_file, indent=2)
         print(f"JSON dosyası oluşturuldu: {json_file_path}")
-    return json_data
+    return translation
