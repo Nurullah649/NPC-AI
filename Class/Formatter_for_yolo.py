@@ -20,7 +20,7 @@ def formatter(results,path,name):
     if results is None:
         detected_objects_json.append(None)
     else:
-        #Does_it_intersect.does_it_intersect(results)
+        Does_it_intersect.does_it_intersect(results)
         for result in results:
             objects=result.boxes.data.tolist()
             for r in objects:

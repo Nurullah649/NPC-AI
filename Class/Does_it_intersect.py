@@ -17,11 +17,12 @@ def Calculate_IOU(boxA, boxB):
     return iou
 def does_it_intersect(results):
     for result in results:
-        objects = result.boxes.xyxy.tolist()
-        cls_objects=result.boxes.cls.tolist()
-        id_objects=result.boxes.id.tolist()
+        objects = result.boxes.xyxy
+        cls_objects=result.boxes.cls
+        id_objects=result.boxes.id
         length=len(objects)
-        for i in range(length):
+        print(result.boxes,objects,cls_objects)
+        '''for i in range(length):
             for j in range(i+1,length):
 
                 if cls_objects[i]==0 and cls_objects[j]==1:
@@ -29,11 +30,11 @@ def does_it_intersect(results):
                     if Calculate_IOU(objects[i],objects[j])>0.5:
                         print("Intersection")
                         objects.delete(objects[j])
-                        return objects
+                        #return objects
                 elif cls_objects[i]==1 and cls_objects[j]==0:
                     print(id_objects[i], " ", id_objects[j], " ", Calculate_IOU(objects[i], objects[j]))
                     if Calculate_IOU(objects[i],objects[j])>0.5:
                         print("Intersection")
                         objects.delete(objects[j])
-                        return objects
-    return objects
+                        #return objects'''
+    #return objects

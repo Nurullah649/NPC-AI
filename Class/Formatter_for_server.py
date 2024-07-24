@@ -2,7 +2,7 @@ import cv2
 import os
 
 import predict_with_server
-from Class.Positioning import CameraMovementTracker
+from Class.Positioning_for_Server import CameraMovementTracker
 import json
 from Class import ImageSimilarityChecker,Does_it_intersect
 import re
@@ -34,7 +34,7 @@ def formatter(results,path,data,name):
     if results is None:
         detected_objects_json.append(None)
     else:
-        Does_it_intersect.does_it_intersect(results)
+        #Does_it_intersect.does_it_intersect(results)
         for result in results:
             objects=result.boxes.data.tolist()
             for r in objects:
@@ -78,7 +78,7 @@ def formatter(results,path,data,name):
     if not os.path.exists("json"):
         os.makedirs("json")
     # JSON dosyasına yazma işlemi
-    json_file_path = f"json/{name.split('.jpg')}.json"  # Dilediğiniz dosya adını ve yolunu belirleyebilirsiniz
+    json_file_path = f"json/{name.split('.jpg')[0]}.json"  # Dilediğiniz dosya adını ve yolunu belirleyebilirsiniz
     with open(json_file_path, 'w') as json_file:
         json.dump(json_data, json_file, indent=2)
         print(f"JSON dosyası oluşturuldu: {json_file_path}")

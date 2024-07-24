@@ -35,7 +35,7 @@ if __name__ == "__main__":
     # Dosya yollarını oluşturmak
     desktop_path = os.path.join(expanduser("~"), "Masaüstü")
     # Kaynak Lokasyonu Belirtin
-    path = "/home/nurullah/Masaüstü/predict/2024-video_frames/frames/"
+    path = "C:\\Users\\nurul\\Masaüstü\\train_2024"
     # Dosya konumundan görsellerin sırayla çekilmesi
     frames = sorted(os.listdir(path), key=lambda x: int(x.split('_')[1].split('.')[0]))
 

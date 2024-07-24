@@ -10,6 +10,7 @@ from colorama import Fore, Style
 from pathlib import Path
 from datetime import datetime
 
+
 # Configurations
 BASE_URL = "http://teknofest.cezerirobot.com:1025/"
 AUTH_URL = f"{BASE_URL}auth/"
@@ -21,8 +22,9 @@ PASSWORD = "gUzm1vDdUsFx"
 USER_URL = f"{BASE_URL}users/{USERNAME}/"
 FRAMES_DIR = "./downloaded_frames/"
 DESKTOP_PATH = os.path.join(expanduser("~"), "Masaüstü")
-V10X_MODEL_PATH = DESKTOP_PATH+'/NPC-AI/runs/detect/yolov10x-1920/best.pt'
+V10X_MODEL_PATH = 'runs/detect/yolov10x-1920/best.pt'
 #V10_MODEL_PATH = 'runs/detect/yolov10-1920/weights/best.pt'
+SESSION_NAME=""
 MAX_WAIT_TIME = 60
 
 # Initialize model
@@ -183,6 +185,7 @@ def process_frames(headers, frames_data, translation_data, logger):
         success = process_frame(frame, translation, headers, logger)
         if success:
             frames_processed += 1
+
         if frames_processed == 80:
             elapsed_time = time.time() - start_time
             if elapsed_time < 60:
