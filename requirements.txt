@@ -30,6 +30,7 @@ httpx==0.27.0
 huggingface-hub==0.23.2
 humanfriendly==10.0
 idna==3.7
+imageio==2.34.2
 importlib_resources==6.4.0
 Jinja2==3.1.4
 joblib==1.4.2
@@ -37,6 +38,7 @@ jsonschema==4.23.0
 jsonschema-specifications==2023.12.1
 kiwisolver==1.4.5
 lapx==0.5.9
+lazy_loader==0.4
 lit==18.1.8
 markdown-it-py==3.0.0
 MarkupSafe==2.1.5
@@ -99,6 +101,7 @@ rospkg==1.5.1
 rpds-py==0.19.1
 ruff==0.5.6
 safetensors==0.4.3
+scikit-image==0.24.0
 scikit-learn==1.5.0
 scipy==1.13.0
 seaborn==0.13.2
@@ -110,6 +113,7 @@ starlette==0.37.2
 sympy==1.12.1
 thop==0.1.1.post2209072238
 threadpoolctl==3.5.0
+tifffile==2024.7.24
 tomlkit==0.12.0
 toolz==0.12.1
 torch==2.0.1
@@ -119,6 +123,7 @@ triton==2.0.0
 typer==0.12.3
 typing_extensions==4.12.2
 tzdata==2024.1
+# Editable install with no version control (ultralytics==8.1.34)
 -e /home/nurullah/PycharmProjects/NPC-AI/yolov10
 ultralytics-thop==0.2.7
 urllib3==2.2.2
