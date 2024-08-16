@@ -1,26 +1,25 @@
 import cv2
 import os
+
+from colorama import Fore
+
 from Class.Positioning import CameraMovementTracker
 import json
-from Class import ImageSimilarityChecker,Does_it_intersect
+from Class import Does_it_intersect
 
 
 tracker = CameraMovementTracker()
 detected_objects = []
 
-
-# UAP ve UAI inilebilir kontrolü yapacak olan modelin oluşturulması
-image_similarity_checker = ImageSimilarityChecker.ImageSimilarityChecker()
-
 def formatter(results,path,name):
     tracker.process_frame(cv2.imread(path))
-    print(tracker.get_positions()," ",tracker.get_angle())
+    print(tracker.get_positions())
     detected_objects_json = []
     # Algılanan nesnelerin JSON formatına dönüştürüleceği listeyi oluştur
     if results is None:
         detected_objects_json.append(None)
     else:
-        Does_it_intersect.does_it_intersect(results)
+
         for result in results:
             objects=result.boxes.data.tolist()
             for r in objects:
@@ -34,10 +33,11 @@ def formatter(results,path,name):
                     "bottom_right_y": y2
                 }
                 if class_id == 3 or class_id == 2:
-                    if image_similarity_checker.control(x1=x1, y1=y1, x2=x2, y2=y2, image_path=os.path.join(path),class_id=class_id):
-
+                    if Does_it_intersect.does_human_center_intersect(results,path):
+                        print(Fore.GREEN,'İNİLEBİLİR')
                         obj["landing_status"] = "1"
                     else:
+                        print(Fore.RED,'İNİLEMEZ')
                         obj["landing_status"] = "0"
                 else:
                     obj["landing_status"] = "-1"

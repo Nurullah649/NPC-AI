@@ -1,20 +1,14 @@
 import cv2
 import os
-
 import predict_with_server
 from Class.Positioning_for_Server import CameraMovementTracker
 import json
-from Class import ImageSimilarityChecker,Does_it_intersect
+from Class import Does_it_intersect
 import re
 
 tracker = CameraMovementTracker(predict_with_server.first_translation_data)
 detected_objects = []
 BASE_URL = "http://teknofest.cezerirobot.com:1025/"
-
-
-# UAP ve UAI inilebilir kontrolü yapacak olan modelin oluşturulması
-image_similarity_checker = ImageSimilarityChecker.ImageSimilarityChecker()
-
 
 def extract_number_from_url(url):
     # URL'deki sayıyı aramak için regex deseni
@@ -48,8 +42,7 @@ def formatter(results,path,data,name):
                     "bottom_right_y": y2
                 }
                 if class_id == 3 or class_id == 2:
-                    if image_similarity_checker.control(x1=x1, y1=y1, x2=x2, y2=y2, image_path=os.path.join(path),class_id=class_id):
-
+                    if Does_it_intersect.does_human_center_intersect(result,path):
                         obj["landing_status"] = "1"
                     else:
                         obj["landing_status"] = "0"

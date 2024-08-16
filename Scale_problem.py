@@ -33,7 +33,7 @@ sonuc2_translations = sonuc2_translations[:min_length]
 # Calculate the scale factor
 gt_distances = np.sqrt(gt_translations['translation_x']**2 + gt_translations['translation_y']**2)
 sonuc2_distances = np.sqrt(sonuc2_translations['translation_x']**2 + sonuc2_translations['translation_y']**2)
-scale_factor = np.mean(sonuc2_distances/(40.200010002181806* 0.0693181110729561) / gt_distances/(40.200010002181806* 0.0693181110729561))
+scale_factor = np.mean(sonuc2_distances / gt_distances)
 
 # Calculate the angular difference
 gt_angles = np.arctan2(gt_translations['translation_y'], gt_translations['translation_x'])
@@ -46,7 +46,7 @@ angle_difference_degrees = np.degrees(angle_difference)
 # Plot the data points
 plt.figure(figsize=(10, 6))
 plt.scatter(gt_translations['translation_x'], gt_translations['translation_y'], color='blue', label='GT Translations')
-plt.scatter(sonuc2_translations['translation_x']/40.200010002181806, sonuc2_translations['translation_y']/40.200010002181806, color='red', label='Sonuc2 Translations')
+plt.scatter(sonuc2_translations['translation_x'], sonuc2_translations['translation_y'], color='red', label='Sonuc2 Translations')
 
 # Adding labels and title
 plt.xlabel('Translation X')
@@ -56,7 +56,7 @@ plt.legend()
 plt.grid(True)
 
 # Show the plot
-plt.savefig('translation_comparison.png')
+plt.show()
 
 print(f"Scale Factor: {scale_factor}")
 print(f"Angular Difference: {angle_difference_degrees} degrees")

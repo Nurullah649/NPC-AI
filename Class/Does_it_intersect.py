@@ -1,40 +1,51 @@
-def Calculate_IOU(boxA, boxB):
-    # determine the (x, y)-coordinates of the intersection rectangle
-    xA = max(boxA[0], boxB[0])
-    yA = max(boxA[1], boxB[1])
-    xB = min(boxA[2], boxB[2])
-    yB = min(boxA[3], boxB[3])
-    # compute the area of intersection rectangle
-    interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
-    # compute the area of both the prediction and ground-truth rectangles
-    boxAArea = (boxA[2] - boxA[0] + 1) * (boxA[3] - boxA[1] + 1)
-    boxBArea = (boxB[2] - boxB[0] + 1) * (boxB[3] - boxB[1] + 1)
-    # compute the intersection over union by taking the intersection
-    # area and dividing it by the sum of prediction + ground-truth
-    # areas - the intersection area
-    iou = interArea / float(boxAArea + boxBArea - interArea)
-    # return the intersection over union value
-    return iou
-def does_it_intersect(results):
-    for result in results:
-        objects = result.boxes.xyxy
-        cls_objects=result.boxes.cls
-        id_objects=result.boxes.id
-        length=len(objects)
-        print(result.boxes,objects,cls_objects)
-        '''for i in range(length):
-            for j in range(i+1,length):
+import os
+from Class.ImageSimilaritryChecker import ImageSimilarityChecker
+# UAP ve UAI inilebilir kontrolü yapacak olan modelin oluşturulması
+image_similarity_checker = ImageSimilarityChecker()
+def is_center_inside(human_box, obj_box):
+    """
+    Bir bounding box'un merkezinin başka bir bounding box'un içinde olup olmadığını kontrol eder.
 
-                if cls_objects[i]==0 and cls_objects[j]==1:
-                    print(id_objects[i], " ", id_objects[j], " ", Calculate_IOU(objects[i], objects[j]))
-                    if Calculate_IOU(objects[i],objects[j])>0.5:
-                        print("Intersection")
-                        objects.delete(objects[j])
-                        #return objects
-                elif cls_objects[i]==1 and cls_objects[j]==0:
-                    print(id_objects[i], " ", id_objects[j], " ", Calculate_IOU(objects[i], objects[j]))
-                    if Calculate_IOU(objects[i],objects[j])>0.5:
-                        print("Intersection")
-                        objects.delete(objects[j])
-                        #return objects'''
-    #return objects
+    :param human_box: Merkezinin kontrol edileceği bounding box [x1, y1, x2, y2, score, class_id]
+    :param obj_box: İçinde merkez olup olmadığı kontrol edilecek bounding box [x1, y1, x2, y2, score, class_id]
+    :return: Merkez obj_box içindeyse True, değilse False
+    """
+    center_x = (human_box[0] + human_box[2]) / 2
+    center_y = (human_box[1] + human_box[3]) / 2
+
+    if obj_box[0] <= center_x <= obj_box[2] and obj_box[1] <= center_y <= obj_box[3]:
+        return False
+    else:
+        return True
+
+def does_human_center_intersect(results,path):
+    """
+    YOLO sonuçlarından cls 1 (İnsan) bounding box'unun merkezinin cls 2/3 bounding box'larının içinde olup olmadığını kontrol eder.
+
+    :param results: YOLO sonuçları
+    :return: Kesişme varsa True, yoksa False
+    """
+    for result in results:
+        objects = result.boxes.data.tolist()
+
+        # cls 1 (İnsan) ve cls 2/3 (UAP, UAI) kutuları filtreleme
+        cls_1_boxes = [obj for obj in objects if obj[5] == 1]
+        cls_2_3_boxes = [obj for obj in objects if obj[5] in [2, 3]]
+
+        # Her bir insanın merkezi diğer objelerle kontrol edilir
+        if cls_1_boxes:
+            for human_box in cls_1_boxes:
+                if any(is_center_inside(human_box, obj_box) for obj_box in cls_2_3_boxes):
+                    for obj in objects:
+                        x1,y1,x2,y2,_,class_id = obj
+                        if class_id==2 or class_id==3:
+                            return image_similarity_checker.control(x1=x1, y1=y1, x2=x2, y2=y2, image_path=os.path.join(path),
+                                                                    class_id=class_id)
+                else:
+                    return False
+        else:
+            for obj in objects:
+                x1, y1, x2, y2, _, class_id = obj
+                if class_id == 2 or class_id == 3:
+                    return image_similarity_checker.control(x1=x1, y1=y1, x2=x2, y2=y2, image_path=os.path.join(path),
+                                                            class_id=class_id)

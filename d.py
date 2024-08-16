@@ -1,3 +1,5 @@
 import torch
-print(torch.cuda.is_available())
-print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else "No GPU available")
+print(torch.cuda.is_available()) # should be True
+
+t = torch.rand(10, 10).cuda()
+print(t.device)
