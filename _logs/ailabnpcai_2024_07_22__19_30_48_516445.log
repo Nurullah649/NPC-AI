@@ -1,9 +1,0 @@
-2024-07-22 19:30:49,039 - INFO - Authentication successful
-2024-07-22 19:30:49,039 - INFO - Fetching new frames data...
-2024-07-22 19:30:54,073 - INFO - Data saved to ./downloaded_frames/frames.json
-2024-07-22 19:30:54,073 - INFO - Fetching new translation data...
-2024-07-22 19:30:59,163 - INFO - Data saved to ./downloaded_frames/translation.json
-2024-07-22 19:30:59,163 - INFO - SUNUCUYLA ÝLETÝÞÝM SÜRESÝ 10.65 saniye
-2024-07-22 19:30:59,164 - INFO - Processing frame /2024_TUYZ_Online_Yarisma_Ana_Oturum_Test_omzseiku_Video/frame_000000.jpg with translation /2024_TUYZ_Online_Yarisma_Ana_Oturum_Test_omzseiku_Video/frame_000000.jpg
-2024-07-22 19:30:59,167 - INFO - Downloading image from http://teknofest.cezerirobot.com:1025/media/2024_TUYZ_Online_Yarisma_Ana_Oturum_Test_omzseiku_Video/frame_000000.jpg...
-2024-07-22 19:31:00,117 - INFO - Image saved to ./downloaded_frames/frames/2024_TUYZ_Online_Yarisma_Ana_Oturum_Test_omzseiku_Video/frame_000000.jpg

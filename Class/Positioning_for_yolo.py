@@ -4,19 +4,27 @@ import numpy as np
 
 class CameraMovementTracker:
     def __init__(self):
-        self.orb = cv2.ORB.create()
+        self.orb = cv2.ORB_create()
         self.positions = np.array([0.0, 0.0])
         self.current_position = np.array([0.0, 0.0])
-        if self.current_position is None:
-            self.current_position = np.array([0.0, 0.0])
-        self.current_angle = 39.0
+        self.current_angle = 0.0
         self.is_first_frame = True
         self.prev_des = None
         self.prev_kp = None
 
+        # Kamera matrisi ve bozulma katsayıları
+        self.camera_matrix = np.array([
+            [1.4133e+03, 0, 950.0639],
+            [0, 1.4188e+03, 543.3796],
+            [0, 0, 1]
+        ])
+        self.dist_coeffs = np.array([-0.0091, 0.0666, 0, 0])
+
     def process_frame(self, frame):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        kp2, des2 = self.orb.detectAndCompute(gray, None)
+        undistorted_frame = cv2.undistort(gray, self.camera_matrix, self.dist_coeffs)
+
+        kp2, des2 = self.orb.detectAndCompute(undistorted_frame, None)
 
         if self.prev_des is not None and self.prev_kp is not None:
             bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
@@ -32,19 +40,18 @@ class CameraMovementTracker:
                     src_mean = np.mean(src_pts, axis=0)
                     dst_mean = np.mean(dst_pts, axis=0)
                     movement = dst_mean - src_mean
-                    if movement is not None:
-                        self.current_position += movement.flatten()
+                    self.current_position += movement.flatten()
 
-                    # Açısal değişikliği hesapla
+                    # Açısal değişimi hesapla
                     angle_rad = np.arctan2(M[1, 0], M[0, 0])
                     self.current_angle += np.degrees(angle_rad)
 
-                    # Pozisyonları güncelle
-                    self.positions = (self.current_position.copy() * np.array([-1, -1])) / 45.20138768
+                    # Pozisyonları güncelle ve X ve Y eksenlerini ters çevir
+                    self.positions = self.current_position.copy() * np.array([-1, -1]) / 45.20138768
                 else:
-                    self.positions = (self.current_position.copy() * np.array([-1, -1]) / 45.20138768)
+                    self.positions = self.current_position.copy() * np.array([-1, -1]) / 45.20138768
             else:
-                self.positions = (self.current_position.copy() * np.array([-1, -1]) / 45.20138768)
+                self.positions = self.current_position.copy() * np.array([-1, -1]) / 45.20138768
         else:
             self.positions = np.array([0.0, 0.0])
 

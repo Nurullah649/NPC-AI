@@ -1,11 +1,13 @@
 import os
 from Class.ImageSimilaritryChecker import ImageSimilarityChecker
+
 # UAP ve UAI inilebilir kontrolü yapacak olan modelin oluşturulması
 image_similarity_checker = ImageSimilarityChecker()
+
+
 def is_center_inside(human_box, obj_box):
     """
     Bir bounding box'un merkezinin başka bir bounding box'un içinde olup olmadığını kontrol eder.
-
     :param human_box: Merkezinin kontrol edileceği bounding box [x1, y1, x2, y2, score, class_id]
     :param obj_box: İçinde merkez olup olmadığı kontrol edilecek bounding box [x1, y1, x2, y2, score, class_id]
     :return: Merkez obj_box içindeyse True, değilse False
@@ -18,7 +20,8 @@ def is_center_inside(human_box, obj_box):
     else:
         return True
 
-def does_human_center_intersect(results,path):
+
+def does_human_center_intersect(results, path):
     """
     YOLO sonuçlarından cls 1 (İnsan) bounding box'unun merkezinin cls 2/3 bounding box'larının içinde olup olmadığını kontrol eder.
 
@@ -37,9 +40,10 @@ def does_human_center_intersect(results,path):
             for human_box in cls_1_boxes:
                 if any(is_center_inside(human_box, obj_box) for obj_box in cls_2_3_boxes):
                     for obj in objects:
-                        x1,y1,x2,y2,_,class_id = obj
-                        if class_id==2 or class_id==3:
-                            return image_similarity_checker.control(x1=x1, y1=y1, x2=x2, y2=y2, image_path=os.path.join(path),
+                        x1, y1, x2, y2, _, class_id = obj
+                        if class_id == 2 or class_id == 3:
+                            return image_similarity_checker.control(x1=x1, y1=y1, x2=x2, y2=y2,
+                                                                    image_path=os.path.join(path),
                                                                     class_id=class_id)
                 else:
                     return False

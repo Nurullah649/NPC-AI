@@ -3,6 +3,8 @@ import time
 from os.path import expanduser
 import torch
 from colorama import Fore, Style
+
+from b import frame
 #Eğer yolov10 kullanılmayacaksa alttaki satırın yorum satırı olması gerekmektedir.
 from yolov10.ultralytics import YOLOv10, YOLO
 #V10'un kullanılmayacağı durumda alttaki satırı yorum satırı olmaktan çıkarın.
@@ -24,7 +26,8 @@ def main(frames, model, path):
             save=True,
 
         )
-        positions.append((Formatter_for_yolo.formatter(results, os.path.join(path, img), name=img), img))
+        x,y=(Formatter_for_yolo.formatter(results, os.path.join(path, img), name=img), img)
+        positions.append((x,y,img))
         end_for_time = time.time()
         elapsed_for_time = (end_for_time - start_for_time) * 1000
         print(Fore.GREEN + f"Total execution time: {elapsed_for_time} milliseconds" + Style.RESET_ALL)
@@ -35,10 +38,10 @@ if __name__ == "__main__":
     # Dosya yollarını oluşturmak
     desktop_path = os.path.join(expanduser("~"), "Desktop")
     # Kaynak Lokasyonu Belirtin
-    #path = desktop_path+"/Predict/TUYZ_2024_Ornek_Veri/frames"2024_TUYZ_Online_Yarisma_Ana_Oturum_pmcfrqkz_Video
-    path2 = "downloaded_frames/frames/deneme2/"
+    path = desktop_path+"/Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/Iptal_Oturum_Frames/"
+    #path = "downloaded_frames/frames/2024_TUYZ_Online_Yarisma_Ana_Oturum_pmcfrqkz_Video/"
     # Dosya konumundan görsellerin sırayla çekilmesi
-    frames = sorted(os.listdir(path2), key=lambda x: int(x.split('_')[1].split('.')[0]))
+    frames = sorted(os.listdir(path), key=lambda x: int(x.split('_')[1].split('.')[0]))
 
     # Model konfigürasyon dosyası ve Model konumu
     train_yaml = "content/config.yaml"
@@ -46,8 +49,7 @@ if __name__ == "__main__":
     v10_model = YOLOv10(model=v10X_model_path)  # Pretrained model path
 
     positions = []
-    main(frames=frames, model=v10_model, path=path2)
-    # Konumları grafiğe çiz
-    '''with open("data/Sonuc2.txt", 'w') as file:
-        for item, image_name in positions:
-            file.write(f"{item},{image_name}\n")'''
+    main(frames=frames, model=v10_model, path=path)
+    with open("data/Result.txt", 'w') as file:
+        for x,y, image_name in positions:
+            file.write(f"{x},{y},{image_name}\n")

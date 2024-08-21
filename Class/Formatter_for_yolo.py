@@ -3,7 +3,7 @@ import os
 
 from colorama import Fore
 
-from Class.Positioning import CameraMovementTracker
+from Class.Positioning_for_yolo import CameraMovementTracker
 import json
 from Class import Does_it_intersect
 
@@ -55,7 +55,7 @@ def formatter(results,path,name):
     ]
     json_data = {
         "id": "1",
-        "user": "TEAM_NAME",
+        "user": "NPC-AI",
         "frame": name,
         "detected_objects": detected_objects_json,
         "detected_translations": detected_translation
@@ -67,4 +67,4 @@ def formatter(results,path,name):
     with open(json_file_path, 'w') as json_file:
         json.dump(json_data, json_file, indent=2)
         print(f"JSON dosyası oluşturuldu: {json_file_path}")
-    return translation
+    return x,y

@@ -3,27 +3,28 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the data from the GT_Translations.csv file
-gt_translations = pd.read_csv('data/GT_Translations.csv')
+gt_translations = pd.read_csv('data/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv')
 
 # Initialize an empty list to store the parsed data from Sonuc2.txt
-sonuc2_data = []
+coordinates = []
 
 # Read and parse the data from the Sonuc2.txt file
-with open('data/Sonuc2.txt', 'r') as file:
-    for line in file:
-        line = line.strip().strip('[]')
+with open('/home/nurullah/Desktop/NPC-AI/data/Sonuc_deneme_polyminalreg.txt', 'r') as file:
+    data = file.readlines()
+    for line in data:
+
         try:
             parts = line.split(',')
-            tx = float(parts[0])
-            ty = float(parts[1].split(']')[0])
-            sonuc2_data.append((tx, ty))
-            print(f"Translation X: {tx}, Translation Y: {ty}")
+            x = float(parts[0])
+            y = float(parts[1])
+            print(f"Translation X: {x}, Translation Y: {y}")
+            coordinates.append((x, y))
         except (ValueError, IndexError) as e:
             print(f"Error parsing line: {line}")
             print(e)
 
 # Convert the parsed data to a DataFrame
-sonuc2_translations = pd.DataFrame(sonuc2_data, columns=['translation_x', 'translation_y'])
+sonuc2_translations = pd.DataFrame(coordinates, columns=['translation_x', 'translation_y'])
 
 # Ensure both datasets have the same length
 min_length = min(len(gt_translations), len(sonuc2_translations))

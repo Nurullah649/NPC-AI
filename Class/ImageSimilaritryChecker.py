@@ -7,7 +7,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 from torchvision.models import ResNet50_Weights, EfficientNet_B7_Weights
 import numpy as np
 
-score = 0.637
+score = 0.68
+
+
 class ImageSimilarityChecker:
     def __init__(self, model_name='efficientnet-b7'):
         self.model = self.load_model(model_name)
@@ -16,10 +18,10 @@ class ImageSimilarityChecker:
     def load_model(self, model_name):
         if model_name == 'resnet50':
             model = models.resnet50(weights=ResNet50_Weights.DEFAULT)
-            model = torch.nn.Sequential(*(list(model.children())[:-1]))
+            model = torch.nn.Sequential(*(list(model.children())[:-1]))  # ResNet50 için son katmanı çıkar
         elif model_name == 'efficientnet-b7':
             model = models.efficientnet_b7(weights=EfficientNet_B7_Weights.DEFAULT)
-            model = torch.nn.Sequential(*(list(model.children())[:-2]))  # EfficientNet-B7 için son iki katmanı çıkarın
+            model = torch.nn.Sequential(*(list(model.children())[:-1]))  # EfficientNet-B7 için sadece son katmanı çıkar
         else:
             raise ValueError("Invalid model name. Supported models: 'resnet50', 'efficientnet-b7'")
 
@@ -50,9 +52,11 @@ class ImageSimilarityChecker:
 
     def similarity(self, feature_vector1, feature_vector2):
         try:
-            if feature_vector1.shape != feature_vector2.shape:
-                print(Fore.RED + "Feature vectors do not match in shape.")
-                return 0
+            # Boyutları minimum değerde eşitlemek için kesme işlemi yapıyoruz
+            min_size = min(len(feature_vector1), len(feature_vector2))
+            feature_vector1 = feature_vector1[:min_size]
+            feature_vector2 = feature_vector2[:min_size]
+
             similarity_score = cosine_similarity([feature_vector1], [feature_vector2])[0][0]
             return similarity_score
         except Exception as e:
@@ -73,7 +77,7 @@ class ImageSimilarityChecker:
         if binary_image is None:
             return False
 
-        ref_image_path = 'content/UAP1.jpg' if class_id == 2 else 'content/UA1.jpg'
+        ref_image_path = 'content/UAP.jpg' if class_id == 2 else 'content/UAI.jpg'
         ref_image = Image.open(ref_image_path)
 
         ref_feature_vector = self.get_feature_vector(ref_image)
@@ -86,11 +90,11 @@ class ImageSimilarityChecker:
         if class_id == 2:
             print(Fore.CYAN + f"UAP Similarity score: {similarity_score}")
             if similarity_score > score:
-                print(Fore.GREEN + "UAP İNİLEBİLİR")
                 return True
         else:
             print(Fore.LIGHTRED_EX + f"UAI Similarity score: {similarity_score}")
             if similarity_score > score:
-                print(Fore.GREEN + "UAI İNİLEBİLİR")
                 return True
         return False
+
+
