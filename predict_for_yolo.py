@@ -37,7 +37,7 @@ if __name__ == "__main__":
     # Dosya yollarını oluşturmak
     desktop_path = os.path.join(expanduser("~"), "Desktop")
     # Kaynak Lokasyonu Belirtin
-    path = desktop_path+"/Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/Iptal_Oturum_Frames/"
+    path = '../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum/'
     #path = "downloaded_frames/frames/2024_TUYZ_Online_Yarisma_Ana_Oturum_pmcfrqkz_Video/"
     # Dosya konumundan görsellerin sırayla çekilmesi
     frames = sorted(os.listdir(path), key=lambda x: int(x.split('_')[1].split('.')[0]))
@@ -49,6 +49,6 @@ if __name__ == "__main__":
 
     positions = []
     main(frames=frames, model=v10_model, path=path)
-    with open("data/Result.txt", 'w') as file:
+    with open("data/original_code.txt", 'w') as file:
         for x,y, image_name in positions:
             file.write(f"{x},{y},{image_name}\n")

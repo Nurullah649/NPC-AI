@@ -9,7 +9,7 @@ gt_translations = pd.read_csv('data/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv')
 coordinates = []
 
 # Read and parse the data from the Sonuc2.txt file
-with open('/home/nurullah/Desktop/NPC-AI/data/Result.txt', 'r') as file:
+with open('/home/nurullah/Desktop/NPC-AI/data/Result_3.txt', 'r') as file:
     data = file.readlines()
     for line in data:
 
@@ -47,7 +47,7 @@ angle_difference_degrees = np.degrees(angle_difference)
 # Plot the data points
 plt.figure(figsize=(10, 6))
 plt.scatter(gt_translations['translation_x'], gt_translations['translation_y'], color='blue', label='GT Translations')
-plt.scatter(sonuc2_translations['translation_x'], sonuc2_translations['translation_y'], color='red', label='Sonuc2 Translations')
+plt.scatter(sonuc2_translations['translation_x'], sonuc2_translations['translation_y'], color='red', label='Sonuc Translations')
 
 # Adding labels and title
 plt.xlabel('Translation X')
