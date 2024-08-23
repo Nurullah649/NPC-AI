@@ -9,7 +9,7 @@ gt_translations = pd.read_csv('data/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv')
 coordinates = []
 
 # Read and parse the data from the Sonuc2.txt file
-with open('/home/nurullah/Desktop/NPC-AI/data/Sonuc_deneme_polyminalreg.txt', 'r') as file:
+with open('/home/nurullah/Desktop/NPC-AI/data/Result.txt', 'r') as file:
     data = file.readlines()
     for line in data:
 

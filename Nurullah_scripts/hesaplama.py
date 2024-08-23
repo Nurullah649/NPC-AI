@@ -6,7 +6,7 @@ matplotlib.use('GTK3Cairo')
 
 coordinates = []
 # Read and parse data from Combined_Sonuc.txt
-with open('/home/nurullah/Desktop/NPC-AI/data/Sonuc_deneme_GPR.txt', 'r') as file:
+with open('/home/nurullah/Desktop/NPC-AI/data/Result.txt', 'r') as file:
     data = file.readlines()
     for line in data:
         try:

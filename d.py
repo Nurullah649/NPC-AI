@@ -1,13 +1,12 @@
-from itertools import count
-
-import cv2
 import os
+import cv2
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 
 # ORB ve gerekli değişkenlerin tanımlanması
-orb = cv2.ORB_create()
+orb = cv2.ORB.create()
+
 positions = np.array([0.0, 0.0])
 current_position = np.array([0.0, 0.0])
 current_angle = 0.0
@@ -15,9 +14,9 @@ is_first_frame = True
 prev_des = None
 prev_kp = None
 
-# Ölçeklendirme ve ofset değerlerini tanımlayın
+# Ölçeklendirme ve offset değerlerini tanımlayın
 scale_factor = None  # Ölçeklendirme faktörü
-offset = None  # Ofset değeri
+offset = None  # Offset değeri
 
 # Dosya yolunu belirtin
 file_path = 'data/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv'
@@ -84,7 +83,7 @@ def process_frame(frame,count,frame_name):
         pred_translation_x = xy_data[count][0]
         pred_translation_y = xy_data[count][1]
     # Sonuçları kaydet
-    with open("data/Sonuc_deneme.txt", 'a') as file:  # 'a' ile dosyaya ekleme yapıyoruz
+    with open("data/Result.txt", 'a') as file:  # 'a' ile dosyaya ekleme yapıyoruz
         file.write(f"{pred_translation_x}, {pred_translation_y}, {frame_name}\n")
 
     prev_des = des2

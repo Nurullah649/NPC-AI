@@ -3,11 +3,10 @@ import time
 from os.path import expanduser
 import torch
 from colorama import Fore, Style
-
-from b import frame
 #Eğer yolov10 kullanılmayacaksa alttaki satırın yorum satırı olması gerekmektedir.
 from yolov10.ultralytics import YOLOv10, YOLO
 #V10'un kullanılmayacağı durumda alttaki satırı yorum satırı olmaktan çıkarın.
+#from ultralytics import YOLO
 from Class import Formatter_for_yolo
 from Class import Process_image
 
