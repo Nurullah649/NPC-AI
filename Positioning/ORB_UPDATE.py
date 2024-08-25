@@ -7,7 +7,7 @@ from sklearn.linear_model import LinearRegression
 # ORB ve gerekli değişkenlerin tanımlanması
 orb = cv2.ORB.create(nfeatures=1050,WTA_K=3,scaleFactor=1.035,edgeThreshold=14,nlevels=9)
 # Dosya yolunu belirtin
-file_path = 'data/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv'
+file_path = '../data/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv'
 
 # CSV dosyasını yükle
 df = pd.read_csv(file_path)
@@ -28,7 +28,7 @@ scale_factor = None  # Ölçeklendirme faktörü
 offset = None  # Offset değeri
 
 # Frame dizini ve sıralama
-frames_path = '../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum/'
+frames_path = '../../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum/'
 frames = sorted(os.listdir(frames_path), key=lambda x: int(x.split('_')[1].split('.')[0]))
 alg_positions = []
 

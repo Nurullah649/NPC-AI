@@ -3,11 +3,14 @@ import cv2
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
+#from Class.R_Model import R_Model
+
+
 
 # ORB ve gerekli değişkenlerin tanımlanması
 orb = cv2.ORB.create(nfeatures=1050,WTA_K=3,scaleFactor=1.035,edgeThreshold=14,nlevels=9)
 # Dosya yolunu belirtin
-file_path = 'data/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv'
+file_path = '../data/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv'
 
 # CSV dosyasını yükle
 df = pd.read_csv(file_path)
@@ -22,18 +25,35 @@ current_angle = 0.0
 is_first_frame = True
 prev_des = None
 prev_kp = None
-
+r_model=None
 # Ölçeklendirme ve offset değerlerini tanımlayın
 scale_factor = None  # Ölçeklendirme faktörü
 offset = None  # Offset değeri
 
 # Frame dizini ve sıralama
-frames_path = '../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum/'
+frames_path = '../../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum/'
 frames = sorted(os.listdir(frames_path), key=lambda x: int(x.split('_')[1].split('.')[0]))
 alg_positions = []
 
+
+def train_model(alg_postions,gt_positions,scale_factor,offset):
+    with open("ALG_data_model_train.csv", 'a') as file:
+        file.write("x,y\n")
+        for position in alg_postions:
+            scaled_positions = np.dot(position, scale_factor.T) + offset
+            pred_translation_x = scaled_positions[0]
+            pred_translation_y = scaled_positions[1]
+            file.write(f"{pred_translation_x},{pred_translation_y}\n")
+
+    with open("GT_data_model_train.csv", 'a') as file:
+        file.write("x,y\n")
+        for position in gt_positions:
+                file.write(f"{position[0]},{position[1]}\n")
+    #r_model = R_Model(alg_data_path="R_model_train.csv",gt_data_path="GT_model_train.csv")
+    #return r_model
+
 def process_frame(frame, count, frame_name):
-    global is_first_frame, current_position, positions, current_angle, prev_des, prev_kp, scale_factor, offset, alg_positions
+    global is_first_frame, current_position, positions, current_angle, prev_des, prev_kp, scale_factor, offset, alg_positions, r_model
     camera_matrix = np.array([
         [1.4133e+03, 0, 950.0639],
         [0, 1.4188e+03, 543.3796],
@@ -90,10 +110,11 @@ def process_frame(frame, count, frame_name):
             model.fit(alg_positions, xy_data)
             scale_factor = model.coef_
             offset = model.intercept_
-        print(positions)
+            train_model(alg_positions,xy_data,scale_factor,offset)
         scaled_positions = np.dot(positions, scale_factor.T) + offset
         pred_translation_x = scaled_positions[0]
         pred_translation_y = scaled_positions[1]
+        #pred_translation_x,pred_translation_y=r_model.predict(pred_translation_x,pred_translation_y)
     else:
         pred_translation_x = xy_data[count][0]
         pred_translation_y = xy_data[count][1]

@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the data from the GT_Translations.csv file
-gt_translations = pd.read_csv('data/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv')
+gt_translations = pd.read_csv('../data/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv')
 
 # Initialize an empty list to store the parsed data from Sonuc2.txt
 coordinates = []
