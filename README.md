@@ -15,13 +15,13 @@
         İki adet predict kodu biri teknofestin sunucundan gelecek olan veriyi predict eden diğeri ise direk localden "path" ile belirtilen değişkenden gelen veriyi predict eden algoritma(Predict_for_server.py && Predict_for_yolo.py)
 # Depoyu Klonlayıp Kullanabilmek İçin Yapılması Gerekenler
     Deponun Bütün Gereksinimleri Ubuntu 22.04 Üzerinde Test Edilmiştir.
-    # Depoyu Klonlamak İçin:
+Depoyu Klonlamak İçin:
 ```bash
     git clone https://github.com/Nurullah649/NPC-AI.git
     cd NPC-AI
     pip install -r requirements.txt  
 ```
-# Eğer yolov10'u kullanmak istiyorsanız:
+Eğer yolov10'u kullanmak istiyorsanız:
 ```bash
     git clone https://github.com/THU-MIG/yolov10.git
     cd yolov10
