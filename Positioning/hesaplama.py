@@ -6,7 +6,7 @@ matplotlib.use('GTK3Cairo')
 
 coordinates = []
 # Read and parse data from Combined_Sonuc.txt
-with open('../data/Result.txt', 'r') as file:
+with open('../data/Result_2.txt', 'r') as file:
     data = file.readlines()
     for line in data:
         try:
@@ -46,7 +46,7 @@ def calculate_E(x_hat, y_hat, x, y):
 
 
 # Read data from GT_Translations.csv file
-gt_translations = pd.read_csv('../data/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv')
+gt_translations = pd.read_csv('../../Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/2024_TUYZ_Online_Yarisma.csv')
 
 # Ensure the columns are numeric and handle NaN values
 gt_translations = gt_translations[['translation_x', 'translation_y']].apply(pd.to_numeric, errors='coerce')

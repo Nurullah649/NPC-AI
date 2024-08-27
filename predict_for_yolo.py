@@ -45,7 +45,8 @@ if __name__ == "__main__":
     # Model konfigürasyon dosyası ve Model konumu
     train_yaml = "content/config.yaml"
     v10X_model_path = 'runs/detect/yolov10x-1920/best.pt'
-    v10_model = YOLOv10(model=v10X_model_path)  # Pretrained model path
+    v10X_model_path2='runs/detect/yolov10x-1920-w33090/last.pt'
+    v10_model = YOLOv10(model=v10X_model_path2)  # Pretrained model path
 
     positions = []
     main(frames=frames, model=v10_model, path=path)

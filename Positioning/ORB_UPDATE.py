@@ -9,7 +9,7 @@ from filterpy.kalman import KalmanFilter
 
 
 def train_model(alg_postions, gt_positions, scale_factor, offset):
-    with open("../Sonuc/ALG_data_model_train.csv", 'a') as file:
+    with open("../data/ALG_data_model_train.csv", 'a') as file:
         file.write("x,y\n")
         for position in alg_postions:
             scaled_positions = np.dot(position, scale_factor.T) + offset
@@ -17,7 +17,7 @@ def train_model(alg_postions, gt_positions, scale_factor, offset):
             pred_translation_y = scaled_positions[1]
             file.write(f"{pred_translation_x},{pred_translation_y}\n")
 
-    with open("../Sonuc/GT_data_model_train.csv", 'a') as file:
+    with open("../data/GT_data_model_train.csv", 'a') as file:
         file.write("x,y\n")
         for position in gt_positions:
             file.write(f"{position[0]},{position[1]}\n")
@@ -132,14 +132,14 @@ def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp,
     prev_kp = kp2
     alg_positions.append(current_position)
 
-    kalman_position = kalman_update(kf, current_position)
+    #kalman_position = kalman_update(kf, current_position)
 
     if count >= 449 and scale_factor is None:
         scale_factor, offset = calculate_scaling_factors(alg_positions, xy_data)
-        train_model(alg_positions, xy_data, scale_factor, offset)
+        #train_model(alg_positions, xy_data, scale_factor, offset)
 
     if scale_factor is not None:
-        scaled_positions = np.dot(kalman_position, scale_factor.T) + offset
+        scaled_positions = np.dot(current_position, scale_factor.T) + offset
         pred_translation_x = scaled_positions[0]
         pred_translation_y = scaled_positions[1]
         # pred_translation_x,pred_translation_y=r_model.predict(pred_translation_x,pred_translation_y)
@@ -147,7 +147,7 @@ def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp,
         pred_translation_x = xy_data[count][0]
         pred_translation_y = xy_data[count][1]
 
-    with open("../Sonuc/Result.txt", 'a') as file:
+    with open("../data/Result_2.txt", 'a') as file:
         file.write(f"{pred_translation_x}, {pred_translation_y}, {frame_name}\n")
 
     return prev_des, prev_kp, current_position, current_angle, scale_factor, offset
@@ -155,7 +155,7 @@ def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp,
 
 def main():
     orb = initialize_orb()
-    file_path = '../data/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv'
+    file_path = '../../Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/2024_TUYZ_Online_Yarisma.csv'
     df = pd.read_csv(file_path)
     x_sutunu_indeksi = 0
     y_sutunu_indeksi = 1
@@ -170,7 +170,7 @@ def main():
     scale_factor = None
     offset = None
 
-    frames_path = '../../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum/'
+    frames_path = '../../Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/Iptal_Oturum_Frames/'
     frames = sorted(os.listdir(frames_path), key=lambda x: int(x.split('_')[1].split('.')[0]))
     alg_positions = []
 
