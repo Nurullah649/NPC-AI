@@ -147,15 +147,15 @@ def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp,
         pred_translation_x = xy_data[count][0]
         pred_translation_y = xy_data[count][1]
 
-    with open("../data/Result_2.txt", 'a') as file:
-        file.write(f"{pred_translation_x}, {pred_translation_y}, {frame_name}\n")
+    with open("Result_2.txt", 'a') as file:
+        file.write(f"{pred_translation_x}, {pred_translation_y}\n")
 
     return prev_des, prev_kp, current_position, current_angle, scale_factor, offset
 
 
 def main():
     orb = initialize_orb()
-    file_path = '../../Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/2024_TUYZ_Online_Yarisma.csv'
+    file_path = '../../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv'
     df = pd.read_csv(file_path)
     x_sutunu_indeksi = 0
     y_sutunu_indeksi = 1
@@ -170,7 +170,7 @@ def main():
     scale_factor = None
     offset = None
 
-    frames_path = '../../Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/Iptal_Oturum_Frames/'
+    frames_path = '../../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum/'
     frames = sorted(os.listdir(frames_path), key=lambda x: int(x.split('_')[1].split('.')[0]))
     alg_positions = []
 

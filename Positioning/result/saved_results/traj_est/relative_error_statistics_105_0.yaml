@@ -1,0 +1,48 @@
+gravity:
+  max: 0.0
+  mean: 0.0
+  median: 0.0
+  min: 0.0
+  num_samples: 2010
+  rmse: 0.0
+  std: 0.0
+rot:
+  max: 0.0
+  mean: 0.0
+  median: 0.0
+  min: 0.0
+  num_samples: 2010
+  rmse: 0.0
+  std: 0.0
+rot_deg_per_m:
+  max: 0.0
+  mean: 0.0
+  median: 0.0
+  min: 0.0
+  num_samples: 2010
+  rmse: 0.0
+  std: 0.0
+trans:
+  max: 30.809348660364396
+  mean: 16.195700150982532
+  median: 15.318951688212499
+  min: 0.4688221756712191
+  num_samples: 2010
+  rmse: 18.37658031896925
+  std: 8.68320222262457
+trans_perc:
+  max: 29.342236819394664
+  mean: 15.42447633426908
+  median: 14.589477798297617
+  min: 0.44649731016306576
+  num_samples: 2010
+  rmse: 17.501505065685
+  std: 8.269716402499592
+yaw:
+  max: 0.0
+  mean: 0.0
+  median: 0.0
+  min: 0.0
+  num_samples: 2010
+  rmse: 0.0
+  std: 0.0

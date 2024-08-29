@@ -3,13 +3,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the data from the GT_Translations.csv file
-gt_translations = pd.read_csv('../../Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/2024_TUYZ_Online_Yarisma.csv')
+gt_translations = pd.read_csv('../../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv')
 
 # Initialize an empty list to store the parsed data from Sonuc2.txt
 coordinates = []
 
 # Read and parse the data from the Sonuc2.txt file
-with open('../data/Result_2.txt', 'r') as file:
+with open('Result_2.txt', 'r') as file:
     data = file.readlines()
     for line in data:
 
