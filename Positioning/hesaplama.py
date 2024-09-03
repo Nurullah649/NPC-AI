@@ -46,7 +46,7 @@ def calculate_E(x_hat, y_hat, x, y):
 
 
 # Read data from GT_Translations.csv file
-gt_translations = pd.read_csv('../../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv')
+gt_translations = pd.read_csv('../../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum.csvg')
 
 # Ensure the columns are numeric and handle NaN values
 gt_translations = gt_translations[['translation_x', 'translation_y']].apply(pd.to_numeric, errors='coerce')

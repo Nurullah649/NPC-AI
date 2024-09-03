@@ -1,22 +1,25 @@
-import pandas as pd
+def convert_file(input_file, output_file):
+    with open(input_file, 'r') as infile, open(output_file, 'w') as outfile:
+        timestamp = 0.0
+        for line in infile:
+            # x ve y değerlerini satırdan al
+            try:
+                x, y = map(float, line.strip().split())
+            except ValueError:
+                continue  # Geçersiz satırları atla
 
-# Load the data
-filename = 'Result_2.txt'
-data = pd.read_csv(filename, header=None)
+            # Varsayılan değerler
+            tz = 0.0
+            qx = qy = qz = qw = 0.0
 
-# Generate a timestamp based on the index or some time interval
-time_interval = 1.0  # Assume 1 second between each entry
-data.insert(0, 'timestamp', [i * time_interval for i in range(len(data))])
+            # Satırı yeni formatta yaz
+            outfile.write(f"{timestamp} {x} {y} {tz} {qx} {qy} {qz} {qw}\n")
 
-# Add the tz and quaternion values
-data.columns = ['timestamp', 'tx', 'ty']
-data['tz'] = 0.0
-data['qx'] = 0.0
-data['qy'] = 0.0
-data['qz'] = 0.0
-data['qw'] = 1.0
+            # timestamp'ı 1.0 artır
+            timestamp += 1.0
 
-# Reorder and save
-data = data[['timestamp', 'tx', 'ty', 'tz', 'qx', 'qy', 'qz', 'qw']]
-output_filename = 'result/stamped_traj_estimate.txt'
-data.to_csv(output_filename, header=False, index=False, sep=' ')
+
+# Kullanım
+input_file = 'stamped_groundtruth.txt'
+output_file = 'result/stamped_groundtruth.txt'
+convert_file(input_file, output_file)

@@ -1,29 +1,12 @@
+
 import os
 import cv2
 import numpy as np
 import pandas as pd
-from scipy.optimize import leastsq, least_squares
+from scipy.optimize import leastsq
 from sklearn.linear_model import LinearRegression
 from filterpy.kalman import KalmanFilter
-#from Class.R_Model import R_Model
-
-
-def train_model(alg_postions, gt_positions, scale_factor, offset):
-    with open("../data/ALG_data_model_train.csv", 'a') as file:
-        file.write("x,y\n")
-        for position in alg_postions:
-            scaled_positions = np.dot(position, scale_factor.T) + offset
-            pred_translation_x = scaled_positions[0]
-            pred_translation_y = scaled_positions[1]
-            file.write(f"{pred_translation_x},{pred_translation_y}\n")
-
-    with open("../data/GT_data_model_train.csv", 'a') as file:
-        file.write("x,y\n")
-        for position in gt_positions:
-            file.write(f"{position[0]},{position[1]}\n")
-    # r_model = R_Model(alg_data_path="R_model_train.csv",gt_data_path="GT_model_train.csv")
-    # return r_model
-
+from Class.Calculate_Direction import Calculate_Direction
 
 def initialize_orb():
     return cv2.ORB.create(nfeatures=1050, WTA_K=3, scaleFactor=1.035, edgeThreshold=14, nlevels=9)
@@ -108,9 +91,14 @@ def calculate_scaling_factors(alg_positions, xy_data):
     offset = model.intercept_
     return scale_factor, offset
 
+detected=None
+
 
 def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp, current_position, current_angle,
                   alg_positions, scale_factor, offset):
+    global detected
+    pred_translation_x=0
+    pred_translation_y=0
     camera_matrix = np.array([
         [1.4133e+03, 0, 950.0639],
         [0, 1.4188e+03, 543.3796],
@@ -130,23 +118,63 @@ def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp,
 
     prev_des = des2
     prev_kp = kp2
-    alg_positions.append(current_position)
 
-    #kalman_position = kalman_update(kf, current_position)
+    kalman_position = kalman_update(kf, current_position)
 
-    if count >= 449 and scale_factor is None:
+    if count > 449 and scale_factor is None:
         scale_factor, offset = calculate_scaling_factors(alg_positions, xy_data)
-        #train_model(alg_positions, xy_data, scale_factor, offset)
+        detected = Calculate_Direction(gt_data=xy_data, alg_data=alg_positions)
+    if scale_factor is not None :
+        if detected.calculate_direction_change():
+            scaled_positions = np.dot(kalman_position, scale_factor.T) + offset
+            pred_translation_x = scaled_positions[0]
+            pred_translation_y = scaled_positions[1]
+        else:
+            if count <= 449:
+                alg_positions.append(current_position)
+                pred_translation_x = xy_data[count][0]
+                pred_translation_y = xy_data[count][1]
+            else:
+                print(detected.compare_total_directions())
+                match detected.compare_total_directions():
+                    case 0:
+                        print('Yön değişti')
+                        ters_dizi = list(map(lambda pair: (pair[1], pair[0]), alg_positions))
+                        detected2 = Calculate_Direction(gt_data=xy_data, alg_data=ters_dizi)
+                        match detected2.compare_total_directions():
+                            case 1:
+                                print('değişken X negatif')
+                                pred_translation_x = kalman_position[1] * -1/40
+                                pred_translation_y = kalman_position[0]/40
+                            case 2:
+                                print('değişken Y negatif')
+                                pred_translation_x = kalman_position[1]/40
+                                pred_translation_y = kalman_position[0] * -1/40
+                            case 3:
+                                print('değişken X ve Y negatif')
+                                pred_translation_x = kalman_position[1] * -1/40
+                                pred_translation_y = kalman_position[0] * -1/40
 
-    if scale_factor is not None:
-        scaled_positions = np.dot(current_position, scale_factor.T) + offset
-        pred_translation_x = scaled_positions[0]
-        pred_translation_y = scaled_positions[1]
-        # pred_translation_x,pred_translation_y=r_model.predict(pred_translation_x,pred_translation_y)
+                    case 1:
+                        print('X negatif')
+                        pred_translation_x = kalman_position[0] * -1/40
+                        pred_translation_y = kalman_position[1]/40
+                    case 2:
+                        print('Y negatif')
+                        pred_translation_x = kalman_position[0]/40
+                        pred_translation_y = kalman_position[1] * -1/40
+                    case 3:
+                        print('X ve Y negatif')
+                        pred_translation_x = kalman_position[0] * -1/40
+                        pred_translation_y = kalman_position[1] * -1/40
+
     else:
-        pred_translation_x = xy_data[count][0]
-        pred_translation_y = xy_data[count][1]
+        if count <= 449:
+            alg_positions.append(current_position)
+            pred_translation_x = xy_data[count][0]
+            pred_translation_y = xy_data[count][1]
 
+    #print(pred_translation_x, pred_translation_y)
     with open("Result_2.txt", 'a') as file:
         file.write(f"{pred_translation_x}, {pred_translation_y}\n")
 
@@ -180,7 +208,7 @@ def main():
     for frame in frames:
         frame_path = os.path.join(frames_path, frame)
         frame_name = os.path.basename(frame_path)
-        print(f"Processing frame: {frame_name}")
+        #print(f"Processing frame: {frame_name}")
         frame = cv2.imread(frame_path)
         prev_des, prev_kp, current_position, current_angle, scale_factor, offset = process_frame(
             frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp, current_position,

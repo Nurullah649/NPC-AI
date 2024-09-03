@@ -1,3 +1,4 @@
+import math
 import os
 import cv2
 import numpy as np
@@ -5,24 +6,6 @@ import pandas as pd
 from scipy.optimize import leastsq, least_squares
 from sklearn.linear_model import LinearRegression
 from filterpy.kalman import KalmanFilter
-from Class.R_Model import R_Model
-
-r=R_Model()
-def train_model(alg_postions, gt_positions, scale_factor, offset):
-    with open("ALG_data_model_train.csv", 'a') as file:
-        file.write("x,y\n")
-        for position in alg_postions:
-            scaled_positions = np.dot(position, scale_factor.T) + offset
-            pred_translation_x = scaled_positions[0]
-            pred_translation_y = scaled_positions[1]
-            file.write(f"{pred_translation_x},{pred_translation_y}\n")
-
-    with open("GT_data_model_train.csv", 'a') as file:
-        file.write("x,y\n")
-        for position in gt_positions:
-            file.write(f"{position[0]},{position[1]}\n")
-    r.train_model()
-
 
 
 def initialize_orb():
@@ -83,7 +66,7 @@ def update_position(src_pts, dst_pts, current_position, current_angle):
     positions = current_position.copy()
     if len(src_pts) >= 4 and len(dst_pts) >= 4:
 
-        m, mask = cv2.findHomography(src_pts, dst_pts,cv2.RANSAC,ransacReprojThreshold=3.0)
+        m, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, ransacReprojThreshold=3.0)
         if m is not None:
             m = optimize_homography(m, src_pts, dst_pts)  # LM ile optimizasyon
             src_mean = np.mean(src_pts, axis=0)
@@ -109,10 +92,12 @@ def calculate_scaling_factors(alg_positions, xy_data):
     return scale_factor, offset
 
 
+Regression = False
+
 
 def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp, current_position, current_angle,
                   alg_positions, scale_factor, offset):
-
+    global Regression
     camera_matrix = np.array([
         [1.4133e+03, 0, 950.0639],
         [0, 1.4188e+03, 543.3796],
@@ -136,22 +121,11 @@ def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp,
 
     kalman_position = kalman_update(kf, current_position)
 
-    if count >= 449 and scale_factor is None:
-        scale_factor, offset = calculate_scaling_factors(alg_positions, xy_data)
-        train_model(alg_positions, xy_data, scale_factor, offset)
-
-    if scale_factor is not None:
-        scaled_positions = np.dot(kalman_position, scale_factor.T) + offset
-        pred_translation_x = scaled_positions[0]
-        pred_translation_y = scaled_positions[1]
-        pred_translation_x_r,pred_translation_y_r=r.predict(pred_translation_x,pred_translation_y)
-        with open("../data/Result_R.txt", 'a') as file:
-            file.write(f"{pred_translation_x_r}, {pred_translation_y_r}, {frame_name}\n")
-    else:
-        pred_translation_x = xy_data[count][0]
-        pred_translation_y = xy_data[count][1]
-
-    with open("Result.txt", 'a') as file:
+    # scaled_positions = np.dot(current_position, scale_factor.T) + offset
+    pred_translation_x = kalman_position[0]/40
+    pred_translation_y = kalman_position[1]/40
+    print(f"Predicted translation: {pred_translation_x}, {pred_translation_y}")
+    with open("Result_2.txt", 'a') as file:
         file.write(f"{pred_translation_x}, {pred_translation_y}\n")
 
     return prev_des, prev_kp, current_position, current_angle, scale_factor, offset
@@ -159,7 +133,7 @@ def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp,
 
 def main():
     orb = initialize_orb()
-    file_path = '../data/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv'
+    file_path = '../../Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/2024_TUYZ_Online_Yarisma.csv'
     df = pd.read_csv(file_path)
     x_sutunu_indeksi = 0
     y_sutunu_indeksi = 1
@@ -174,7 +148,7 @@ def main():
     scale_factor = None
     offset = None
 
-    frames_path = '../../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum/'
+    frames_path = '../../Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/Iptal_Oturum_Frames/'
     frames = sorted(os.listdir(frames_path), key=lambda x: int(x.split('_')[1].split('.')[0]))
     alg_positions = []
 
