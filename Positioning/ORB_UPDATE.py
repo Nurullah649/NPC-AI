@@ -144,29 +144,29 @@ def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp,
                         match detected2.compare_total_directions():
                             case 1:
                                 print('değişken X negatif')
-                                pred_translation_x = kalman_position[1] * -1/40
-                                pred_translation_y = kalman_position[0]/40
+                                pred_translation_x = kalman_position[1] / -detected.get_scale_factor()
+                                pred_translation_y = kalman_position[0]/detected.get_scale_factor()
                             case 2:
                                 print('değişken Y negatif')
-                                pred_translation_x = kalman_position[1]/40
-                                pred_translation_y = kalman_position[0] * -1/40
+                                pred_translation_x = kalman_position[1]/detected.get_scale_factor()
+                                pred_translation_y = kalman_position[0] / -detected.get_scale_factor()
                             case 3:
                                 print('değişken X ve Y negatif')
-                                pred_translation_x = kalman_position[1] * -1/40
-                                pred_translation_y = kalman_position[0] * -1/40
+                                pred_translation_x = kalman_position[1] /-detected.get_scale_factor()
+                                pred_translation_y = kalman_position[0] /-detected.get_scale_factor()
 
                     case 1:
                         print('X negatif')
-                        pred_translation_x = kalman_position[0] * -1/40
-                        pred_translation_y = kalman_position[1]/40
+                        pred_translation_x = kalman_position[0] /-detected.get_scale_factor()
+                        pred_translation_y = kalman_position[1]/detected.get_scale_factor()
                     case 2:
                         print('Y negatif')
-                        pred_translation_x = kalman_position[0]/40
-                        pred_translation_y = kalman_position[1] * -1/40
+                        pred_translation_x = kalman_position[0]/detected.get_scale_factor()
+                        pred_translation_y = kalman_position[1] /-detected.get_scale_factor()
                     case 3:
                         print('X ve Y negatif')
-                        pred_translation_x = kalman_position[0] * -1/40
-                        pred_translation_y = kalman_position[1] * -1/40
+                        pred_translation_x = (kalman_position[0] * -1)/detected.get_scale_factor()
+                        pred_translation_y = (kalman_position[1] * -1)/detected.get_scale_factor()
 
     else:
         if count <= 449:
@@ -183,7 +183,7 @@ def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp,
 
 def main():
     orb = initialize_orb()
-    file_path = '../../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv'
+    file_path = '../../Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/2024_TUYZ_Online_Yarisma.csv'
     df = pd.read_csv(file_path)
     x_sutunu_indeksi = 0
     y_sutunu_indeksi = 1
@@ -198,7 +198,7 @@ def main():
     scale_factor = None
     offset = None
 
-    frames_path = '../../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum/'
+    frames_path = '../../Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/Iptal_Oturum_Frames/'
     frames = sorted(os.listdir(frames_path), key=lambda x: int(x.split('_')[1].split('.')[0]))
     alg_positions = []
 

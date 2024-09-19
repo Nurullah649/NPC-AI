@@ -6,7 +6,7 @@ import json
 from Class import Does_it_intersect
 import re
 
-tracker = CameraMovementTracker(predict_with_server.first_translation_data)
+tracker = CameraMovementTracker()
 detected_objects = []
 BASE_URL = "http://teknofest.cezerirobot.com:1025/"
 

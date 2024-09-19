@@ -12,7 +12,7 @@ from datetime import datetime
 
 
 # Configurations
-BASE_URL = "http://teknofest.cezerirobot.com:1025/"
+BASE_URL = "http://10.10.10.98:1025/"
 AUTH_URL = f"{BASE_URL}auth/"
 FRAMES_URL = f"{BASE_URL}frames/"
 PREDICTION_URL = f"{BASE_URL}prediction/"
