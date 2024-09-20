@@ -51,5 +51,6 @@ def does_human_center_intersect(results, path):
             for obj in objects:
                 x1, y1, x2, y2, _, class_id = obj
                 if class_id == 2 or class_id == 3:
+                    print(x1, y1, x2, y2)
                     return image_similarity_checker.control(x1=x1, y1=y1, x2=x2, y2=y2, image_path=os.path.join(path),
                                                             class_id=class_id)

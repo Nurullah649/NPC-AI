@@ -64,7 +64,7 @@ if __name__ == "__main__":
     train_yaml = "content/config.yaml"
     v10X_model_path = 'runs/detect/yolov10x-1920/best.pt'
     v10X_model_path2='runs/detect/yolov10x-1920-w33090/last.pt'
-    v10_model = YOLOv10(model=v10X_model_path2)  # Pretrained model path
+    v10_model = YOLOv10(model=v10X_model_path)  # Pretrained model path
 
 
     positions = []
