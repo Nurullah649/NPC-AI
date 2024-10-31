@@ -1,30 +1,37 @@
 import os
 import shutil
 
+
+
+
 def tasima(kaynak_dizin, hedef_dizin):
     # Kaynak dizindeki tüm dosya ve klasörleri listeler
     dosyalar = os.listdir(kaynak_dizin)
-
+    count=0
     # Dosyaları döngüye al
     for dosya in dosyalar:
         # Dosyanın tam yolu
         kaynak = os.path.join(kaynak_dizin, dosya)
+        kaynak_dosyalar=os.listdir(kaynak)
+        for d in kaynak_dosyalar:
+            dizin=os.path.join(kaynak,d)
+            for i in os.listdir(dizin):
+                # Hedef dizine taşıma işlemi
+                c=os.path.join(dizin, i)
+                for x in os.listdir(c):
+                    dizin_son=os.path.join(os.path.join(dizin, i),x)
+                    print(count,dosya, d,i,x)
+                    yeni_ad=dosya+"_"+d+"_"+i+"_"+x
+                    hedef_dosya=os.path.join(hedef_dizin,yeni_ad)
+                    shutil.copy(dizin_son, hedef_dosya)
+                    count+=1
 
-        # Eğer bir dosya ise ve dosya bir resim dosyası ise taşı
-        if os.path.isfile(kaynak) and dosya.endswith(('.txt')):#''.png', '.jpg', '.jpeg', '.gif'
-            # Hedef dizinde aynı isimde bir dosya var mı kontrol et
-            hedef = os.path.join(hedef_dizin, dosya)
-            # Hedef dizinde aynı isimde dosya varsa farklı bir isimle taşı
-            yeni_isim = dosya.split('.')[0] + '_VY2_5.' + dosya.split('.')[1]
-            hedef = os.path.join(hedef_dizin, yeni_isim)
-            shutil.move(kaynak, hedef)
-            print(f"{dosya} hedef dizinde zaten var, {yeni_isim} olarak taşındı.")
-        else:
-            print(f"{dosya} bir resim dosyası değil, atlanıyor.")
+
+
 
 # Kaynak ve hedef dizinlerin tanımlanması
-kaynak_dizin = "/home/npc-ai/Masaüstü/VY2_5_txt_konum"
-hedef_dizin = "/home/npc-ai/Masaüstü/new_dataset_label"
+kaynak_dizin = "/home/nurullah/Desktop/Predict/images/t/"
+hedef_dizin = "/home/nurullah/Desktop/DATA_SET/images/val/"
 
 # Fonksiyonu çağırma
 tasima(kaynak_dizin, hedef_dizin)

@@ -2,17 +2,15 @@ import numpy as np
 import cv2
 
 # Kamera kaynağını başlat (0, varsayılan kamerayı açar)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(4)
 
-# Kırmızı için alt ve üst sınırlar (HSV formatında)
-lower_red1 = np.array([0, 120, 70])
-upper_red1 = np.array([10, 255, 255])
-lower_red2 = np.array([170, 120, 70])
-upper_red2 = np.array([180, 255, 255])
+# Kırmızı için tek sınır (HSV formatında)
+lower_red = np.array([0, 120, 70])
+upper_red = np.array([10, 255, 255])
 
-# Genişletilmiş mavi renk aralıkları (HSV formatında)
+# Mavi için tek sınır (HSV formatında)
 lower_blue = np.array([100, 150, 0])
-upper_blue = np.array([150, 255, 255])
+upper_blue = np.array([140, 255, 255])
 
 # Kameranın çözünürlüğünü öğren ve merkezini bul
 frame_width = int(cap.get(3))
@@ -37,12 +35,10 @@ while True:
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     if not tracking_mode:
-        # Kırmızı rengi tespit et (iki farklı aralığı birleştir)
-        mask_red1 = cv2.inRange(hsv, lower_red1, upper_red1)
-        mask_red2 = cv2.inRange(hsv, lower_red2, upper_red2)
-        mask_red = mask_red1 + mask_red2
+        # Kırmızı rengi tespit et
+        mask_red = cv2.inRange(hsv, lower_red, upper_red)
 
-        # Mavi rengi tespit et (genişletilmiş aralık)
+        # Mavi rengi tespit et
         mask_blue = cv2.inRange(hsv, lower_blue, upper_blue)
 
         # Kırmızı ve mavi için konturları bul

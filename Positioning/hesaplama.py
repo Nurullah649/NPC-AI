@@ -1,18 +1,19 @@
 import numpy as np
 import pandas as pd
 import matplotlib
+from matplotlib import pyplot as plt
 
 matplotlib.use('GTK3Cairo')
 
 coordinates = []
 # Read and parse data from Combined_Sonuc.txt
-with open('Result_2.txt', 'r') as file:
-    data = file.readlines()
-    for line in data:
+with open('/home/nurullah/Desktop/NPC-AI/data/original_code.txt', 'r') as file:
+    for line in file:
         try:
-            parts = line.split(',')
-            x = float(parts[0])
-            y = float(parts[1])
+            parts = line.split()
+            if len(parts) >= 8:  # 8. eleman x, 9. eleman y
+                x = float(parts[5])  # x değeri
+                y = float(parts[6])  # y değeri
             print(f"Translation X: {x}, Translation Y: {y}")
             coordinates.append((x, y))
         except (ValueError, IndexError) as e:
@@ -46,7 +47,7 @@ def calculate_E(x_hat, y_hat, x, y):
 
 
 # Read data from GT_Translations.csv file
-gt_translations = pd.read_csv('../../Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/2024_TUYZ_Online_Yarisma.csv')
+gt_translations = pd.read_csv('/home/nurullah/Desktop/NPC-AI/content/2024_Ornek_Veri_GT.csv')
 
 # Ensure the columns are numeric and handle NaN values
 gt_translations = gt_translations[['translation_x', 'translation_y']].apply(pd.to_numeric, errors='coerce')
@@ -89,3 +90,15 @@ try:
     print(f"Error E: {E}")
 except ValueError as e:
     print(f"Error calculating E: {e}")
+# Plotting the results
+plt.figure(figsize=(10, 6))
+plt.plot(x_gt, y_gt, label='Ground Truth', marker='o', linestyle='-', color='blue')
+plt.plot(x_vals, y_vals, label='Calculated', marker='x', linestyle='--', color='red')
+
+plt.title('Ground Truth vs Calculated Translations')
+plt.xlabel('Translation X')
+plt.ylabel('Translation Y')
+plt.legend()
+plt.grid()
+plt.axis('equal')  # To maintain the aspect ratio
+plt.show()

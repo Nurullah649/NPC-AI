@@ -60,11 +60,11 @@ def formatter(results,path,name):
         "detected_objects": detected_objects_json,
         "detected_translations": detected_translation
     }
-    if not os.path.exists("json"):
+    '''if not os.path.exists("json"):
         os.makedirs("json")
     # JSON dosyasına yazma işlemi
     json_file_path = f"json/{name.split('.jpg')[0]}.json"  # Dilediğiniz dosya adını ve yolunu belirleyebilirsiniz
     with open(json_file_path, 'w') as json_file:
         json.dump(json_data, json_file, indent=2)
-        print(f"JSON dosyası oluşturuldu: {json_file_path}")
+        print(f"JSON dosyası oluşturuldu: {json_file_path}")'''
     return x,y

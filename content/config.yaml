@@ -1,6 +1,6 @@
-path: /home/npc-ai/Masaüstü/DENEME_DATA
-train: /home/npc-ai/Masaüstü/DENEME_DATA/images/train2
-val: /home/npc-ai/Masaüstü/DENEME_DATA/images/val
+path: /home/nurullah/Desktop/val/
+train:  /home/nurullah/Desktop/val/images/val2
+val: /home/nurullah/Desktop/val/images/val2
 
 nc: 4
 names:
