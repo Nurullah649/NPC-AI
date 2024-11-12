@@ -7,15 +7,15 @@ matplotlib.use('GTK3Cairo')
 
 coordinates = []
 # Read and parse data from Combined_Sonuc.txt
-with open('/home/nurullah/Desktop/NPC-AI/data/original_code.txt', 'r') as file:
+with open('/home/nurullah/Desktop/DPVO/result/images.txt', 'r') as file:
     for line in file:
         try:
             parts = line.split()
             if len(parts) >= 8:  # 8. eleman x, 9. eleman y
-                x = float(parts[5])  # x değeri
-                y = float(parts[6])  # y değeri
+                x = float(parts[5])*3.536731580968524  # x değeri
+                y = float(parts[6])*3.536731580968524  # y değeri
             print(f"Translation X: {x}, Translation Y: {y}")
-            coordinates.append((x, y))
+            coordinates.append((-x, -y))
         except (ValueError, IndexError) as e:
             print(f"Error parsing line: {line}")
             print(e)

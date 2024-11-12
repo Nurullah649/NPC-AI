@@ -24,10 +24,9 @@ def main(frames, model, path):
             data=train_yaml,
             save=True,
 
-
         )
-        x,y = Formatter_for_yolo.formatter(results, os.path.join(path, img), name=img)
-        positions.append([x,y])
+        #x,y = Formatter_for_yolo.formatter(results, os.path.join(path, img), name=img)
+        #positions.append([x,y])
         end_for_time = time.time()
         elapsed_for_time = (end_for_time - start_for_time) * 1000
         print(Fore.GREEN + f"Total execution time: {elapsed_for_time} milliseconds" + Style.RESET_ALL)
@@ -37,15 +36,15 @@ if __name__ == "__main__":
     os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
     # Dosya yollarını oluşturmak
     desktop_path = os.path.join(expanduser("~"), "Desktop")
-    # Kaynak Lokasyonu Belirtin
-    path = '../DATA_SET/images/2024/TUYZ_2024_Ornek_Veri/'
+    # Kaynak Lokasyonu Belirtin/
+    path = '/home/nurullah/Desktop/Predict/images/2024/1. Oturum/'
     #path = "downloaded_frames/frames/2024_TUYZ_Online_Yarisma_Ana_Oturum_pmcfrqkz_Video/"
     # Dosya konumundan görsellerin sırayla çekilmesi
     frames = sorted(os.listdir(path), key=lambda x: int(x.split('_')[1].split('.')[0]))
 
     # Model konfigürasyon dosyası ve Model konumu
     train_yaml = "content/config.yaml"
-    v10X_model_path = 'runs/detect/yolov10x-1920/best.pt'
+    v10X_model_path = '/home/nurullah/Desktop/NPC-AI/runs/detect/yolov10x-1920_olddataset/best.pt'
     v10X_model_path2='/home/nurullah/Downloads/best.pt'
     v10_model = YOLOv10(model=v10X_model_path)  # Pretrained model path
 

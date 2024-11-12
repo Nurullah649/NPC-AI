@@ -53,7 +53,7 @@ def draw_boxes(frame, fused_boxes):
 
 def main():
     model_path = '/home/nurullah/Desktop/NPC-AI/runs/detect/yolov10x-1920/best.pt'
-    video_path = '/home/nurullah/Desktop/Predict/TUYZ_2024_Ornek_Veri/TUYZ_2024_Ornek_Video.MP4'
+    video_path = '/home/nurullah/Desktop/TUYZ_2024_Ornek_Veri/TUYZ_2024_Ornek_Video.MP4'
 
     model = load_model(model_path)
     if model is None:

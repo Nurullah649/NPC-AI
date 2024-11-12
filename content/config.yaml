@@ -1,6 +1,6 @@
-path: /home/nurullah/Desktop/val/
-train:  /home/nurullah/Desktop/val/images/val2
-val: /home/nurullah/Desktop/val/images/val2
+path: /home/nurullah/Desktop/DATA_SET/images/
+train:  train/
+val: val/
 
 nc: 4
 names:
