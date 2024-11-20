@@ -8,13 +8,12 @@ import cv2
 import numpy as np
 from pathlib import Path
 from ultralytics import YOLO
-from ultralytics import YOLOv10
 from sklearn.linear_model import LinearRegression
 from Class import Does_it_intersect, Process_image
 from .constants import classes, landing_statuses
 from .detected_object import DetectedObject
 from .detected_translation import DetectedTranslation
-from Class.CameraMovementTracker import CameraMovementTracker
+from ..Class.CameraMovementTracker import CameraMovementTracker
 from Class.Calculate_Direction import Calculate_Direction
 
 def read_calibration_file():
@@ -30,7 +29,7 @@ class ObjectDetectionModel:
     def __init__(self, evaluation_server_url):
         logging.info('Created Object Detection Model')
         self.evaluation_server = evaluation_server_url
-        self.model_v10 = YOLOv10("/home/nurullah/Desktop/NPC-AI/runs/detect/yolov10x-1920/best.pt")
+        self.model_v10 = YOLO("/home/nurullah/Desktop/NPC-AI/runs/detect/yolov10x-1920_olddataset/best.pt")
         self.camera_matrix, self.dist_coeffs = read_calibration_file()
         self.tracker = None
         self.is_first_frame=True

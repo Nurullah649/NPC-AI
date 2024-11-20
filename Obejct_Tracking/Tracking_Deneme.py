@@ -1,52 +1,60 @@
-import os
 import cv2
 import numpy as np
-from ultralytics import YOLOv10
-from deep_sort_realtime.deepsort_tracker import DeepSort
+from ultralytics import YOLO
+from sort import SortTracker  # SORT kütüphanesi
 
-# YOLOv10 modelini yükle
-model = YOLOv10('runs/detect/yolov10x-1920/best.pt')
+# YOLO modelini yükleme
+def load_yolo():
+    model = YOLO("../runs/detect/yolov11x-1440_new_dataset/weights/last.pt")  # Model dosyasını yükle
+    return model
 
-# Deep SORT tracker'ı başlat
-deepsort = DeepSort(max_age=30, n_init=3, nn_budget=70)
+# YOLO ile nesne algılama
+def detect_objects_yolo(model, frame):
+    results = model(frame, stream=True)
+    detections = []  # [x1, y1, x2, y2, confidence] formatında
 
-# Video kaynağını aç
-path = '../Predict/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum/'
-frames = sorted(os.listdir(path), key=lambda x: int(x.split('_')[1].split('.')[0]))
-
-for frame in frames:
-    # Görseli oku
-    img = cv2.imread(os.path.join(path, frame))
-
-    # YOLOv10 ile nesne tespiti yap
-    results = model(img)
-
-    detections = []
     for result in results:
-        for obj in result.boxes:
-            xyxy = obj.xyxy[0].cpu().numpy()
-            conf = obj.conf[0].cpu().numpy()
-            cls = obj.cls[0].cpu().numpy()  # Detection class
-            # [left, top, width, height] formatına dönüştür
-            left, top, right, bottom = xyxy
-            width = right - left
-            height = bottom - top
-            detections.append(([left, top, width, height], conf, int(cls)))
+        for box in result.boxes:
+            x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
+            confidence = float(box.conf.cpu().numpy())  # Tek değer olarak doğruluk
+            class_id = int(box.cls.cpu().numpy())
 
-    if len(detections) > 0:
-        # Deep SORT ile takip yap
-        tracks = deepsort.update_tracks(detections, img)
+            # Sadece belirli bir sınıfı takip etmek istiyorsanız burada kontrol ekleyebilirsiniz
+            if confidence > 0.5:  # Eşik değeri
+                detections.append([x1, y1, x2, y2, confidence])
 
-        # Takip edilen nesneleri çizin
-        for track in tracks:
-            box = track.to_tlbr()  # Get the bounding box in [top left, bottom right] format
-            track_id = track.track_id
-            cv2.rectangle(img, (int(box[0]), int(box[1])), (int(box[2]), int(box[3])), (0, 255, 0), 2)
-            cv2.putText(img, str(track_id), (int(box[0]), int(box[1]) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+    # Eğer hiç nesne algılanmazsa, boş bir numpy array döndür
+    return np.array(detections) if len(detections) > 0 else np.empty((0, 5))
 
-    # Sonuçları göster
-    cv2.imshow('Tracking', img)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+# Video üzerinde nesne algılama ve takip
+def process_video(video_path):
+    cap = cv2.VideoCapture(video_path)
+    model = load_yolo()
 
-cv2.destroyAllWindows()
+    tracker = SortTracker()  # SORT Tracker'ı başlat
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        # YOLO ile nesne algılama
+        detections = detect_objects_yolo(model, frame)
+
+        # Takip edilen nesneleri güncelle
+        tracked_objects = tracker.update(detections,None)  # [x1, y1, x2, y2, ID]
+
+        # Nesneleri çizin
+        for obj in tracked_objects:
+            x1, y1, x2, y2, obj_id = map(int, obj)
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            cv2.putText(frame, f"ID: {obj_id}", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+        cv2.imshow("Frame", frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+# Video dosyasını işle
+process_video("../../TUYZ_2024_Ornek_Video.MP4")

@@ -13,34 +13,7 @@ class CameraMovementTracker:
         self.camera_matrix = camera_matrix
         self.dist_coeffs = dist_coeffs
         self.first_frame=first_frame
-        self.kf=self.initialize_kalman_filter(self.first_frame)
-
-    def initialize_kalman_filter(self,initial_position):
-        kf = KalmanFilter(dim_x=4, dim_z=2)
-        kf.x = np.array([initial_position[0], 0., initial_position[1], 0.])
-        kf.F = np.array([
-            [1, 1, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 1, 1],
-            [0, 0, 0, 1]
-        ])
-        kf.H = np.array([
-            [1, 0, 0, 0],
-            [0, 0, 1, 0]
-        ])
-        kf.P *= 50000
-        kf.R = np.array([
-            [50000, 0],
-            [0, 50000]
-        ])
-        kf.Q = np.eye(4)
-        return kf
-
-    def kalman_update(self,kf, measured_position):
-        kf.predict()
-        kf.update(measured_position)
-        return kf.x[0], kf.x[2]
-
+        #self.kf=self.initialize_kalman_filter(self.first_frame)
 
     def residuals(self,h, src_pts, dst_pts):
         h_matrix = h.reshape((3, 3))
