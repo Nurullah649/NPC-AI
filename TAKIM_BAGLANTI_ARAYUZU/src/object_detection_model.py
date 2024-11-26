@@ -171,6 +171,9 @@ class ObjectDetectionModel:
                             case 3:
                                 positions[0] = (positions[0] * -1)/self.detected.get_scale_factor()
                                 positions[1] = (positions[1] * -1)/self.detected.get_scale_factor()
+                            case 4:
+                                positions[0] = (positions[0]) / self.detected.get_scale_factor()
+                                positions[1] = (positions[1]) / self.detected.get_scale_factor()
 
                     case 1:
                         positions[0] = (positions[0] * -1)/self.detected.get_scale_factor()
@@ -181,6 +184,9 @@ class ObjectDetectionModel:
                     case 3:
                         positions[0] = (positions[0] * -1)/self.detected.get_scale_factor()
                         positions[1] = (positions[1] * -1)/self.detected.get_scale_factor()
+                    case 4:
+                        positions[0] = (positions[0] ) / self.detected.get_scale_factor()
+                        positions[1] = (positions[1] ) / self.detected.get_scale_factor()
             self.trans_obj = DetectedTranslation(positions[0], positions[1])
         print(positions)
         prediction.add_translation_object(self.trans_obj)

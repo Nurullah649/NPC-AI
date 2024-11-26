@@ -3,22 +3,23 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the data from the GT_Translations.csv file
-gt_translations = pd.read_csv('/home/nurullah/Desktop/NPC-AI/content/2024_Ornek_Veri_GT.csv')
+gt_translations = pd.read_csv('/home/nurullah/NPC-AI/content/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv')
 
 # Initialize an empty list to store the parsed data from Sonuc2.txt
 coordinates = []
-
+count=0
 # Read and parse the data from the Sonuc2.txt file
-with open('/home/nurullah/Desktop/DPVO/result/images.txt', 'r') as file:
+with open('/home/nurullah/NPC-AI/Positioning/combined_results.txt', 'r') as file:
     data = file.readlines()
     for line in data:
         try:
             parts = line.split()
-            if len(parts) >= 8:  # 8. eleman x, 9. eleman y
-                x = float(parts[5])  # x değeri
-                y = float(parts[6])  # y değeri
-            print(f"Translation X: {x}, Translation Y: {y}")
-            coordinates.append((-x, -y))
+
+            x = float(parts[0])  # x değeri
+            y = float(parts[1])  # y değeri
+            print(f"{count} Translation X: {x}, Translation Y: {y}")
+            count+=1
+            coordinates.append((x, y))
         except (ValueError, IndexError) as e:
             print(f"Error parsing line: {line}")
             print(e)

@@ -3,19 +3,21 @@ import pandas as pd
 import matplotlib
 from matplotlib import pyplot as plt
 
-matplotlib.use('GTK3Cairo')
-
+matplotlib.use('Agg')
+count=0
 coordinates = []
 # Read and parse data from Combined_Sonuc.txt
-with open('/home/nurullah/Desktop/DPVO/result/images.txt', 'r') as file:
-    for line in file:
+with open('/home/nurullah/NPC-AI/Positioning/Result_2.txt', 'r') as file:
+    data = file.readlines()
+    for line in data:
         try:
             parts = line.split()
-            if len(parts) >= 8:  # 8. eleman x, 9. eleman y
-                x = float(parts[5])*3.536731580968524  # x değeri
-                y = float(parts[6])*3.536731580968524  # y değeri
-            print(f"Translation X: {x}, Translation Y: {y}")
-            coordinates.append((-x, -y))
+
+            x = float(parts[0])  # x değeri
+            y = float(parts[1])  # y değeri
+            print(f"{count} Translation X: {x}, Translation Y: {y}")
+            count+=1
+            coordinates.append((x, y))
         except (ValueError, IndexError) as e:
             print(f"Error parsing line: {line}")
             print(e)
@@ -47,7 +49,7 @@ def calculate_E(x_hat, y_hat, x, y):
 
 
 # Read data from GT_Translations.csv file
-gt_translations = pd.read_csv('/home/nurullah/Desktop/NPC-AI/content/2024_Ornek_Veri_GT.csv')
+gt_translations = pd.read_csv('/home/nurullah/NPC-AI/content/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv')
 
 # Ensure the columns are numeric and handle NaN values
 gt_translations = gt_translations[['translation_x', 'translation_y']].apply(pd.to_numeric, errors='coerce')

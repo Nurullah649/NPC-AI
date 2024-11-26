@@ -1,4 +1,3 @@
-
 import os
 import cv2
 import numpy as np
@@ -124,6 +123,9 @@ def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp,
     if count > 449 and scale_factor is None:
         scale_factor, offset = calculate_scaling_factors(alg_positions, xy_data)
         detected = Calculate_Direction(gt_data=xy_data, alg_data=alg_positions)
+        scaled_positions = np.dot(kalman_position, scale_factor.T) + offset
+        pred_translation_x = scaled_positions[0]
+        pred_translation_y = scaled_positions[1]
     if scale_factor is not None :
         if detected.calculate_direction_change():
             scaled_positions = np.dot(kalman_position, scale_factor.T) + offset
@@ -135,38 +137,46 @@ def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp,
                 pred_translation_x = xy_data[count][0]
                 pred_translation_y = xy_data[count][1]
             else:
-                print(detected.compare_total_directions())
+                #print(detected.compare_total_directions())
                 match detected.compare_total_directions():
                     case 0:
-                        print('Yön değişti')
+                        #print('Yön değişti')
                         ters_dizi = list(map(lambda pair: (pair[1], pair[0]), alg_positions))
                         detected2 = Calculate_Direction(gt_data=xy_data, alg_data=ters_dizi)
                         match detected2.compare_total_directions():
                             case 1:
-                                print('değişken X negatif')
+                                #print('değişken X negatif')
                                 pred_translation_x = kalman_position[1] / -detected.get_scale_factor()
                                 pred_translation_y = kalman_position[0]/detected.get_scale_factor()
                             case 2:
-                                print('değişken Y negatif')
+                                #print('değişken Y negatif')
                                 pred_translation_x = kalman_position[1]/detected.get_scale_factor()
                                 pred_translation_y = kalman_position[0] / -detected.get_scale_factor()
                             case 3:
-                                print('değişken X ve Y negatif')
+                                #print('değişken X ve Y negatif')
                                 pred_translation_x = kalman_position[1] /-detected.get_scale_factor()
                                 pred_translation_y = kalman_position[0] /-detected.get_scale_factor()
+                            case 4:
+                                # print('değişken X ve Y pozitif')
+                                pred_translation_x = kalman_position[1] / detected.get_scale_factor()
+                                pred_translation_y = kalman_position[0] / detected.get_scale_factor()
 
                     case 1:
-                        print('X negatif')
+                        #print('X negatif')
                         pred_translation_x = kalman_position[0] /-detected.get_scale_factor()
                         pred_translation_y = kalman_position[1]/detected.get_scale_factor()
                     case 2:
-                        print('Y negatif')
+                        #print('Y negatif')
                         pred_translation_x = kalman_position[0]/detected.get_scale_factor()
                         pred_translation_y = kalman_position[1] /-detected.get_scale_factor()
                     case 3:
-                        print('X ve Y negatif')
+                        #print('X ve Y negatif')
                         pred_translation_x = (kalman_position[0] * -1)/detected.get_scale_factor()
                         pred_translation_y = (kalman_position[1] * -1)/detected.get_scale_factor()
+                    case 4:
+                        # print('X ve Y pozitif')
+                        pred_translation_x = (kalman_position[0] ) / detected.get_scale_factor()
+                        pred_translation_y = (kalman_position[1] ) / detected.get_scale_factor()
 
     else:
         if count <= 449:
@@ -174,16 +184,20 @@ def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp,
             pred_translation_x = xy_data[count][0]
             pred_translation_y = xy_data[count][1]
 
-    #print(pred_translation_x, pred_translation_y)
+    #print(pred_translation_x, pred_translation_y,'\n')
+
     with open("Result_2.txt", 'a') as file:
-        file.write(f"{pred_translation_x}, {pred_translation_y}\n")
+        file.write(f"{pred_translation_x} {pred_translation_y}\n")
 
     return prev_des, prev_kp, current_position, current_angle, scale_factor, offset
 
+from tqdm import tqdm
 
 def main():
+    if os.path.join('Result_2.txt'):
+        os.remove('Result_2.txt')
     orb = initialize_orb()
-    file_path = '../../Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/2024_TUYZ_Online_Yarisma.csv'
+    file_path = '../content/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv'
     df = pd.read_csv(file_path)
     x_sutunu_indeksi = 0
     y_sutunu_indeksi = 1
@@ -198,22 +212,24 @@ def main():
     scale_factor = None
     offset = None
 
-    frames_path = '../../Predict/2024_TUYZ_Online_Yarisma_Iptal_Oturum/Iptal_Oturum_Frames/'
+    frames_path = '/home/nurullah/Downloads/2024_TUYZ_Online_Yarisma_Oturumu/2024_TUYZ_Online_Yarisma_Ana_Oturum/'
     frames = sorted(os.listdir(frames_path), key=lambda x: int(x.split('_')[1].split('.')[0]))
     alg_positions = []
 
     kf = initialize_kalman_filter(current_position)
 
     count = 0
-    for frame in frames:
+    # Wrap the frames list with tqdm for the progress bar
+    for frame in tqdm(frames, desc="Processing frames", unit="frame",disable=False):
         frame_path = os.path.join(frames_path, frame)
         frame_name = os.path.basename(frame_path)
-        #print(f"Processing frame: {frame_name}")
         frame = cv2.imread(frame_path)
         prev_des, prev_kp, current_position, current_angle, scale_factor, offset = process_frame(
             frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp, current_position,
             current_angle, alg_positions, scale_factor, offset)
         count += 1
+
+
 
 
 if __name__ == "__main__":

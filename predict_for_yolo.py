@@ -3,7 +3,7 @@ import time
 from os.path import expanduser
 from colorama import Fore, Style
 from ultralytics import YOLO
-from Class import Formatter_for_yolo
+from Class import formatter_W_AI
 from Class import Process_image
 from pandas import read_csv
 import matplotlib.pyplot as plt
@@ -43,14 +43,14 @@ def main(images, model, path):
         # Formatter ile veriyi işleme
         if count < 450:
             gt_x, gt_y = data['translation_x'][count], data['translation_y'][count]
-            x, y = Formatter_for_yolo.formatter(
+            x, y = formatter_W_AI.formatter_with_ai(
                 results, os.path.join(path, img),
                 gt_data_=[gt_x, gt_y],
                 health_status='1'
             )
         else:
             gt_x, gt_y = data['translation_x'][count], data['translation_y'][count]
-            x, y = Formatter_for_yolo.formatter(
+            x, y = formatter_W_AI.formatter_with_ai(
                 results, os.path.join(path, img),
                 gt_data_=[gt_x, gt_y],
                 health_status='0'
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     path = '/home/nurullah/Desktop/Predict/images/2024/1. Oturum/'
     frames = sorted(os.listdir(path), key=lambda x: int(x.split('_')[1].split('.')[0]))
     train_yaml = "content/config.yaml"
-    v10X_model_path = '/home/nurullah/Desktop/NPC-AI/runs/detect/yolov10x-1920_olddataset/best.pt'
+    v10X_model_path = '/home/nurullah/NPC-AI/runs/detect/yolov10x-1920_olddataset/best.pt'
     v10_model = YOLO(model=v10X_model_path)
     a = '0.0'
     positions = []

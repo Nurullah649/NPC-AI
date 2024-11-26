@@ -52,6 +52,8 @@ class Calculate_Direction:
                 return 2
             elif not x_similarity and not y_similarity:
                 return 3
+            else:
+                return 4
 
     def calculate_scale_factor(self):
         # Her iki veri seti arasındaki ölçek farkını hesaplar
