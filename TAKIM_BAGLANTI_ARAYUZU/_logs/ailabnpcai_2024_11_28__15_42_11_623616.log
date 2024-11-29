@@ -1,0 +1,9 @@
+2024-11-28 15:42:11,623 - INFO - Created Object Detection Model
+2024-11-28 15:42:11,720 - ERROR - Login request failed: HTTPConnectionPool(host='localhost', port=1025): Max retries exceeded with url: /auth/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x755eb0f3eb90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2024-11-28 15:42:11,721 - ERROR - Get frames request failed: HTTPConnectionPool(host='localhost', port=1025): Max retries exceeded with url: /frames/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x755eb0f3d6c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2024-11-28 15:42:11,721 - INFO - Retrying in 0.1 seconds...
+2024-11-28 15:42:11,823 - ERROR - Get frames request failed: HTTPConnectionPool(host='localhost', port=1025): Max retries exceeded with url: /frames/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x755eb0f3da20>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2024-11-28 15:42:11,823 - INFO - Retrying in 0.2 seconds...
+2024-11-28 15:42:12,025 - ERROR - Get frames request failed: HTTPConnectionPool(host='localhost', port=1025): Max retries exceeded with url: /frames/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x755eb0f3ef20>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2024-11-28 15:42:12,025 - INFO - Retrying in 0.4 seconds...
+2024-11-28 15:42:12,425 - ERROR - Failed to get frames after multiple retries. Loading frames from file.

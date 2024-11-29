@@ -5,7 +5,7 @@ import time
 import os
 from decouple import config
 
-
+session_name=''
 class ConnectionHandler:
     def __init__(self, base_url, username=None, password=None):
         self.base_url = base_url
@@ -131,6 +131,7 @@ class ConnectionHandler:
         engellemek için tanımlanmıştır. get_frames fonksiyonunu kullanırken bu kısıtı göz önünde
         bulundurmak yarışmacıların sorumluluğundadır.
         """
+        global session_name
         try:
             # _images klasorunun mevcut olup olmadigini kontrol edelim
             if os.path.exists(self.img_save_path):

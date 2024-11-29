@@ -1,25 +1,29 @@
-def convert_file(input_file, output_file):
-    with open(input_file, 'r') as infile, open(output_file, 'w') as outfile:
-        timestamp = 0.0
-        for line in infile:
-            # x ve y değerlerini satırdan al
-            try:
-                x, y = map(float, line.strip().split())
-            except ValueError:
-                continue  # Geçersiz satırları atla
+import matplotlib.pyplot as plt
 
-            # Varsayılan değerler
-            tz = 0.0
-            qx = qy = qz = qw = 0.0
+# Verilerin bulunduğu txt dosyasının yolu
+file_path = 'updated_video_data.txt'
 
-            # Satırı yeni formatta yaz
-            outfile.write(f"{timestamp} {x} {y} {tz} {qx} {qy} {qz} {qw}\n")
+# x ve y listeleri
+x = []
+y = []
 
-            # timestamp'ı 1.0 artır
-            timestamp += 1.0
+# Dosyayı açıp her satırdan x ve y verilerini alıyoruz
+with open(file_path, 'r') as file:
+    for line in file:
+        # Satırı ayırarak x ve y'yi alıyoruz
+        values = line.split()
+        pred_x = float(values[5])
+        pred_y = float(values[6])
+        x.append(pred_y)  # x değeri
+        y.append(-pred_x)  # y değeri
 
+# Grafik oluşturma (noktalar şeklinde)
+plt.scatter(x, y)
 
-# Kullanım
-input_file = 'stamped_groundtruth.txt'
-output_file = 'result/stamped_groundtruth.txt'
-convert_file(input_file, output_file)
+# Başlık ve etiketler ekleme
+plt.title("X ve Y Verilerinin Nokta Grafiği")
+plt.xlabel("X Değerleri")
+plt.ylabel("Y Değerleri")
+
+# Grafiği gösterme
+plt.show()

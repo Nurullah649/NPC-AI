@@ -3,21 +3,21 @@ import pandas as pd
 import matplotlib
 from matplotlib import pyplot as plt
 
-matplotlib.use('Agg')
+matplotlib.use('TkAgg')  # Use TkAgg for interactive plotting
 count=0
 coordinates = []
 # Read and parse data from Combined_Sonuc.txt
-with open('/home/nurullah/NPC-AI/Positioning/Result_2.txt', 'r') as file:
+with open('updated_video_data.txt', 'r') as file:
     data = file.readlines()
     for line in data:
         try:
             parts = line.split()
 
-            x = float(parts[0])  # x değeri
-            y = float(parts[1])  # y değeri
+            x = float(parts[5])*11.852485469143044  # x değeri
+            y = float(parts[6])*11.852485469143044 # y değeri
             print(f"{count} Translation X: {x}, Translation Y: {y}")
             count+=1
-            coordinates.append((x, y))
+            coordinates.append((y, -x))
         except (ValueError, IndexError) as e:
             print(f"Error parsing line: {line}")
             print(e)
@@ -87,15 +87,17 @@ for array_name, array in [("x_gt", x_gt), ("y_gt", y_gt), ("x_vals", x_vals), ("
         print(f"{array_name} contains Inf values.")
 
 # Calculate the error
+x_t = np.concatenate((x_gt[:450], x_vals[450:]))
+y_t = np.concatenate((y_gt[:450], y_vals[450:]))
 try:
-    E = calculate_E(x_gt, y_gt, x_vals, y_vals)
+    E = calculate_E(x_gt, y_gt, x_t, y_t)
     print(f"Error E: {E}")
 except ValueError as e:
     print(f"Error calculating E: {e}")
 # Plotting the results
 plt.figure(figsize=(10, 6))
 plt.plot(x_gt, y_gt, label='Ground Truth', marker='o', linestyle='-', color='blue')
-plt.plot(x_vals, y_vals, label='Calculated', marker='x', linestyle='--', color='red')
+plt.plot(x_t,y_t, label='Calculated', marker='x', linestyle='--', color='red')
 
 plt.title('Ground Truth vs Calculated Translations')
 plt.xlabel('Translation X')

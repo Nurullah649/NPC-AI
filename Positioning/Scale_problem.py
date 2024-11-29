@@ -1,7 +1,10 @@
+from fractions import Fraction
+
+import matplotlib
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
+matplotlib.use('TkAgg')  # Use TkAgg for interactive plotting
 # Read the data from the GT_Translations.csv file
 gt_translations = pd.read_csv('/home/nurullah/NPC-AI/content/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv')
 
@@ -9,17 +12,17 @@ gt_translations = pd.read_csv('/home/nurullah/NPC-AI/content/2024_TUYZ_Online_Ya
 coordinates = []
 count=0
 # Read and parse the data from the Sonuc2.txt file
-with open('/home/nurullah/NPC-AI/Positioning/combined_results.txt', 'r') as file:
+with open('updated_video_data.txt', 'r') as file:
     data = file.readlines()
     for line in data:
         try:
             parts = line.split()
 
-            x = float(parts[0])  # x değeri
-            y = float(parts[1])  # y değeri
+            x = float(parts[5])*11.852485469143044 # x değeri
+            y = float(parts[6])*11.852485469143044 # y değeri
             print(f"{count} Translation X: {x}, Translation Y: {y}")
             count+=1
-            coordinates.append((x, y))
+            coordinates.append((y, -x))
         except (ValueError, IndexError) as e:
             print(f"Error parsing line: {line}")
             print(e)
@@ -61,4 +64,5 @@ plt.grid(True)
 plt.show()
 
 print(f"Scale Factor: {scale_factor}")
+print(1/ scale_factor)
 print(f"Angular Difference: {angle_difference_degrees} degrees")

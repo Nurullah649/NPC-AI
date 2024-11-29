@@ -1,0 +1,21 @@
+2024-11-28 15:42:44,095 - INFO - Created Object Detection Model
+2024-11-28 15:42:44,190 - ERROR - Login request failed: HTTPConnectionPool(host='localhost', port=1025): Max retries exceeded with url: /auth/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x74ff6b232bc0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2024-11-28 15:42:44,191 - WARNING - ./_images/TUYZ_Video_9_s40wo/frames.json does not exist.
+2024-11-28 15:42:44,191 - ERROR - Get frames request failed: HTTPConnectionPool(host='localhost', port=1025): Max retries exceeded with url: /frames/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x74ff6b2318a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2024-11-28 15:42:44,191 - INFO - Retrying in 0.1 seconds...
+2024-11-28 15:42:44,293 - ERROR - Get frames request failed: HTTPConnectionPool(host='localhost', port=1025): Max retries exceeded with url: /frames/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x74ff6b231a20>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2024-11-28 15:42:44,293 - INFO - Retrying in 0.2 seconds...
+2024-11-28 15:42:44,495 - ERROR - Get frames request failed: HTTPConnectionPool(host='localhost', port=1025): Max retries exceeded with url: /frames/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x74ff6b232d40>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2024-11-28 15:42:44,495 - INFO - Retrying in 0.4 seconds...
+2024-11-28 15:42:44,896 - ERROR - Failed to get frames after multiple retries. Loading frames from file.
+2024-11-28 15:42:44,896 - WARNING - ./_images/TUYZ_Video_9_s40wo/frames.json does not exist.
+2024-11-28 15:42:44,896 - WARNING - ./_images/TUYZ_Video_9_s40wo/translations.json does not exist.
+2024-11-28 15:42:44,897 - ERROR - Get translations request failed: HTTPConnectionPool(host='localhost', port=1025): Max retries exceeded with url: /translation/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x74ff6b2304c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2024-11-28 15:42:44,897 - INFO - Retrying in 0.1 seconds...
+2024-11-28 15:42:44,998 - ERROR - Get translations request failed: HTTPConnectionPool(host='localhost', port=1025): Max retries exceeded with url: /translation/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x74ff6b20f130>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2024-11-28 15:42:44,999 - INFO - Retrying in 0.2 seconds...
+2024-11-28 15:42:45,200 - ERROR - Get translations request failed: HTTPConnectionPool(host='localhost', port=1025): Max retries exceeded with url: /translation/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x74ff6b20de40>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2024-11-28 15:42:45,200 - INFO - Retrying in 0.4 seconds...
+2024-11-28 15:42:45,601 - ERROR - Failed to get translations after multiple retries. Loading translations from file.
+2024-11-28 15:42:45,601 - WARNING - ./_images/TUYZ_Video_9_s40wo/translations.json does not exist.
+2024-11-28 15:42:45,602 - INFO - Checkpoints saved before exit.

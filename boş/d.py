@@ -3,7 +3,7 @@ import re
 
 # Log dosyasını oku
 log_file = '2. Oturum/_logs/'  # Log dosyanızın adı
-output_file = 'successful_frames.txt'
+output_file = '../TAKIM_BAGLANTI_ARAYUZU/successful_frames.txt'
 logs= os.listdir(log_file)
 
 count=0
