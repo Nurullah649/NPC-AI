@@ -194,8 +194,9 @@ def process_frame(frame, count, frame_name, xy_data, orb, kf, prev_des, prev_kp,
 from tqdm import tqdm
 
 def main():
-    if os.path.join('Result_2.txt'):
-        os.remove('Result_2.txt')
+
+    '''if os.path.join('Result_2.txt'):
+        os.remove('Result_2.txt')'''
     orb = initialize_orb()
     file_path = '../content/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv'
     df = pd.read_csv(file_path)

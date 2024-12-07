@@ -3,7 +3,7 @@ import time
 from os.path import expanduser
 from colorama import Fore, Style
 from ultralytics import YOLO
-from Class import formatter_W_AI
+from Class import Formatter_for_yolo
 from Class import Process_image
 from pandas import read_csv
 import matplotlib.pyplot as plt
@@ -43,14 +43,14 @@ def main(images, model, path):
         # Formatter ile veriyi işleme
         if count < 450:
             gt_x, gt_y = data['translation_x'][count], data['translation_y'][count]
-            x, y = formatter_W_AI.formatter_with_ai(
+            x, y = Formatter_for_yolo.formatter(
                 results, os.path.join(path, img),
                 gt_data_=[gt_x, gt_y],
                 health_status='1'
             )
         else:
             gt_x, gt_y = data['translation_x'][count], data['translation_y'][count]
-            x, y = formatter_W_AI.formatter_with_ai(
+            x, y =  Formatter_for_yolo.formatter(
                 results, os.path.join(path, img),
                 gt_data_=[gt_x, gt_y],
                 health_status='0'
