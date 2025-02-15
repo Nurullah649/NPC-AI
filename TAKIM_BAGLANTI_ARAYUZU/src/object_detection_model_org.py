@@ -2,7 +2,7 @@ import logging
 import time
 import random
 import requests
-from ultralytics import YOLOv10
+from ultralytics import YOLO
 from .constants import classes, landing_statuses
 from .detected_object import DetectedObject
 from .detected_translation import DetectedTranslation
@@ -15,7 +15,7 @@ class ObjectDetectionModel:
         logging.info('Created Object Detection Model')
         self.evaulation_server = evaluation_server_url
         # Modelinizi bu kısımda init edebilirsiniz.
-        self.model = YOLOv10()
+        self.model = YOLO()
 
     @staticmethod
     def download_image(img_url, images_folder, images_files, retries=3, initial_wait_time=0.1):

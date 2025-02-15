@@ -1,4 +1,4 @@
-YOLOv10x summary (fused): 503 layers, 31591784 parameters, 0 gradients, 169.8 GFLOPs
+YOLOv10x summary (fused): 503 layers, 31,591,784 parameters, 0 gradients, 169.8 GFLOPs
                  Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100%|██████████| 375/375 [01:52<00:00,  3.35it/s]
                    all       2250     115994      0.779      0.743       0.75      0.701
                  Araba       2250     110967      0.964      0.881       0.95      0.826

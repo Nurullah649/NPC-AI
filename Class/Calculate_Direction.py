@@ -13,12 +13,13 @@ class Calculate_Direction:
         direction_changes = 0
         # Başlangıç yönünü belirle
         previous_vector = np.array(self.gt_data[1]) - np.array(self.gt_data[0])
-
+        threshold_angle=np.pi/4
         for i in range(1, len(self.gt_data) - 1):
             current_vector = np.array(self.gt_data[i + 1]) - np.array(self.gt_data[i])
 
-            # İki vektör arasındaki açıya bakıyoruz (dot product kullanarak)
-            if np.dot(previous_vector, current_vector) < 0:
+            angle = np.arccos(np.clip(np.dot(previous_vector, current_vector) / (np.linalg.norm(previous_vector) * np.linalg.norm(current_vector)), -1.0, 1.0))
+
+            if angle > threshold_angle:
                 direction_changes += 1
 
             previous_vector = current_vector
@@ -57,7 +58,7 @@ class Calculate_Direction:
 
     def calculate_scale_factor(self):
         # Her iki veri seti arasındaki ölçek farkını hesaplar
-        total_gt_vector = np.sum(np.diff(self.gt_data, axis=0), axis=0)
+        '''total_gt_vector = np.sum(np.diff(self.gt_data, axis=0), axis=0)
         total_alg_vector = np.sum(np.diff(self.alg_data, axis=0), axis=0)
 
         # İki vektörün normunu hesapla
@@ -65,7 +66,10 @@ class Calculate_Direction:
         alg_norm = np.linalg.norm(total_alg_vector)
 
         # Ölçek faktörünü hesapla
-        scale_factor = alg_norm / gt_norm
+        scale_factor = alg_norm / gt_norm'''
+        scales = [np.linalg.norm(alg_vec) / np.linalg.norm(gt_vec)
+                  for alg_vec, gt_vec in zip(np.diff(self.alg_data, axis=0), np.diff(self.gt_data, axis=0))]
+        scale_factor = np.median(scales)
 
         return scale_factor
 

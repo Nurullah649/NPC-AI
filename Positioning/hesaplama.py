@@ -2,22 +2,23 @@ import numpy as np
 import pandas as pd
 import matplotlib
 from matplotlib import pyplot as plt
-
+#17.004386156636134
+#17.004386156636134
 matplotlib.use('TkAgg')  # Use TkAgg for interactive plotting
 count=0
 coordinates = []
 # Read and parse data from Combined_Sonuc.txt
-with open('/home/nurullah/DPVO/result/images.txt', 'r') as file:
+with open('combined_results.txt', 'r') as file:
     data = file.readlines()
     for line in data:
         try:
             parts = line.split()
 
-            x = float(parts[5])*4.319146578732656  # x değeri
-            y = float(parts[6])*4.319146578732656 # y değeri
+            x = float(parts[0])  # x değeri
+            y = float(parts[1]) # y değeri
             print(f"{count} Translation X: {x}, Translation Y: {y}")
             count+=1
-            coordinates.append((y, -x))
+            coordinates.append((x, y))
         except (ValueError, IndexError) as e:
             print(f"Error parsing line: {line}")
             print(e)

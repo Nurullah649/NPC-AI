@@ -71,4 +71,4 @@ def process_video(video_path):
     cv2.destroyAllWindows()
 
 # Video dosyasını işle
-process_video("../../TUYZ_2024_Ornek_Video.MP4")
+process_video("../")

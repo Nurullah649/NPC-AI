@@ -1,4 +1,4 @@
-file_path = '/home/nurullah/DPVO/result/images.txt'
+file_path = 'images_1.txt'
 
 with open(file_path, 'r') as file:
     data = file.readlines()
@@ -7,7 +7,7 @@ with open(file_path, 'r') as file:
 non_empty_lines = [line for line in data if line.strip()]
 
 # Dosyayı güncelle
-with open('deneme.txt', 'w') as file:
+with open('images_1.txt', 'w') as file:
     file.writelines(non_empty_lines)
 
 print(f"Orijinal satır sayısı: {len(data)}")

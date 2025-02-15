@@ -5,7 +5,7 @@ from sklearn.linear_model import LinearRegression
 
 # Load data from updated_video_data.txt
 coordinates = []
-with open('deneme.txt', 'r') as file:
+with open('images_1.txt', 'r') as file:
     data = file.readlines()
 
     for line in data:
@@ -45,7 +45,7 @@ y_train = np.column_stack((x_vals[:train_size], y_vals[:train_size]))
 
 # Train the linear regression model
 model = LinearRegression(fit_intercept=False, positive=False)
-model.fit(x_train, y_train)
+model.fit(y_train, x_train)
 scale_factor = model.coef_
 offset = model.intercept_
 
