@@ -2,23 +2,23 @@ import numpy as np
 import pandas as pd
 import matplotlib
 from matplotlib import pyplot as plt
-#17.004386156636134
+#8.159275201114161
 #17.004386156636134
 matplotlib.use('TkAgg')  # Use TkAgg for interactive plotting
 count=0
 coordinates = []
 # Read and parse data from Combined_Sonuc.txt
-with open('combined_results.txt', 'r') as file:
+with open('../../DPVO/deneme.txt', 'r') as file:
     data = file.readlines()
     for line in data:
         try:
-            parts = line.split()
+            parts = line.split(',')
 
             x = float(parts[0])  # x değeri
             y = float(parts[1]) # y değeri
             print(f"{count} Translation X: {x}, Translation Y: {y}")
             count+=1
-            coordinates.append((x, y))
+            coordinates.append((x, -y))
         except (ValueError, IndexError) as e:
             print(f"Error parsing line: {line}")
             print(e)
@@ -35,7 +35,7 @@ def calculate_E(x_hat, y_hat, x, y):
     total_sum = 0
 
     for i in range(N):
-        term = ((x_hat[i] - x[i]) ** 2 + (y_hat[i] - y[i]) ** 2) ** 0.5
+        term = (((x_hat[i] - x[i])**2) + ((y_hat[i] - y[i])**2)) ** 0.5
         total_sum += term
 
         # Print the term and its components for debugging
@@ -50,7 +50,7 @@ def calculate_E(x_hat, y_hat, x, y):
 
 
 # Read data from GT_Translations.csv file
-gt_translations = pd.read_csv('/home/nurullah/NPC-AI/content/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv')
+gt_translations = pd.read_csv('../content/2024_TUYZ_Online_Yarisma.csv')
 
 # Ensure the columns are numeric and handle NaN values
 gt_translations = gt_translations[['translation_x', 'translation_y']].apply(pd.to_numeric, errors='coerce')

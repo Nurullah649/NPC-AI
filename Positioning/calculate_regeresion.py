@@ -5,25 +5,25 @@ from sklearn.linear_model import LinearRegression
 
 # Load data from updated_video_data.txt
 coordinates = []
-with open('images_1.txt', 'r') as file:
+with open('../../DPVO/iptal_sim.txt', 'r') as file:
     data = file.readlines()
-
     for line in data:
         try:
-            parts = line.split()
-            x = float(parts[5])  # x value
-            y = float(parts[6])  # y value
+            print(data)
+            parts = line.split(',')
+            x = float(parts[0])  # x value
+            y = float(parts[1])  # y value
             coordinates.append([x, y])
         except (ValueError, IndexError):
             continue  # Skip invalid lines
-print(len(coordinates))
+
 
 # Separate x and y values
 x_vals = [coord[0] for coord in coordinates]
 y_vals = [coord[1] for coord in coordinates]
 
 # Load ground truth translations from CSV
-gt_translations = pd.read_csv('../content/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv')
+gt_translations = pd.read_csv('../content/2024_TUYZ_İptal_Online_Yarisma.csv')
 gt_translations = gt_translations[['translation_x', 'translation_y']].apply(pd.to_numeric, errors='coerce').dropna()
 
 # Extract x and y values

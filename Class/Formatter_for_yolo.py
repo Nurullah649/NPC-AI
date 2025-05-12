@@ -3,8 +3,8 @@ import os
 import numpy as np
 from colorama import Fore
 from sklearn.linear_model import LinearRegression
-from Class.Calculate_Direction import Calculate_Direction
-from Class.Positioning_for_yolo import CameraMovementTracker
+from .Calculate_Direction import Calculate_Direction
+from .DPVO_Obejct import DPVO_object
 import json
 from Class import Does_it_intersect
 
@@ -15,6 +15,7 @@ detected_objects = []
 scale_factor = None
 detected=None
 offset=None
+""" ORB için kullanılan kalibrasyon dosyası
 def read_calibration_file():
     camera_matrix = np.array([
         [1.4133e+03, 0, 950.0639],
@@ -24,12 +25,12 @@ def read_calibration_file():
     dist_coeffs = np.array([-0.0091, 0.0666, 0, 0])
     return camera_matrix, dist_coeffs
 
-camera_matrix, dist_coeffs = read_calibration_file()
-tracker = CameraMovementTracker(camera_matrix, dist_coeffs)
+camera_matrix, dist_coeffs = read_calibration_file()"""
+tracker = DPVO_object()
 
-def formatter(results,path,gt_data_,health_status):
+def formatter(results,path,idx,gt_data_,health_status):
     global scale_factor,detected,offset
-    tracker.process_frame(cv2.imread(path))
+
     detected_objects_json = []
     # Algılanan nesnelerin JSON formatına dönüştürüleceği listeyi oluştur
     if results is None:
@@ -49,7 +50,7 @@ def formatter(results,path,gt_data_,health_status):
                     "bottom_right_y": y2
                 }
                 if class_id == 3 or class_id == 2:
-                    if Does_it_intersect.does_human_center_intersect(results,path):
+                    if Does_it_intersect.does_other_center_intersect(results,path):
                         print(Fore.GREEN,'İNİLEBİLİR')
                         obj["landing_status"] = "1"
                     else:
@@ -61,8 +62,9 @@ def formatter(results,path,gt_data_,health_status):
 
     # Algılanan çevirilerin JSON formatına dönüştürüleceği listeyi oluştur
 
-    translation = tracker.get_positions().tolist()  # Get the current position
-    x, y = translation  # Unpack the translation
+    translation = tracker.process_frames_from_list(idx,path)  # Get the current position
+    print(translation)
+    x, y ,z= translation  # Unpack the translation
     if health_status == '1':
         calibration_frames.append((x, y))
         gt_data.append([float(gt_data_[0]), float(gt_data_[1])])
@@ -78,11 +80,12 @@ def formatter(results,path,gt_data_,health_status):
                 model.fit(alg_positions, gt_positions)
                 scale_factor = model.coef_
                 offset = model.intercept_
-                scaled_positions = np.dot(translation, scale_factor.T) + offset
+                scaled_positions = np.dot(translation[:2], scale_factor.T) + offset
                 x = scaled_positions[0]
                 y = scaled_positions[1]
+
         elif detected.calculate_direction_change():
-            scaled_positions = np.dot(translation, scale_factor.T) + offset
+            scaled_positions = np.dot(translation[:2], scale_factor.T) + offset
             x = scaled_positions[0]
             y = scaled_positions[1]
         else:

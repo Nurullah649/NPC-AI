@@ -1,0 +1,394 @@
+=== DATASET RAPORU ===
+• Veri seti       : kırpılmış256
+• Toplam örnek    : 12151
+• Görüntü boyutu  : 1×256×256
+• Özellik sayısı  : 65536
+• Sınıf sayısı     : 2 → ['inilebilir', 'inilemez']
+• Sınıf başına adetler:
+    - inilebilir: 7665
+    - inilemez: 4486
+======================
+======== Same Data ========
+--- Değerlendirme ---
+Confusion Matrix:
+ [[7631   34]
+ [  19 4467]]
+Accuracy : 0.9956
+Precision: 0.9924
+Recall   : 0.9958
+F1 Score : 0.9941
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       1.00      1.00      1.00      7665
+    inilemez       0.99      1.00      0.99      4486
+
+    accuracy                           1.00     12151
+   macro avg       0.99      1.00      1.00     12151
+weighted avg       1.00      1.00      1.00     12151
+========= %70-%30 data ==========
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[2268   32]
+ [  27 1319]]
+Accuracy : 0.9838
+Precision: 0.9763
+Recall   : 0.9799
+F1 Score : 0.9781
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.99      0.99      0.99      2300
+    inilemez       0.98      0.98      0.98      1346
+
+    accuracy                           0.98      3646
+   macro avg       0.98      0.98      0.98      3646
+weighted avg       0.98      0.98      0.98      3646
+
+
+===== 5-Fold Fold 1 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[1515   18]
+ [  17  881]]
+Accuracy : 0.9856
+Precision: 0.9800
+Recall   : 0.9811
+F1 Score : 0.9805
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.99      0.99      0.99      1533
+    inilemez       0.98      0.98      0.98       898
+
+    accuracy                           0.99      2431
+   macro avg       0.98      0.98      0.98      2431
+weighted avg       0.99      0.99      0.99      2431
+
+
+===== 5-Fold Fold 2 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[1503   30]
+ [  24  873]]
+Accuracy : 0.9778
+Precision: 0.9668
+Recall   : 0.9732
+F1 Score : 0.9700
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.98      0.98      0.98      1533
+    inilemez       0.97      0.97      0.97       897
+
+    accuracy                           0.98      2430
+   macro avg       0.98      0.98      0.98      2430
+weighted avg       0.98      0.98      0.98      2430
+
+
+===== 5-Fold Fold 3 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[1511   22]
+ [  16  881]]
+Accuracy : 0.9844
+Precision: 0.9756
+Recall   : 0.9822
+F1 Score : 0.9789
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.99      0.99      0.99      1533
+    inilemez       0.98      0.98      0.98       897
+
+    accuracy                           0.98      2430
+   macro avg       0.98      0.98      0.98      2430
+weighted avg       0.98      0.98      0.98      2430
+
+
+===== 5-Fold Fold 4 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[1506   27]
+ [  17  880]]
+Accuracy : 0.9819
+Precision: 0.9702
+Recall   : 0.9810
+F1 Score : 0.9756
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.99      0.98      0.99      1533
+    inilemez       0.97      0.98      0.98       897
+
+    accuracy                           0.98      2430
+   macro avg       0.98      0.98      0.98      2430
+weighted avg       0.98      0.98      0.98      2430
+
+===== 5-Fold Fold 5 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[1514   19]
+ [  23  874]]
+Accuracy : 0.9827
+Precision: 0.9787
+Recall   : 0.9744
+F1 Score : 0.9765
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.99      0.99      0.99      1533
+    inilemez       0.98      0.97      0.98       897
+
+    accuracy                           0.98      2430
+   macro avg       0.98      0.98      0.98      2430
+weighted avg       0.98      0.98      0.98      2430
+
+===== 10-Fold Fold 1 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[753  14]
+ [ 10 439]]
+Accuracy : 0.9803
+Precision: 0.9691
+Recall   : 0.9777
+F1 Score : 0.9734
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.99      0.98      0.98       767
+    inilemez       0.97      0.98      0.97       449
+
+    accuracy                           0.98      1216
+   macro avg       0.98      0.98      0.98      1216
+weighted avg       0.98      0.98      0.98      1216
+
+===== 10-Fold Fold 2 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[758   9]
+ [  8 440]]
+Accuracy : 0.9860
+Precision: 0.9800
+Recall   : 0.9821
+F1 Score : 0.9810
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.99      0.99      0.99       767
+    inilemez       0.98      0.98      0.98       448
+
+    accuracy                           0.99      1215
+   macro avg       0.98      0.99      0.98      1215
+weighted avg       0.99      0.99      0.99      1215
+
+
+===== 10-Fold Fold 3 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[756  11]
+ [  4 444]]
+Accuracy : 0.9877
+Precision: 0.9758
+Recall   : 0.9911
+F1 Score : 0.9834
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.99      0.99      0.99       767
+    inilemez       0.98      0.99      0.98       448
+
+    accuracy                           0.99      1215
+   macro avg       0.99      0.99      0.99      1215
+weighted avg       0.99      0.99      0.99      1215
+
+===== 10-Fold Fold 4 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[750  17]
+ [ 12 436]]
+Accuracy : 0.9761
+Precision: 0.9625
+Recall   : 0.9732
+F1 Score : 0.9678
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.98      0.98      0.98       767
+    inilemez       0.96      0.97      0.97       448
+
+    accuracy                           0.98      1215
+   macro avg       0.97      0.98      0.97      1215
+weighted avg       0.98      0.98      0.98      1215
+
+
+===== 10-Fold Fold 5 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[752  15]
+ [ 10 438]]
+Accuracy : 0.9794
+Precision: 0.9669
+Recall   : 0.9777
+F1 Score : 0.9723
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.99      0.98      0.98       767
+    inilemez       0.97      0.98      0.97       448
+
+    accuracy                           0.98      1215
+   macro avg       0.98      0.98      0.98      1215
+weighted avg       0.98      0.98      0.98      1215
+
+
+===== 10-Fold Fold 6 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[757   9]
+ [ 10 439]]
+Accuracy : 0.9844
+Precision: 0.9799
+Recall   : 0.9777
+F1 Score : 0.9788
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.99      0.99      0.99       766
+    inilemez       0.98      0.98      0.98       449
+
+    accuracy                           0.98      1215
+   macro avg       0.98      0.98      0.98      1215
+weighted avg       0.98      0.98      0.98      1215
+
+
+===== 10-Fold Fold 7 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[756  10]
+ [  5 444]]
+Accuracy : 0.9877
+Precision: 0.9780
+Recall   : 0.9889
+F1 Score : 0.9834
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.99      0.99      0.99       766
+    inilemez       0.98      0.99      0.98       449
+
+    accuracy                           0.99      1215
+   macro avg       0.99      0.99      0.99      1215
+weighted avg       0.99      0.99      0.99      1215
+
+
+===== 10-Fold Fold 8 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[750  16]
+ [  6 443]]
+Accuracy : 0.9819
+Precision: 0.9651
+Recall   : 0.9866
+F1 Score : 0.9758
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.99      0.98      0.99       766
+    inilemez       0.97      0.99      0.98       449
+
+    accuracy                           0.98      1215
+   macro avg       0.98      0.98      0.98      1215
+weighted avg       0.98      0.98      0.98      1215
+
+
+===== 10-Fold Fold 9 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[759   7]
+ [  9 440]]
+Accuracy : 0.9868
+Precision: 0.9843
+Recall   : 0.9800
+F1 Score : 0.9821
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.99      0.99      0.99       766
+    inilemez       0.98      0.98      0.98       449
+
+    accuracy                           0.99      1215
+   macro avg       0.99      0.99      0.99      1215
+weighted avg       0.99      0.99      0.99      1215
+
+
+===== 10-Fold Fold 10 =====
+
+--- Değerlendirme ---
+Confusion Matrix:
+ [[754  12]
+ [  7 442]]
+Accuracy : 0.9844
+Precision: 0.9736
+Recall   : 0.9844
+F1 Score : 0.9790
+
+Classification Report:
+              precision    recall  f1-score   support
+
+  inilebilir       0.99      0.98      0.99       766
+    inilemez       0.97      0.98      0.98       449
+
+    accuracy                           0.98      1215
+   macro avg       0.98      0.98      0.98      1215
+weighted avg       0.98      0.98      0.98      1215
+
+5-Fold CV detayları:
+ Fold 1: {'accuracy': 0.9856026326614562, 'precision': 0.9799777530589544, 'recall': 0.9810690423162584, 'f1': 0.9805230940456316}
+ Fold 2: {'accuracy': 0.9777777777777777, 'precision': 0.9667774086378738, 'recall': 0.9732441471571907, 'f1': 0.97}
+ Fold 3: {'accuracy': 0.9843621399176955, 'precision': 0.9756367663344407, 'recall': 0.9821627647714605, 'f1': 0.9788888888888889}
+ Fold 4: {'accuracy': 0.9818930041152263, 'precision': 0.9702315325248071, 'recall': 0.9810479375696767, 'f1': 0.975609756097561}
+ Fold 5: {'accuracy': 0.9827160493827161, 'precision': 0.9787234042553191, 'recall': 0.9743589743589743, 'f1': 0.976536312849162}
+
+10-Fold CV detayları:
+ Fold 1: {'accuracy': 0.9802631578947368, 'precision': 0.9690949227373068, 'recall': 0.977728285077951, 'f1': 0.9733924611973392}
+ Fold 2: {'accuracy': 0.9860082304526749, 'precision': 0.9799554565701559, 'recall': 0.9821428571428571, 'f1': 0.9810479375696767}
+ Fold 3: {'accuracy': 0.9876543209876543, 'precision': 0.9758241758241758, 'recall': 0.9910714285714286, 'f1': 0.9833887043189369}
+ Fold 4: {'accuracy': 0.9761316872427983, 'precision': 0.9624724061810155, 'recall': 0.9732142857142857, 'f1': 0.9678135405105438}
+ Fold 5: {'accuracy': 0.9794238683127572, 'precision': 0.9668874172185431, 'recall': 0.9776785714285714, 'f1': 0.9722530521642619}
+ Fold 6: {'accuracy': 0.9843621399176955, 'precision': 0.9799107142857143, 'recall': 0.977728285077951, 'f1': 0.9788182831661093}
+ Fold 7: {'accuracy': 0.9876543209876543, 'precision': 0.9779735682819384, 'recall': 0.9888641425389755, 'f1': 0.9833887043189369}
+ Fold 8: {'accuracy': 0.9818930041152263, 'precision': 0.9651416122004357, 'recall': 0.9866369710467706, 'f1': 0.9757709251101322}
+ Fold 9: {'accuracy': 0.9868312757201646, 'precision': 0.9843400447427293, 'recall': 0.9799554565701559, 'f1': 0.9821428571428571}
+ Fold 10: {'accuracy': 0.9843621399176955, 'precision': 0.973568281938326, 'recall': 0.9844097995545658, 'f1': 0.9789590254706534}

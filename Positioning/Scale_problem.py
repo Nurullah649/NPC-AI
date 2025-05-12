@@ -12,17 +12,17 @@ gt_translations = pd.read_csv('/home/nurullah/NPC-AI/content/2024_TUYZ_Online_Ya
 coordinates = []
 count=0
 # Read and parse the data from the Sonuc2.txt file
-with open('combined_results.txt', 'r') as file:
+with open('../../DPVO/points.txt', 'r') as file:
     data = file.readlines()
     for line in data:
         try:
-            parts = line.split()
+            parts = line.split(',')
 
-            x = float(parts[0])# x değeri
-            y = float(parts[1])# y değeri
+            x = float(parts[0])*-44# x değeri
+            y = float(parts[1])*44# y değeri
             print(f"{count} Translation X: {x}, Translation Y: {y}")
             count+=1
-            coordinates.append((x, y))
+            coordinates.append((y, x))
         except (ValueError, IndexError) as e:
             print(f"Error parsing line: {line}")
             print(e)

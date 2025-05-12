@@ -24,7 +24,7 @@ def main(images, model, path):
     ax.set_ylabel("Y Coordinate")
     ax.grid()
 
-    for img in images:
+    for idx,img in enumerate(images):
         start_for_time = time.time()
 
         # Resim ön işleme
@@ -38,20 +38,20 @@ def main(images, model, path):
         )
 
         # GT verilerini oku
-        data = read_csv('content/2024_Ornek_Veri_GT.csv')
+        data = read_csv('content/2024_TUYZ_Online_Yarisma_Ana_Oturum.csv')
 
         # Formatter ile veriyi işleme
         if count < 450:
             gt_x, gt_y = data['translation_x'][count], data['translation_y'][count]
             x, y = Formatter_for_yolo.formatter(
-                results, os.path.join(path, img),
+                results, os.path.join(path, img),idx,
                 gt_data_=[gt_x, gt_y],
                 health_status='1'
             )
         else:
             gt_x, gt_y = data['translation_x'][count], data['translation_y'][count]
             x, y =  Formatter_for_yolo.formatter(
-                results, os.path.join(path, img),
+                results, os.path.join(path, img),idx,
                 gt_data_=[gt_x, gt_y],
                 health_status='0'
             )
@@ -82,7 +82,7 @@ def main(images, model, path):
 if __name__ == "__main__":
     os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
     desktop_path = os.path.join(expanduser("~"), "Desktop")
-    path = '/home/nurullah/Desktop/Predict/images/2024/1. Oturum/'
+    path = '/home/nurullah/Desktop/Files/test/'
     frames = sorted(os.listdir(path), key=lambda x: int(x.split('_')[1].split('.')[0]))
     train_yaml = "content/config.yaml"
     v10X_model_path = '/home/nurullah/NPC-AI/runs/detect/yolov10x-1920_olddataset/best.pt'
@@ -96,5 +96,5 @@ if __name__ == "__main__":
 
     # Sonuçları kaydet
     with open("data/original_code.txt", 'w') as file:
-        for x, y in positions:
-            file.write(f"{a} {a} {a} {a} {a} {x} {y} {a}\n")
+        for x, y, z in positions:
+            file.write(f"{x} {y} {z}\n")

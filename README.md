@@ -10,13 +10,7 @@ Depoyu Klonlamak İçin:
     cd NPC-AI
     pip install -r requirements.txt  
 ```
-Eğer yolov10'u kullanmak istiyorsanız:
-```bash
-    git clone https://github.com/THU-MIG/yolov10.git
-    cd yolov10
-    pip install -r requirements.txt
-    pip install -e .
-```      
+    
 # Eğitimi Başlatmak İçin:
     Şimdide Ana klasördeki content Klasörünü açın ve bir adet Config.yaml dosyası oluşturun ve içine aşağıdaki gibi bilgileri girin:
         path: /path/to/data_set

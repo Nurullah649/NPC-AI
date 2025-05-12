@@ -19,3 +19,8 @@ YOLOv9e summary (fused): 687 layers, 57,379,484 parameters, 0 gradients, 189.1 G
                  Insan        920       3902      0.158      0.108     0.0535     0.0205
                    UAP        816        821          1      0.966      0.988      0.977
                    UAI        303        304      0.817       0.84      0.885       0.86
+
+
+
+"""Bayesian Optimizasyonda en iyi parametreler:
+{'target': 0.9796926454445664, 'params': {'dropout_rate': 0.3601687251037376, 'learning_rate': 0.0075699358709946435}}"""

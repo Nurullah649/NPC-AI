@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/DBoW2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Pangolin" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Pangolin/components/pango_python/pybind11" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Pangolin/scripts/vcpkg" vcs="Git" />
+  </component>
+</project>
