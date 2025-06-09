@@ -50,7 +50,7 @@ def formatter(results,path,idx,gt_data_,health_status):
                     "bottom_right_y": y2
                 }
                 if class_id == 3 or class_id == 2:
-                    if Does_it_intersect.does_other_center_intersect(results,path):
+                    if Does_it_intersect.does_other_center_intersect_and_predict(results,path):
                         print(Fore.GREEN,'İNİLEBİLİR')
                         obj["landing_status"] = "1"
                     else:

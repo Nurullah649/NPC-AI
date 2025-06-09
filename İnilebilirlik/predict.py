@@ -80,7 +80,7 @@ def evaluate_model(model, loader):
     wrong_inilemez.mkdir(parents=True, exist_ok=True)
 
     # Tahmine göre görüntüleri kopyala.
-    # Burada, 0.0 değeri "inilebilir", 1.0 ise "inilemez" olarak kabul ediliyor.
+    # Burada, 1.0 değeri "inilebilir", 0.0 ise "inilemez" olarak kabul ediliyor.
     for path, pred, true_label in zip(image_paths, all_preds, all_labels):
         if pred == true_label:  # doğru tahmin
             dest = correct_inilebilir if pred == 0.0 else correct_inilemez

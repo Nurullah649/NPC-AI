@@ -1,6 +1,6 @@
-path: /home/nurullah/Desktop/DATA_SET/images/
-train:  train/
-val: val/
+path: /home/ailab/Desktop/DATA_SET/images/
+train:  train_split/
+val: val_split/
 
 nc: 4
 names:

@@ -28,7 +28,7 @@ eval_transform = transforms.Compose([
 ])
 
 # 2. Veri Kümesi Yolu ve Yükleme
-data_dir = "data/kırpılmış256"  # Kendi veri dizininizi güncelleyin
+data_dir = "kırpılmış_renkli_kare"  # Kendi veri dizininizi güncelleyin
 full_train_dataset = datasets.ImageFolder(root=data_dir, transform=train_transform)
 full_eval_dataset = datasets.ImageFolder(root=data_dir, transform=eval_transform)
 

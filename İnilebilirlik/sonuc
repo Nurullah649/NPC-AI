@@ -1,0 +1,494 @@
+/home/nurullah/miniconda3/envs/dpvo/bin/python /home/nurullah/NPC-AI/İnilebilirlik/resnet_train.py
+2025-05-22 19:10:59.083072: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1747930259.097582   18992 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1747930259.102039   18992 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1747930259.114044   18992 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1747930259.114060   18992 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1747930259.114062   18992 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1747930259.114064   18992 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+2025-05-22 19:10:59.117586: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Veri yükleyiciler hazırlanıyor...
+[I 2025-05-22 19:11:01,168] A new study created in memory with name: no-name-005b9cdf-b227-4056-9ee7-34cb5e90a08e
+Veri yükleyiciler hazır.
+
+--- Optuna Hiperparametre Optimizasyonu Başlıyor (25 deneme) ---
+
+Deneme 0: lr=0.000073, dropout=0.391, opt=SGD, wd=0.0000028, ls=0.168, momentum=0.903
+  Deneme 0 - Epoch 1/15 -> Val Acc: 0.3214, Val Loss: 0.7014, Train Loss: 0.6923
+  Deneme 0 - Epoch 2/15 -> Val Acc: 0.4076, Val Loss: 0.6966, Train Loss: 0.6917
+  Deneme 0 - Epoch 3/15 -> Val Acc: 0.4766, Val Loss: 0.6932, Train Loss: 0.6902
+  Deneme 0 - Epoch 4/15 -> Val Acc: 0.5573, Val Loss: 0.6896, Train Loss: 0.6888
+  Deneme 0 - Epoch 5/15 -> Val Acc: 0.6041, Val Loss: 0.6874, Train Loss: 0.6883
+  Deneme 0 - Epoch 6/15 -> Val Acc: 0.6509, Val Loss: 0.6839, Train Loss: 0.6873
+  Deneme 0 - Epoch 7/15 -> Val Acc: 0.6933, Val Loss: 0.6799, Train Loss: 0.6861
+  Deneme 0 - Epoch 8/15 -> Val Acc: 0.7026, Val Loss: 0.6787, Train Loss: 0.6852
+  Deneme 0 - Epoch 9/15 -> Val Acc: 0.7081, Val Loss: 0.6761, Train Loss: 0.6841
+  Deneme 0 - Epoch 10/15 -> Val Acc: 0.7278, Val Loss: 0.6734, Train Loss: 0.6828
+  Deneme 0 - Epoch 11/15 -> Val Acc: 0.7475, Val Loss: 0.6703, Train Loss: 0.6821
+  Deneme 0 - Epoch 12/15 -> Val Acc: 0.7586, Val Loss: 0.6690, Train Loss: 0.6807
+  Deneme 0 - Epoch 13/15 -> Val Acc: 0.7703, Val Loss: 0.6663, Train Loss: 0.6799
+  Deneme 0 - Epoch 14/15 -> Val Acc: 0.7716, Val Loss: 0.6627, Train Loss: 0.6805
+[I 2025-05-22 19:16:56,290] Trial 0 finished with value: 0.7733990147783252 and parameters: {'lr': 7.320734585702823e-05, 'dropout_rate': 0.3906084250330071, 'optimizer': 'SGD', 'weight_decay': 2.789337316648374e-06, 'label_smoothing': 0.1681174650458248, 'momentum': 0.9027712007516565}. Best is trial 0 with value: 0.7733990147783252.
+  Deneme 0 - Epoch 15/15 -> Val Acc: 0.7734, Val Loss: 0.6624, Train Loss: 0.6786
+
+Deneme 1: lr=0.000044, dropout=0.468, opt=Adam, wd=0.0000027, ls=0.076
+  Deneme 1 - Epoch 1/15 -> Val Acc: 0.8381, Val Loss: 0.5170, Train Loss: 0.6429
+  Deneme 1 - Epoch 2/15 -> Val Acc: 0.8885, Val Loss: 0.4080, Train Loss: 0.5572
+  Deneme 1 - Epoch 3/15 -> Val Acc: 0.9083, Val Loss: 0.3656, Train Loss: 0.5163
+  Deneme 1 - Epoch 4/15 -> Val Acc: 0.9378, Val Loss: 0.3136, Train Loss: 0.4842
+  Deneme 1 - Epoch 5/15 -> Val Acc: 0.9464, Val Loss: 0.2812, Train Loss: 0.4666
+  Deneme 1 - Epoch 6/15 -> Val Acc: 0.9483, Val Loss: 0.2628, Train Loss: 0.4456
+  Deneme 1 - Epoch 7/15 -> Val Acc: 0.9495, Val Loss: 0.2499, Train Loss: 0.4462
+  Deneme 1 - Epoch 8/15 -> Val Acc: 0.9520, Val Loss: 0.2359, Train Loss: 0.4403
+  Deneme 1 - Epoch 9/15 -> Val Acc: 0.9544, Val Loss: 0.2118, Train Loss: 0.4278
+  Deneme 1 - Epoch 10/15 -> Val Acc: 0.9514, Val Loss: 0.2345, Train Loss: 0.4212
+  Deneme 1 - Epoch 11/15 -> Val Acc: 0.9581, Val Loss: 0.2050, Train Loss: 0.4171
+  Deneme 1 - Epoch 12/15 -> Val Acc: 0.9581, Val Loss: 0.2017, Train Loss: 0.4108
+  Deneme 1 - Epoch 13/15 -> Val Acc: 0.9520, Val Loss: 0.2016, Train Loss: 0.4143
+  Deneme 1 - Epoch 14/15 -> Val Acc: 0.9563, Val Loss: 0.1908, Train Loss: 0.4140
+  Deneme 1 - Epoch 15/15 -> Val Acc: 0.9581, Val Loss: 0.1932, Train Loss: 0.4089
+[I 2025-05-22 19:22:53,664] Trial 1 finished with value: 0.958128078817734 and parameters: {'lr': 4.394341839636136e-05, 'dropout_rate': 0.46795583555907183, 'optimizer': 'Adam', 'weight_decay': 2.733052716308509e-06, 'label_smoothing': 0.07631591670221315}. Best is trial 1 with value: 0.958128078817734.
+
+Deneme 2: lr=0.000034, dropout=0.411, opt=SGD, wd=0.0000320, ls=0.018, momentum=0.904
+  Deneme 2 - Epoch 1/15 -> Val Acc: 0.7248, Val Loss: 0.6782, Train Loss: 0.6930
+  Deneme 2 - Epoch 2/15 -> Val Acc: 0.7254, Val Loss: 0.6777, Train Loss: 0.6921
+  Deneme 2 - Epoch 3/15 -> Val Acc: 0.7248, Val Loss: 0.6771, Train Loss: 0.6925
+  Deneme 2 - Epoch 4/15 -> Val Acc: 0.7291, Val Loss: 0.6769, Train Loss: 0.6911
+  Deneme 2 - Epoch 5/15 -> Val Acc: 0.7438, Val Loss: 0.6745, Train Loss: 0.6900
+  Deneme 2 - Epoch 6/15 -> Val Acc: 0.7420, Val Loss: 0.6753, Train Loss: 0.6900
+  Deneme 2 - Epoch 7/15 -> Val Acc: 0.7500, Val Loss: 0.6737, Train Loss: 0.6900
+  Deneme 2 - Epoch 8/15 -> Val Acc: 0.7451, Val Loss: 0.6729, Train Loss: 0.6881
+  Deneme 2 - Epoch 9/15 -> Val Acc: 0.7494, Val Loss: 0.6718, Train Loss: 0.6882
+  Deneme 2 - Epoch 10/15 -> Val Acc: 0.7549, Val Loss: 0.6706, Train Loss: 0.6876
+  Deneme 2 - Epoch 11/15 -> Val Acc: 0.7568, Val Loss: 0.6705, Train Loss: 0.6865
+  Deneme 2 - Epoch 12/15 -> Val Acc: 0.7592, Val Loss: 0.6694, Train Loss: 0.6861
+  Deneme 2 - Epoch 13/15 -> Val Acc: 0.7642, Val Loss: 0.6686, Train Loss: 0.6855
+  Deneme 2 - Epoch 14/15 -> Val Acc: 0.7648, Val Loss: 0.6669, Train Loss: 0.6844
+  Deneme 2 - Epoch 15/15 -> Val Acc: 0.7679, Val Loss: 0.6654, Train Loss: 0.6838
+[I 2025-05-22 19:28:51,871] Trial 2 finished with value: 0.7678571428571429 and parameters: {'lr': 3.410423121530804e-05, 'dropout_rate': 0.4106013095270352, 'optimizer': 'SGD', 'weight_decay': 3.1991034632200806e-05, 'label_smoothing': 0.01796664916690658, 'momentum': 0.904404035140518}. Best is trial 1 with value: 0.958128078817734.
+
+Deneme 3: lr=0.000020, dropout=0.209, opt=Adam, wd=0.0000727, ls=0.032
+  Deneme 3 - Epoch 1/15 -> Val Acc: 0.8528, Val Loss: 0.5835, Train Loss: 0.6640
+  Deneme 3 - Epoch 2/15 -> Val Acc: 0.8590, Val Loss: 0.4995, Train Loss: 0.6024
+  Deneme 3 - Epoch 3/15 -> Val Acc: 0.8768, Val Loss: 0.4349, Train Loss: 0.5521
+  Deneme 3 - Epoch 4/15 -> Val Acc: 0.9083, Val Loss: 0.3877, Train Loss: 0.5182
+  Deneme 3 - Epoch 5/15 -> Val Acc: 0.9236, Val Loss: 0.3525, Train Loss: 0.4926
+  Deneme 3 - Epoch 6/15 -> Val Acc: 0.9329, Val Loss: 0.3178, Train Loss: 0.4625
+  Deneme 3 - Epoch 7/15 -> Val Acc: 0.9341, Val Loss: 0.3013, Train Loss: 0.4537
+  Deneme 3 - Epoch 8/15 -> Val Acc: 0.9403, Val Loss: 0.2802, Train Loss: 0.4385
+  Deneme 3 - Epoch 9/15 -> Val Acc: 0.9384, Val Loss: 0.2747, Train Loss: 0.4314
+  Deneme 3 - Epoch 10/15 -> Val Acc: 0.9433, Val Loss: 0.2581, Train Loss: 0.4284
+  Deneme 3 - Epoch 11/15 -> Val Acc: 0.9440, Val Loss: 0.2559, Train Loss: 0.4270
+  Deneme 3 - Epoch 12/15 -> Val Acc: 0.9495, Val Loss: 0.2403, Train Loss: 0.4116
+  Deneme 3 - Epoch 13/15 -> Val Acc: 0.9532, Val Loss: 0.2327, Train Loss: 0.3995
+  Deneme 3 - Epoch 14/15 -> Val Acc: 0.9495, Val Loss: 0.2275, Train Loss: 0.3976
+  Deneme 3 - Epoch 15/15 -> Val Acc: 0.9501, Val Loss: 0.2180, Train Loss: 0.3861
+[I 2025-05-22 19:34:50,566] Trial 3 finished with value: 0.9532019704433498 and parameters: {'lr': 2.0277331944196186e-05, 'dropout_rate': 0.20867469468446478, 'optimizer': 'Adam', 'weight_decay': 7.270128228835782e-05, 'label_smoothing': 0.03241546055529676}. Best is trial 1 with value: 0.958128078817734.
+
+Deneme 4: lr=0.005402, dropout=0.596, opt=SGD, wd=0.0000070, ls=0.095, momentum=0.870
+  Deneme 4 - Epoch 1/15 -> Val Acc: 0.8307, Val Loss: 0.5815, Train Loss: 0.6658
+  Deneme 4 - Epoch 2/15 -> Val Acc: 0.8775, Val Loss: 0.4362, Train Loss: 0.5924
+  Deneme 4 - Epoch 3/15 -> Val Acc: 0.9095, Val Loss: 0.3621, Train Loss: 0.5371
+  Deneme 4 - Epoch 4/15 -> Val Acc: 0.9335, Val Loss: 0.3095, Train Loss: 0.4952
+  Deneme 4 - Epoch 5/15 -> Val Acc: 0.9477, Val Loss: 0.2709, Train Loss: 0.4799
+  Deneme 4 - Epoch 6/15 -> Val Acc: 0.9514, Val Loss: 0.2335, Train Loss: 0.4685
+  Deneme 4 - Epoch 7/15 -> Val Acc: 0.9483, Val Loss: 0.2563, Train Loss: 0.4653
+  Deneme 4 - Epoch 8/15 -> Val Acc: 0.9544, Val Loss: 0.2152, Train Loss: 0.4511
+  Deneme 4 - Epoch 9/15 -> Val Acc: 0.9569, Val Loss: 0.2196, Train Loss: 0.4406
+  Deneme 4 - Epoch 10/15 -> Val Acc: 0.9581, Val Loss: 0.2081, Train Loss: 0.4424
+  Deneme 4 - Epoch 11/15 -> Val Acc: 0.9544, Val Loss: 0.1863, Train Loss: 0.4305
+  Deneme 4 - Epoch 12/15 -> Val Acc: 0.9569, Val Loss: 0.1920, Train Loss: 0.4350
+  Deneme 4 - Epoch 13/15 -> Val Acc: 0.9532, Val Loss: 0.1884, Train Loss: 0.4272
+  Deneme 4 - Epoch 14/15 -> Val Acc: 0.9575, Val Loss: 0.1802, Train Loss: 0.4228
+  Deneme 4 - Epoch 15/15 -> Val Acc: 0.9563, Val Loss: 0.1933, Train Loss: 0.4233
+  Deneme 4 erken durduruldu epoch 15.
+[I 2025-05-22 19:40:47,747] Trial 4 finished with value: 0.958128078817734 and parameters: {'lr': 0.005401886781392353, 'dropout_rate': 0.5955839541478599, 'optimizer': 'SGD', 'weight_decay': 6.97347656266828e-06, 'label_smoothing': 0.0954872809555275, 'momentum': 0.8698336079673998}. Best is trial 1 with value: 0.958128078817734.
+
+Deneme 5: lr=0.000036, dropout=0.226, opt=Adam, wd=0.0000023, ls=0.087
+  Deneme 5 - Epoch 1/15 -> Val Acc: 0.8251, Val Loss: 0.5511, Train Loss: 0.6482
+  Deneme 5 - Epoch 2/15 -> Val Acc: 0.8744, Val Loss: 0.4176, Train Loss: 0.5681
+  Deneme 5 - Epoch 3/15 -> Val Acc: 0.9107, Val Loss: 0.3737, Train Loss: 0.5256
+  Deneme 5 - Epoch 4/15 -> Val Acc: 0.9200, Val Loss: 0.3460, Train Loss: 0.4951
+  Deneme 5 - Epoch 5/15 -> Val Acc: 0.9304, Val Loss: 0.3117, Train Loss: 0.4729
+  Deneme 5 - Epoch 6/15 -> Val Acc: 0.9446, Val Loss: 0.2724, Train Loss: 0.4663
+  Deneme 5 - Epoch 7/15 -> Val Acc: 0.9501, Val Loss: 0.2549, Train Loss: 0.4527
+  Deneme 5 - Epoch 8/15 -> Val Acc: 0.9489, Val Loss: 0.2280, Train Loss: 0.4407
+  Deneme 5 - Epoch 9/15 -> Val Acc: 0.9538, Val Loss: 0.2359, Train Loss: 0.4376
+  Deneme 5 - Epoch 10/15 -> Val Acc: 0.9526, Val Loss: 0.2345, Train Loss: 0.4338
+  Deneme 5 - Epoch 11/15 -> Val Acc: 0.9544, Val Loss: 0.2224, Train Loss: 0.4308
+  Deneme 5 - Epoch 12/15 -> Val Acc: 0.9575, Val Loss: 0.2037, Train Loss: 0.4286
+  Deneme 5 - Epoch 13/15 -> Val Acc: 0.9526, Val Loss: 0.2101, Train Loss: 0.4245
+  Deneme 5 - Epoch 14/15 -> Val Acc: 0.9587, Val Loss: 0.2034, Train Loss: 0.4224
+  Deneme 5 - Epoch 15/15 -> Val Acc: 0.9569, Val Loss: 0.2051, Train Loss: 0.4172
+[I 2025-05-22 19:46:44,443] Trial 5 finished with value: 0.958743842364532 and parameters: {'lr': 3.571285677788959e-05, 'dropout_rate': 0.22641792533436647, 'optimizer': 'Adam', 'weight_decay': 2.3168552526427914e-06, 'label_smoothing': 0.0869761476152025}. Best is trial 5 with value: 0.958743842364532.
+
+Deneme 6: lr=0.002952, dropout=0.531, opt=SGD, wd=0.0000325, ls=0.134, momentum=0.909
+  Deneme 6 - Epoch 1/15 -> Val Acc: 0.8276, Val Loss: 0.5993, Train Loss: 0.6729
+  Deneme 6 - Epoch 2/15 -> Val Acc: 0.8615, Val Loss: 0.4686, Train Loss: 0.6188
+  Deneme 6 - Epoch 3/15 -> Val Acc: 0.8615, Val Loss: 0.4399, Train Loss: 0.5721
+[I 2025-05-22 19:48:20,227] Trial 6 pruned.
+  Deneme 6 - Epoch 4/15 -> Val Acc: 0.9119, Val Loss: 0.3643, Train Loss: 0.5394
+  Deneme 6 budandı (pruned) epoch 4.
+
+Deneme 7: lr=0.000011, dropout=0.114, opt=SGD, wd=0.0001101, ls=0.122, momentum=0.986
+  Deneme 7 - Epoch 1/15 -> Val Acc: 0.4083, Val Loss: 0.6969, Train Loss: 0.6928
+  Deneme 7 - Epoch 2/15 -> Val Acc: 0.5049, Val Loss: 0.6923, Train Loss: 0.6919
+  Deneme 7 - Epoch 3/15 -> Val Acc: 0.5782, Val Loss: 0.6889, Train Loss: 0.6904
+  Deneme 7 - Epoch 4/15 -> Val Acc: 0.6324, Val Loss: 0.6858, Train Loss: 0.6888
+  Deneme 7 budandı (pruned) epoch 4.
+[I 2025-05-22 19:49:55,606] Trial 7 pruned.
+
+Deneme 8: lr=0.000048, dropout=0.276, opt=SGD, wd=0.0001450, ls=0.001, momentum=0.849
+  Deneme 8 - Epoch 1/15 -> Val Acc: 0.6693, Val Loss: 0.6838, Train Loss: 0.6932
+  Deneme 8 - Epoch 2/15 -> Val Acc: 0.6613, Val Loss: 0.6839, Train Loss: 0.6936
+  Deneme 8 - Epoch 3/15 -> Val Acc: 0.6909, Val Loss: 0.6817, Train Loss: 0.6923
+  Deneme 8 - Epoch 4/15 -> Val Acc: 0.6983, Val Loss: 0.6804, Train Loss: 0.6916
+  Deneme 8 budandı (pruned) epoch 4.
+[I 2025-05-22 19:51:31,572] Trial 8 pruned.
+
+Deneme 9: lr=0.000462, dropout=0.127, opt=SGD, wd=0.0000084, ls=0.091, momentum=0.810
+  Deneme 9 - Epoch 1/15 -> Val Acc: 0.4895, Val Loss: 0.6942, Train Loss: 0.6923
+  Deneme 9 - Epoch 2/15 -> Val Acc: 0.6115, Val Loss: 0.6853, Train Loss: 0.6883
+  Deneme 9 - Epoch 3/15 -> Val Acc: 0.7248, Val Loss: 0.6736, Train Loss: 0.6844
+  Deneme 9 - Epoch 4/15 -> Val Acc: 0.7623, Val Loss: 0.6660, Train Loss: 0.6806
+  Deneme 9 budandı (pruned) epoch 4.
+[I 2025-05-22 19:53:07,690] Trial 9 pruned.
+
+Deneme 10: lr=0.000310, dropout=0.268, opt=Adam, wd=0.0004793, ls=0.197
+  Deneme 10 - Epoch 1/15 -> Val Acc: 0.9341, Val Loss: 0.3278, Train Loss: 0.5682
+  Deneme 10 - Epoch 2/15 -> Val Acc: 0.9403, Val Loss: 0.2861, Train Loss: 0.5138
+  Deneme 10 - Epoch 3/15 -> Val Acc: 0.9569, Val Loss: 0.2393, Train Loss: 0.4958
+  Deneme 10 - Epoch 4/15 -> Val Acc: 0.9557, Val Loss: 0.2248, Train Loss: 0.4934
+  Deneme 10 - Epoch 5/15 -> Val Acc: 0.9563, Val Loss: 0.2394, Train Loss: 0.4828
+  Deneme 10 - Epoch 6/15 -> Val Acc: 0.9538, Val Loss: 0.2292, Train Loss: 0.4827
+  Deneme 10 - Epoch 7/15 -> Val Acc: 0.9575, Val Loss: 0.2258, Train Loss: 0.4737
+  Deneme 10 - Epoch 8/15 -> Val Acc: 0.9563, Val Loss: 0.2032, Train Loss: 0.4682
+  Deneme 10 - Epoch 9/15 -> Val Acc: 0.9631, Val Loss: 0.2102, Train Loss: 0.4743
+  Deneme 10 - Epoch 10/15 -> Val Acc: 0.9569, Val Loss: 0.1985, Train Loss: 0.4725
+  Deneme 10 - Epoch 11/15 -> Val Acc: 0.9624, Val Loss: 0.2080, Train Loss: 0.4721
+  Deneme 10 - Epoch 12/15 -> Val Acc: 0.9600, Val Loss: 0.2384, Train Loss: 0.4640
+  Deneme 10 - Epoch 13/15 -> Val Acc: 0.9637, Val Loss: 0.1968, Train Loss: 0.4654
+  Deneme 10 - Epoch 14/15 -> Val Acc: 0.9649, Val Loss: 0.1974, Train Loss: 0.4617
+  Deneme 10 - Epoch 15/15 -> Val Acc: 0.9631, Val Loss: 0.1962, Train Loss: 0.4562
+[I 2025-05-22 19:59:05,613] Trial 10 finished with value: 0.9649014778325123 and parameters: {'lr': 0.0003096119771167535, 'dropout_rate': 0.2678844958332567, 'optimizer': 'Adam', 'weight_decay': 0.00047926690815243596, 'label_smoothing': 0.19672989212932}. Best is trial 10 with value: 0.9649014778325123.
+
+Deneme 11: lr=0.000268, dropout=0.281, opt=Adam, wd=0.0009727, ls=0.185
+  Deneme 11 - Epoch 1/15 -> Val Acc: 0.9378, Val Loss: 0.3093, Train Loss: 0.5675
+  Deneme 11 - Epoch 2/15 -> Val Acc: 0.9483, Val Loss: 0.2649, Train Loss: 0.5030
+  Deneme 11 - Epoch 3/15 -> Val Acc: 0.9532, Val Loss: 0.2422, Train Loss: 0.4968
+  Deneme 11 - Epoch 4/15 -> Val Acc: 0.9581, Val Loss: 0.2268, Train Loss: 0.4862
+  Deneme 11 - Epoch 5/15 -> Val Acc: 0.9526, Val Loss: 0.2434, Train Loss: 0.4855
+  Deneme 11 - Epoch 6/15 -> Val Acc: 0.9575, Val Loss: 0.2523, Train Loss: 0.4821
+  Deneme 11 - Epoch 7/15 -> Val Acc: 0.9470, Val Loss: 0.2114, Train Loss: 0.4801
+  Deneme 11 - Epoch 8/15 -> Val Acc: 0.9587, Val Loss: 0.2424, Train Loss: 0.4711
+  Deneme 11 - Epoch 9/15 -> Val Acc: 0.9538, Val Loss: 0.2469, Train Loss: 0.4722
+  Deneme 11 - Epoch 10/15 -> Val Acc: 0.9600, Val Loss: 0.2162, Train Loss: 0.4679
+  Deneme 11 - Epoch 11/15 -> Val Acc: 0.9581, Val Loss: 0.2099, Train Loss: 0.4676
+  Deneme 11 - Epoch 12/15 -> Val Acc: 0.9643, Val Loss: 0.1975, Train Loss: 0.4656
+  Deneme 11 - Epoch 13/15 -> Val Acc: 0.9624, Val Loss: 0.2086, Train Loss: 0.4628
+  Deneme 11 - Epoch 14/15 -> Val Acc: 0.9624, Val Loss: 0.2028, Train Loss: 0.4631
+[I 2025-05-22 20:05:03,452] Trial 11 finished with value: 0.9642857142857143 and parameters: {'lr': 0.00026835780071377094, 'dropout_rate': 0.28110966345877525, 'optimizer': 'Adam', 'weight_decay': 0.0009727342359939694, 'label_smoothing': 0.18455394057530253}. Best is trial 10 with value: 0.9649014778325123.
+  Deneme 11 - Epoch 15/15 -> Val Acc: 0.9624, Val Loss: 0.1925, Train Loss: 0.4589
+
+Deneme 12: lr=0.000306, dropout=0.309, opt=Adam, wd=0.0009692, ls=0.196
+  Deneme 12 - Epoch 1/15 -> Val Acc: 0.9397, Val Loss: 0.3308, Train Loss: 0.5694
+  Deneme 12 - Epoch 2/15 -> Val Acc: 0.9550, Val Loss: 0.2425, Train Loss: 0.5152
+  Deneme 12 - Epoch 3/15 -> Val Acc: 0.8473, Val Loss: 0.3954, Train Loss: 0.5070
+  Deneme 12 - Epoch 4/15 -> Val Acc: 0.9594, Val Loss: 0.2279, Train Loss: 0.4966
+  Deneme 12 - Epoch 5/15 -> Val Acc: 0.9581, Val Loss: 0.2276, Train Loss: 0.4935
+  Deneme 12 - Epoch 6/15 -> Val Acc: 0.9544, Val Loss: 0.2262, Train Loss: 0.4826
+  Deneme 12 - Epoch 7/15 -> Val Acc: 0.9594, Val Loss: 0.2069, Train Loss: 0.4849
+  Deneme 12 - Epoch 8/15 -> Val Acc: 0.9594, Val Loss: 0.2240, Train Loss: 0.4761
+  Deneme 12 - Epoch 9/15 -> Val Acc: 0.9637, Val Loss: 0.2065, Train Loss: 0.4765
+  Deneme 12 - Epoch 10/15 -> Val Acc: 0.9606, Val Loss: 0.2068, Train Loss: 0.4747
+  Deneme 12 - Epoch 11/15 -> Val Acc: 0.9606, Val Loss: 0.2073, Train Loss: 0.4697
+  Deneme 12 - Epoch 12/15 -> Val Acc: 0.9581, Val Loss: 0.1992, Train Loss: 0.4718
+  Deneme 12 - Epoch 13/15 -> Val Acc: 0.9612, Val Loss: 0.2149, Train Loss: 0.4688
+  Deneme 12 - Epoch 14/15 -> Val Acc: 0.9606, Val Loss: 0.2266, Train Loss: 0.4720
+  Deneme 12 erken durduruldu epoch 14.
+[I 2025-05-22 20:10:37,692] Trial 12 finished with value: 0.9636699507389163 and parameters: {'lr': 0.000306362065670034, 'dropout_rate': 0.30949608292249275, 'optimizer': 'Adam', 'weight_decay': 0.0009692112988991608, 'label_smoothing': 0.19599215659117042}. Best is trial 10 with value: 0.9649014778325123.
+
+Deneme 13: lr=0.000337, dropout=0.324, opt=Adam, wd=0.0009973, ls=0.192
+  Deneme 13 - Epoch 1/15 -> Val Acc: 0.9458, Val Loss: 0.2765, Train Loss: 0.5662
+  Deneme 13 - Epoch 2/15 -> Val Acc: 0.9489, Val Loss: 0.2673, Train Loss: 0.5020
+  Deneme 13 - Epoch 3/15 -> Val Acc: 0.9532, Val Loss: 0.2519, Train Loss: 0.5004
+  Deneme 13 - Epoch 4/15 -> Val Acc: 0.9520, Val Loss: 0.2588, Train Loss: 0.4950
+  Deneme 13 - Epoch 5/15 -> Val Acc: 0.9347, Val Loss: 0.2955, Train Loss: 0.4923
+  Deneme 13 - Epoch 6/15 -> Val Acc: 0.9501, Val Loss: 0.2125, Train Loss: 0.4885
+  Deneme 13 - Epoch 7/15 -> Val Acc: 0.9507, Val Loss: 0.2496, Train Loss: 0.4766
+  Deneme 13 - Epoch 8/15 -> Val Acc: 0.9618, Val Loss: 0.2389, Train Loss: 0.4770
+  Deneme 13 - Epoch 9/15 -> Val Acc: 0.9538, Val Loss: 0.2499, Train Loss: 0.4823
+  Deneme 13 - Epoch 10/15 -> Val Acc: 0.9587, Val Loss: 0.2312, Train Loss: 0.4750
+  Deneme 13 - Epoch 11/15 -> Val Acc: 0.9606, Val Loss: 0.2140, Train Loss: 0.4708
+  Deneme 13 - Epoch 12/15 -> Val Acc: 0.9655, Val Loss: 0.2083, Train Loss: 0.4638
+  Deneme 13 - Epoch 13/15 -> Val Acc: 0.9649, Val Loss: 0.1928, Train Loss: 0.4641
+  Deneme 13 - Epoch 14/15 -> Val Acc: 0.9618, Val Loss: 0.2115, Train Loss: 0.4632
+  Deneme 13 - Epoch 15/15 -> Val Acc: 0.9661, Val Loss: 0.2053, Train Loss: 0.4664
+[I 2025-05-22 20:16:35,250] Trial 13 finished with value: 0.9661330049261084 and parameters: {'lr': 0.0003365267640376661, 'dropout_rate': 0.3243407666273828, 'optimizer': 'Adam', 'weight_decay': 0.000997288786277043, 'label_smoothing': 0.19230944682368492}. Best is trial 13 with value: 0.9661330049261084.
+
+Deneme 14: lr=0.001577, dropout=0.360, opt=Adam, wd=0.0003393, ls=0.156
+  Deneme 14 - Epoch 1/15 -> Val Acc: 0.9433, Val Loss: 0.2211, Train Loss: 0.5361
+  Deneme 14 - Epoch 2/15 -> Val Acc: 0.9587, Val Loss: 0.2187, Train Loss: 0.4880
+  Deneme 14 - Epoch 3/15 -> Val Acc: 0.9538, Val Loss: 0.2142, Train Loss: 0.4882
+  Deneme 14 - Epoch 4/15 -> Val Acc: 0.9606, Val Loss: 0.2233, Train Loss: 0.4826
+  Deneme 14 - Epoch 5/15 -> Val Acc: 0.9212, Val Loss: 0.2836, Train Loss: 0.4626
+  Deneme 14 - Epoch 6/15 -> Val Acc: 0.9581, Val Loss: 0.2042, Train Loss: 0.4653
+  Deneme 14 - Epoch 7/15 -> Val Acc: 0.9557, Val Loss: 0.1948, Train Loss: 0.4660
+  Deneme 14 - Epoch 8/15 -> Val Acc: 0.9618, Val Loss: 0.1854, Train Loss: 0.4451
+  Deneme 14 - Epoch 9/15 -> Val Acc: 0.9581, Val Loss: 0.2022, Train Loss: 0.4445
+  Deneme 14 - Epoch 10/15 -> Val Acc: 0.9612, Val Loss: 0.2026, Train Loss: 0.4432
+  Deneme 14 - Epoch 11/15 -> Val Acc: 0.9637, Val Loss: 0.1633, Train Loss: 0.4433
+  Deneme 14 - Epoch 12/15 -> Val Acc: 0.9649, Val Loss: 0.1532, Train Loss: 0.4407
+  Deneme 14 - Epoch 13/15 -> Val Acc: 0.9649, Val Loss: 0.1728, Train Loss: 0.4452
+  Deneme 14 - Epoch 14/15 -> Val Acc: 0.9624, Val Loss: 0.1742, Train Loss: 0.4424
+  Deneme 14 - Epoch 15/15 -> Val Acc: 0.9606, Val Loss: 0.1976, Train Loss: 0.4338
+[I 2025-05-22 20:22:32,792] Trial 14 finished with value: 0.9649014778325123 and parameters: {'lr': 0.0015767014577461056, 'dropout_rate': 0.3603133589650639, 'optimizer': 'Adam', 'weight_decay': 0.0003392890601986676, 'label_smoothing': 0.15606669898546305}. Best is trial 13 with value: 0.9661330049261084.
+
+Deneme 15: lr=0.000905, dropout=0.207, opt=Adam, wd=0.0003963, ls=0.200
+  Deneme 15 - Epoch 1/15 -> Val Acc: 0.9335, Val Loss: 0.2983, Train Loss: 0.5535
+  Deneme 15 - Epoch 2/15 -> Val Acc: 0.9514, Val Loss: 0.2172, Train Loss: 0.5104
+  Deneme 15 - Epoch 3/15 -> Val Acc: 0.9218, Val Loss: 0.3049, Train Loss: 0.4996
+  Deneme 15 - Epoch 4/15 -> Val Acc: 0.9575, Val Loss: 0.2300, Train Loss: 0.4931
+  Deneme 15 - Epoch 5/15 -> Val Acc: 0.9538, Val Loss: 0.1957, Train Loss: 0.4910
+  Deneme 15 - Epoch 6/15 -> Val Acc: 0.9612, Val Loss: 0.1983, Train Loss: 0.4840
+  Deneme 15 - Epoch 7/15 -> Val Acc: 0.9618, Val Loss: 0.2384, Train Loss: 0.4801
+  Deneme 15 - Epoch 8/15 -> Val Acc: 0.9557, Val Loss: 0.1868, Train Loss: 0.4770
+  Deneme 15 - Epoch 9/15 -> Val Acc: 0.9637, Val Loss: 0.1848, Train Loss: 0.4739
+  Deneme 15 - Epoch 10/15 -> Val Acc: 0.9643, Val Loss: 0.1921, Train Loss: 0.4725
+  Deneme 15 - Epoch 11/15 -> Val Acc: 0.9631, Val Loss: 0.2004, Train Loss: 0.4689
+  Deneme 15 - Epoch 12/15 -> Val Acc: 0.9667, Val Loss: 0.2021, Train Loss: 0.4703
+  Deneme 15 - Epoch 13/15 -> Val Acc: 0.9674, Val Loss: 0.1891, Train Loss: 0.4732
+  Deneme 15 - Epoch 14/15 -> Val Acc: 0.9631, Val Loss: 0.2036, Train Loss: 0.4669
+  Deneme 15 - Epoch 15/15 -> Val Acc: 0.9587, Val Loss: 0.2140, Train Loss: 0.4626
+[I 2025-05-22 20:28:33,961] Trial 15 finished with value: 0.9673645320197044 and parameters: {'lr': 0.0009047136638192376, 'dropout_rate': 0.20685851661129578, 'optimizer': 'Adam', 'weight_decay': 0.00039626789083630436, 'label_smoothing': 0.19955733652140992}. Best is trial 15 with value: 0.9673645320197044.
+
+Deneme 16: lr=0.001063, dropout=0.171, opt=Adam, wd=0.0002770, ls=0.154
+  Deneme 16 - Epoch 1/15 -> Val Acc: 0.9495, Val Loss: 0.2563, Train Loss: 0.5510
+  Deneme 16 - Epoch 2/15 -> Val Acc: 0.9538, Val Loss: 0.2224, Train Loss: 0.4823
+  Deneme 16 - Epoch 3/15 -> Val Acc: 0.9544, Val Loss: 0.1979, Train Loss: 0.4707
+  Deneme 16 - Epoch 4/15 -> Val Acc: 0.9569, Val Loss: 0.1974, Train Loss: 0.4614
+  Deneme 16 - Epoch 5/15 -> Val Acc: 0.9594, Val Loss: 0.1758, Train Loss: 0.4611
+  Deneme 16 - Epoch 6/15 -> Val Acc: 0.9477, Val Loss: 0.1802, Train Loss: 0.4491
+  Deneme 16 - Epoch 7/15 -> Val Acc: 0.9569, Val Loss: 0.1845, Train Loss: 0.4527
+  Deneme 16 - Epoch 8/15 -> Val Acc: 0.9643, Val Loss: 0.1699, Train Loss: 0.4471
+  Deneme 16 - Epoch 9/15 -> Val Acc: 0.9501, Val Loss: 0.2273, Train Loss: 0.4455
+  Deneme 16 - Epoch 10/15 -> Val Acc: 0.9612, Val Loss: 0.1780, Train Loss: 0.4355
+  Deneme 16 - Epoch 11/15 -> Val Acc: 0.9661, Val Loss: 0.1769, Train Loss: 0.4363
+  Deneme 16 - Epoch 12/15 -> Val Acc: 0.9643, Val Loss: 0.1704, Train Loss: 0.4359
+  Deneme 16 - Epoch 13/15 -> Val Acc: 0.9655, Val Loss: 0.1560, Train Loss: 0.4345
+  Deneme 16 - Epoch 14/15 -> Val Acc: 0.9655, Val Loss: 0.1721, Train Loss: 0.4314
+  Deneme 16 - Epoch 15/15 -> Val Acc: 0.9661, Val Loss: 0.1470, Train Loss: 0.4195
+[I 2025-05-22 20:34:37,272] Trial 16 finished with value: 0.9661330049261084 and parameters: {'lr': 0.0010633534830988937, 'dropout_rate': 0.17115795819849974, 'optimizer': 'Adam', 'weight_decay': 0.0002769542495068015, 'label_smoothing': 0.15401056576260935}. Best is trial 15 with value: 0.9673645320197044.
+
+Deneme 17: lr=0.000128, dropout=0.198, opt=Adam, wd=0.0001987, ls=0.132
+  Deneme 17 - Epoch 1/15 -> Val Acc: 0.8953, Val Loss: 0.3876, Train Loss: 0.5827
+  Deneme 17 - Epoch 2/15 -> Val Acc: 0.9421, Val Loss: 0.2616, Train Loss: 0.4913
+  Deneme 17 - Epoch 3/15 -> Val Acc: 0.9520, Val Loss: 0.2259, Train Loss: 0.4686
+  Deneme 17 - Epoch 4/15 -> Val Acc: 0.9550, Val Loss: 0.2281, Train Loss: 0.4619
+  Deneme 17 - Epoch 5/15 -> Val Acc: 0.9569, Val Loss: 0.2282, Train Loss: 0.4543
+  Deneme 17 - Epoch 6/15 -> Val Acc: 0.9544, Val Loss: 0.2191, Train Loss: 0.4528
+  Deneme 17 - Epoch 7/15 -> Val Acc: 0.9501, Val Loss: 0.2182, Train Loss: 0.4427
+  Deneme 17 - Epoch 8/15 -> Val Acc: 0.9587, Val Loss: 0.2019, Train Loss: 0.4480
+  Deneme 17 - Epoch 9/15 -> Val Acc: 0.9649, Val Loss: 0.1966, Train Loss: 0.4407
+  Deneme 17 - Epoch 10/15 -> Val Acc: 0.9575, Val Loss: 0.1800, Train Loss: 0.4310
+  Deneme 17 - Epoch 11/15 -> Val Acc: 0.9612, Val Loss: 0.1845, Train Loss: 0.4336
+  Deneme 17 - Epoch 12/15 -> Val Acc: 0.9563, Val Loss: 0.2014, Train Loss: 0.4294
+  Deneme 17 - Epoch 13/15 -> Val Acc: 0.9612, Val Loss: 0.1773, Train Loss: 0.4245
+  Deneme 17 - Epoch 14/15 -> Val Acc: 0.9600, Val Loss: 0.1763, Train Loss: 0.4261
+  Deneme 17 erken durduruldu epoch 14.
+[I 2025-05-22 20:40:13,439] Trial 17 finished with value: 0.9649014778325123 and parameters: {'lr': 0.00012833813129868978, 'dropout_rate': 0.1975605597912398, 'optimizer': 'Adam', 'weight_decay': 0.0001986986029255202, 'label_smoothing': 0.13158220984866498}. Best is trial 15 with value: 0.9673645320197044.
+
+Deneme 18: lr=0.009499, dropout=0.450, opt=Adam, wd=0.0004938, ls=0.057
+  Deneme 18 - Epoch 1/15 -> Val Acc: 0.9230, Val Loss: 0.2363, Train Loss: 0.5978
+  Deneme 18 - Epoch 2/15 -> Val Acc: 0.7913, Val Loss: 0.4335, Train Loss: 0.5290
+  Deneme 18 - Epoch 3/15 -> Val Acc: 0.9415, Val Loss: 0.2245, Train Loss: 0.5061
+  Deneme 18 - Epoch 4/15 -> Val Acc: 0.9169, Val Loss: 0.2028, Train Loss: 0.4914
+  Deneme 18 budandı (pruned) epoch 4.
+[I 2025-05-22 20:41:49,970] Trial 18 pruned.
+
+Deneme 19: lr=0.000916, dropout=0.335, opt=Adam, wd=0.0000844, ls=0.174
+  Deneme 19 - Epoch 1/15 -> Val Acc: 0.9144, Val Loss: 0.3251, Train Loss: 0.5479
+  Deneme 19 - Epoch 2/15 -> Val Acc: 0.8701, Val Loss: 0.3481, Train Loss: 0.4924
+  Deneme 19 - Epoch 3/15 -> Val Acc: 0.9526, Val Loss: 0.2163, Train Loss: 0.4877
+  Deneme 19 - Epoch 4/15 -> Val Acc: 0.9581, Val Loss: 0.1895, Train Loss: 0.4783
+  Deneme 19 - Epoch 5/15 -> Val Acc: 0.9661, Val Loss: 0.1786, Train Loss: 0.4634
+  Deneme 19 - Epoch 6/15 -> Val Acc: 0.9674, Val Loss: 0.1805, Train Loss: 0.4605
+  Deneme 19 - Epoch 7/15 -> Val Acc: 0.9618, Val Loss: 0.1664, Train Loss: 0.4580
+  Deneme 19 - Epoch 8/15 -> Val Acc: 0.9600, Val Loss: 0.1720, Train Loss: 0.4502
+  Deneme 19 - Epoch 9/15 -> Val Acc: 0.9618, Val Loss: 0.1704, Train Loss: 0.4543
+  Deneme 19 - Epoch 10/15 -> Val Acc: 0.9680, Val Loss: 0.1621, Train Loss: 0.4485
+  Deneme 19 - Epoch 11/15 -> Val Acc: 0.9674, Val Loss: 0.1966, Train Loss: 0.4447
+  Deneme 19 - Epoch 12/15 -> Val Acc: 0.9698, Val Loss: 0.1651, Train Loss: 0.4386
+  Deneme 19 - Epoch 13/15 -> Val Acc: 0.9717, Val Loss: 0.1627, Train Loss: 0.4374
+  Deneme 19 - Epoch 14/15 -> Val Acc: 0.9698, Val Loss: 0.1603, Train Loss: 0.4394
+  Deneme 19 - Epoch 15/15 -> Val Acc: 0.9729, Val Loss: 0.1511, Train Loss: 0.4348
+[I 2025-05-22 20:47:50,397] Trial 19 finished with value: 0.9729064039408867 and parameters: {'lr': 0.0009161687803640246, 'dropout_rate': 0.3352705138027818, 'optimizer': 'Adam', 'weight_decay': 8.442913930570078e-05, 'label_smoothing': 0.17395784530393882}. Best is trial 19 with value: 0.9729064039408867.
+
+Deneme 20: lr=0.000958, dropout=0.157, opt=Adam, wd=0.0000144, ls=0.164
+  Deneme 20 - Epoch 1/15 -> Val Acc: 0.9150, Val Loss: 0.3056, Train Loss: 0.5396
+  Deneme 20 - Epoch 2/15 -> Val Acc: 0.9569, Val Loss: 0.2172, Train Loss: 0.4892
+  Deneme 20 - Epoch 3/15 -> Val Acc: 0.9495, Val Loss: 0.1980, Train Loss: 0.4703
+  Deneme 20 - Epoch 4/15 -> Val Acc: 0.9544, Val Loss: 0.2111, Train Loss: 0.4579
+  Deneme 20 - Epoch 5/15 -> Val Acc: 0.9624, Val Loss: 0.1725, Train Loss: 0.4568
+  Deneme 20 - Epoch 6/15 -> Val Acc: 0.9661, Val Loss: 0.1817, Train Loss: 0.4474
+  Deneme 20 - Epoch 7/15 -> Val Acc: 0.9544, Val Loss: 0.1632, Train Loss: 0.4385
+  Deneme 20 - Epoch 8/15 -> Val Acc: 0.9594, Val Loss: 0.1556, Train Loss: 0.4361
+  Deneme 20 - Epoch 9/15 -> Val Acc: 0.9667, Val Loss: 0.1775, Train Loss: 0.4322
+  Deneme 20 - Epoch 10/15 -> Val Acc: 0.9698, Val Loss: 0.1514, Train Loss: 0.4275
+  Deneme 20 - Epoch 11/15 -> Val Acc: 0.9692, Val Loss: 0.1578, Train Loss: 0.4244
+  Deneme 20 - Epoch 12/15 -> Val Acc: 0.9723, Val Loss: 0.1628, Train Loss: 0.4304
+  Deneme 20 - Epoch 13/15 -> Val Acc: 0.9748, Val Loss: 0.1639, Train Loss: 0.4278
+  Deneme 20 - Epoch 14/15 -> Val Acc: 0.9711, Val Loss: 0.1439, Train Loss: 0.4219
+  Deneme 20 - Epoch 15/15 -> Val Acc: 0.9674, Val Loss: 0.1561, Train Loss: 0.4186
+[I 2025-05-22 20:53:47,341] Trial 20 finished with value: 0.9747536945812808 and parameters: {'lr': 0.0009584328414665062, 'dropout_rate': 0.15651476619456378, 'optimizer': 'Adam', 'weight_decay': 1.4369691709542386e-05, 'label_smoothing': 0.16402753304127335}. Best is trial 20 with value: 0.9747536945812808.
+
+Deneme 21: lr=0.000951, dropout=0.145, opt=Adam, wd=0.0000133, ls=0.170
+  Deneme 21 - Epoch 1/15 -> Val Acc: 0.9427, Val Loss: 0.2296, Train Loss: 0.5405
+  Deneme 21 - Epoch 2/15 -> Val Acc: 0.9550, Val Loss: 0.2093, Train Loss: 0.4808
+  Deneme 21 - Epoch 3/15 -> Val Acc: 0.9612, Val Loss: 0.2000, Train Loss: 0.4705
+  Deneme 21 - Epoch 4/15 -> Val Acc: 0.9618, Val Loss: 0.1867, Train Loss: 0.4633
+  Deneme 21 - Epoch 5/15 -> Val Acc: 0.9594, Val Loss: 0.2139, Train Loss: 0.4552
+  Deneme 21 - Epoch 6/15 -> Val Acc: 0.9514, Val Loss: 0.1803, Train Loss: 0.4466
+  Deneme 21 - Epoch 7/15 -> Val Acc: 0.9692, Val Loss: 0.1668, Train Loss: 0.4469
+  Deneme 21 - Epoch 8/15 -> Val Acc: 0.9649, Val Loss: 0.1622, Train Loss: 0.4359
+  Deneme 21 - Epoch 9/15 -> Val Acc: 0.9723, Val Loss: 0.1657, Train Loss: 0.4423
+  Deneme 21 - Epoch 10/15 -> Val Acc: 0.9655, Val Loss: 0.1692, Train Loss: 0.4411
+  Deneme 21 - Epoch 11/15 -> Val Acc: 0.9698, Val Loss: 0.1530, Train Loss: 0.4306
+  Deneme 21 - Epoch 12/15 -> Val Acc: 0.9698, Val Loss: 0.1716, Train Loss: 0.4303
+  Deneme 21 - Epoch 13/15 -> Val Acc: 0.9729, Val Loss: 0.1539, Train Loss: 0.4236
+  Deneme 21 - Epoch 14/15 -> Val Acc: 0.9754, Val Loss: 0.1453, Train Loss: 0.4197
+  Deneme 21 - Epoch 15/15 -> Val Acc: 0.9778, Val Loss: 0.1470, Train Loss: 0.4210
+[I 2025-05-22 20:59:50,468] Trial 21 finished with value: 0.9778325123152709 and parameters: {'lr': 0.000950778784118598, 'dropout_rate': 0.14540764515649876, 'optimizer': 'Adam', 'weight_decay': 1.3338318976818048e-05, 'label_smoothing': 0.16976663285266777}. Best is trial 21 with value: 0.9778325123152709.
+
+Deneme 22: lr=0.002410, dropout=0.155, opt=Adam, wd=0.0000137, ls=0.168
+  Deneme 22 - Epoch 1/15 -> Val Acc: 0.9446, Val Loss: 0.2205, Train Loss: 0.5364
+  Deneme 22 - Epoch 2/15 -> Val Acc: 0.9427, Val Loss: 0.2365, Train Loss: 0.4837
+  Deneme 22 - Epoch 3/15 -> Val Acc: 0.9520, Val Loss: 0.2071, Train Loss: 0.4725
+  Deneme 22 - Epoch 4/15 -> Val Acc: 0.9526, Val Loss: 0.1898, Train Loss: 0.4635
+  Deneme 22 budandı (pruned) epoch 4.
+[I 2025-05-22 21:01:27,821] Trial 22 pruned.
+
+Deneme 23: lr=0.000719, dropout=0.113, opt=Adam, wd=0.0000151, ls=0.117
+  Deneme 23 - Epoch 1/15 -> Val Acc: 0.9440, Val Loss: 0.2352, Train Loss: 0.5295
+  Deneme 23 - Epoch 2/15 -> Val Acc: 0.9495, Val Loss: 0.2226, Train Loss: 0.4506
+  Deneme 23 - Epoch 3/15 -> Val Acc: 0.9427, Val Loss: 0.2189, Train Loss: 0.4446
+  Deneme 23 - Epoch 4/15 -> Val Acc: 0.9631, Val Loss: 0.1680, Train Loss: 0.4274
+  Deneme 23 - Epoch 5/15 -> Val Acc: 0.9600, Val Loss: 0.1535, Train Loss: 0.4267
+  Deneme 23 - Epoch 6/15 -> Val Acc: 0.9649, Val Loss: 0.1458, Train Loss: 0.4126
+  Deneme 23 - Epoch 7/15 -> Val Acc: 0.9575, Val Loss: 0.1428, Train Loss: 0.4083
+  Deneme 23 - Epoch 8/15 -> Val Acc: 0.9631, Val Loss: 0.1374, Train Loss: 0.4007
+  Deneme 23 - Epoch 9/15 -> Val Acc: 0.9618, Val Loss: 0.1336, Train Loss: 0.3948
+  Deneme 23 - Epoch 10/15 -> Val Acc: 0.9698, Val Loss: 0.1425, Train Loss: 0.3881
+  Deneme 23 - Epoch 11/15 -> Val Acc: 0.9717, Val Loss: 0.1360, Train Loss: 0.3842
+  Deneme 23 - Epoch 12/15 -> Val Acc: 0.9723, Val Loss: 0.1404, Train Loss: 0.3746
+  Deneme 23 - Epoch 13/15 -> Val Acc: 0.9686, Val Loss: 0.1285, Train Loss: 0.3826
+  Deneme 23 - Epoch 14/15 -> Val Acc: 0.9698, Val Loss: 0.1395, Train Loss: 0.3785
+  Deneme 23 - Epoch 15/15 -> Val Acc: 0.9674, Val Loss: 0.1667, Train Loss: 0.3796
+[I 2025-05-22 21:07:31,529] Trial 23 finished with value: 0.9722906403940886 and parameters: {'lr': 0.0007193569355432667, 'dropout_rate': 0.11260053398706135, 'optimizer': 'Adam', 'weight_decay': 1.5116406030018258e-05, 'label_smoothing': 0.11715299567297055}. Best is trial 21 with value: 0.9778325123152709.
+
+Deneme 24: lr=0.000149, dropout=0.242, opt=Adam, wd=0.0000010, ls=0.150
+  Deneme 24 - Epoch 1/15 -> Val Acc: 0.8879, Val Loss: 0.3960, Train Loss: 0.5821
+  Deneme 24 - Epoch 2/15 -> Val Acc: 0.9464, Val Loss: 0.2586, Train Loss: 0.4975
+  Deneme 24 - Epoch 3/15 -> Val Acc: 0.9557, Val Loss: 0.2522, Train Loss: 0.4766
+  Deneme 24 - Epoch 4/15 -> Val Acc: 0.9557, Val Loss: 0.2079, Train Loss: 0.4652
+  Deneme 24 budandı (pruned) epoch 4.
+
+--- Optuna Çalışması Tamamlandı! ---
+En İyi Deneme Numarası: 21
+En İyi Değer (Max Val Accuracy): 0.9778
+En İyi Hiperparametreler:
+  lr: 0.000950778784118598
+  dropout_rate: 0.14540764515649876
+  optimizer: Adam
+  weight_decay: 1.3338318976818048e-05
+  label_smoothing: 0.16976663285266777
+
+--- Final Eğitim Başlıyor ---
+Cihaz: cuda
+En İyi Hiperparametreler: {'lr': 0.000950778784118598, 'dropout_rate': 0.14540764515649876, 'optimizer': 'Adam', 'weight_decay': 1.3338318976818048e-05, 'label_smoothing': 0.16976663285266777}
+[I 2025-05-22 21:09:08,712] Trial 24 pruned.
+Final eğitim sıfırdan başlıyor (checkpoint yok veya yükleme kapalı).
+/home/nurullah/miniconda3/envs/dpvo/lib/python3.10/site-packages/torch/optim/lr_scheduler.py:28: UserWarning: The verbose parameter is deprecated. Please use get_last_lr() to access the learning rate.
+  warnings.warn("The verbose parameter is deprecated. Please use get_last_lr() "
+Final Eğitim - Epoch 1/50: Train Loss: 0.5287 | Val Loss: 0.3139 | Val Acc: 0.9027 | Prec: 0.7667 | Rec: 0.9360 | F1: 0.8429
+  En iyi final model kaydedildi: son_en_iyi_model.pth, Val Acc: 0.9027
+Final Eğitim - Epoch 2/50: Train Loss: 0.4972 | Val Loss: 0.2273 | Val Acc: 0.9532 | Prec: 0.9435 | Rec: 0.8852 | F1: 0.9134
+  En iyi final model kaydedildi: son_en_iyi_model.pth, Val Acc: 0.9532
+Final Eğitim - Epoch 3/50: Train Loss: 0.4750 | Val Loss: 0.1978 | Val Acc: 0.9581 | Prec: 0.9487 | Rec: 0.8985 | F1: 0.9229
+  En iyi final model kaydedildi: son_en_iyi_model.pth, Val Acc: 0.9581
+Final Eğitim - Epoch 4/50: Train Loss: 0.4679 | Val Loss: 0.1870 | Val Acc: 0.9569 | Prec: 0.9873 | Rec: 0.8565 | F1: 0.9173
+Final Eğitim - Epoch 5/50: Train Loss: 0.4577 | Val Loss: 0.1806 | Val Acc: 0.9581 | Prec: 0.9684 | Rec: 0.8786 | F1: 0.9213
+Final Eğitim - Epoch 6/50: Train Loss: 0.4466 | Val Loss: 0.1580 | Val Acc: 0.9649 | Prec: 0.9806 | Rec: 0.8918 | F1: 0.9341
+  En iyi final model kaydedildi: son_en_iyi_model.pth, Val Acc: 0.9649
+Final Eğitim - Epoch 7/50: Train Loss: 0.4399 | Val Loss: 0.1572 | Val Acc: 0.9643 | Prec: 0.9901 | Rec: 0.8808 | F1: 0.9322
+Final Eğitim - Epoch 8/50: Train Loss: 0.4448 | Val Loss: 0.2395 | Val Acc: 0.9526 | Prec: 0.8775 | Rec: 0.9647 | F1: 0.9190
+Final Eğitim - Epoch 9/50: Train Loss: 0.4470 | Val Loss: 0.1726 | Val Acc: 0.9717 | Prec: 0.9744 | Rec: 0.9227 | F1: 0.9478
+  En iyi final model kaydedildi: son_en_iyi_model.pth, Val Acc: 0.9717
+Final Eğitim - Epoch 10/50: Train Loss: 0.4353 | Val Loss: 0.1526 | Val Acc: 0.9717 | Prec: 0.9788 | Rec: 0.9183 | F1: 0.9476
+Final Eğitim - Epoch 11/50: Train Loss: 0.4347 | Val Loss: 0.1665 | Val Acc: 0.9711 | Prec: 0.9552 | Rec: 0.9404 | F1: 0.9477
+Final Eğitim - Epoch 12/50: Train Loss: 0.4307 | Val Loss: 0.1481 | Val Acc: 0.9698 | Prec: 0.9879 | Rec: 0.9029 | F1: 0.9435
+Final Eğitim - Epoch 13/50: Train Loss: 0.4270 | Val Loss: 0.1530 | Val Acc: 0.9741 | Prec: 0.9905 | Rec: 0.9161 | F1: 0.9518
+  En iyi final model kaydedildi: son_en_iyi_model.pth, Val Acc: 0.9741
+Final Eğitim - Epoch 14/50: Train Loss: 0.4260 | Val Loss: 0.1633 | Val Acc: 0.9680 | Prec: 0.9588 | Rec: 0.9249 | F1: 0.9416
+Final Eğitim - Epoch 15/50: Train Loss: 0.4213 | Val Loss: 0.1564 | Val Acc: 0.9760 | Prec: 0.9770 | Rec: 0.9360 | F1: 0.9560
+  En iyi final model kaydedildi: son_en_iyi_model.pth, Val Acc: 0.9760
+Final Eğitim - Epoch 16/50: Train Loss: 0.4217 | Val Loss: 0.1442 | Val Acc: 0.9698 | Prec: 0.9833 | Rec: 0.9073 | F1: 0.9437
+Final Eğitim - Epoch 17/50: Train Loss: 0.4263 | Val Loss: 0.1545 | Val Acc: 0.9741 | Prec: 0.9813 | Rec: 0.9249 | F1: 0.9523
+Final Eğitim - Epoch 18/50: Train Loss: 0.4139 | Val Loss: 0.1387 | Val Acc: 0.9711 | Prec: 0.9927 | Rec: 0.9029 | F1: 0.9457
+Final Eğitim - Epoch 19/50: Train Loss: 0.4194 | Val Loss: 0.1333 | Val Acc: 0.9760 | Prec: 0.9929 | Rec: 0.9205 | F1: 0.9553
+Final Eğitim - Epoch 20/50: Train Loss: 0.4169 | Val Loss: 0.1450 | Val Acc: 0.9778 | Prec: 0.9771 | Rec: 0.9426 | F1: 0.9596
+  En iyi final model kaydedildi: son_en_iyi_model.pth, Val Acc: 0.9778
+Final Eğitim - Epoch 21/50: Train Loss: 0.4150 | Val Loss: 0.1512 | Val Acc: 0.9791 | Prec: 0.9816 | Rec: 0.9426 | F1: 0.9617
+  En iyi final model kaydedildi: son_en_iyi_model.pth, Val Acc: 0.9791
+Final Eğitim - Epoch 22/50: Train Loss: 0.4129 | Val Loss: 0.1417 | Val Acc: 0.9760 | Prec: 0.9859 | Rec: 0.9272 | F1: 0.9556
+Final Eğitim - Epoch 23/50: Train Loss: 0.4167 | Val Loss: 0.1460 | Val Acc: 0.9754 | Prec: 0.9814 | Rec: 0.9294 | F1: 0.9546
+Final Eğitim - Epoch 24/50: Train Loss: 0.4164 | Val Loss: 0.1685 | Val Acc: 0.9772 | Prec: 0.9561 | Rec: 0.9625 | F1: 0.9593
+Final Eğitim - Epoch 25/50: Train Loss: 0.4062 | Val Loss: 0.1367 | Val Acc: 0.9797 | Prec: 0.9953 | Rec: 0.9316 | F1: 0.9624
+  En iyi final model kaydedildi: son_en_iyi_model.pth, Val Acc: 0.9797
+Final Eğitim - Epoch 26/50: Train Loss: 0.4150 | Val Loss: 0.1425 | Val Acc: 0.9772 | Prec: 0.9815 | Rec: 0.9360 | F1: 0.9582
+Final Eğitim - Epoch 27/50: Train Loss: 0.4091 | Val Loss: 0.1345 | Val Acc: 0.9797 | Prec: 0.9817 | Rec: 0.9448 | F1: 0.9629
+Final Eğitim - Epoch 28/50: Train Loss: 0.4083 | Val Loss: 0.1322 | Val Acc: 0.9704 | Prec: 0.9951 | Rec: 0.8985 | F1: 0.9443
+Final Eğitim - Epoch 29/50: Train Loss: 0.4150 | Val Loss: 0.1399 | Val Acc: 0.9791 | Prec: 0.9838 | Rec: 0.9404 | F1: 0.9616
+Final Eğitim - Epoch 30/50: Train Loss: 0.4084 | Val Loss: 0.1518 | Val Acc: 0.9809 | Prec: 0.9795 | Rec: 0.9514 | F1: 0.9653
+  En iyi final model kaydedildi: son_en_iyi_model.pth, Val Acc: 0.9809
+Final Eğitim - Epoch 31/50: Train Loss: 0.4101 | Val Loss: 0.1697 | Val Acc: 0.9791 | Prec: 0.9645 | Rec: 0.9603 | F1: 0.9624
+Final Eğitim - Epoch 32/50: Train Loss: 0.4067 | Val Loss: 0.1331 | Val Acc: 0.9778 | Prec: 0.9883 | Rec: 0.9316 | F1: 0.9591
+Final Eğitim - Epoch 33/50: Train Loss: 0.4037 | Val Loss: 0.1580 | Val Acc: 0.9821 | Prec: 0.9862 | Rec: 0.9492 | F1: 0.9674
+  En iyi final model kaydedildi: son_en_iyi_model.pth, Val Acc: 0.9821
+Final Eğitim - Epoch 34/50: Train Loss: 0.4063 | Val Loss: 0.1387 | Val Acc: 0.9784 | Prec: 0.9906 | Rec: 0.9316 | F1: 0.9602
+Final Eğitim - Epoch 35/50: Train Loss: 0.4101 | Val Loss: 0.1356 | Val Acc: 0.9803 | Prec: 0.9884 | Rec: 0.9404 | F1: 0.9638
+Final Eğitim - Epoch 36/50: Train Loss: 0.4038 | Val Loss: 0.1412 | Val Acc: 0.9815 | Prec: 0.9885 | Rec: 0.9448 | F1: 0.9661
+Final Eğitim - Epoch 37/50: Train Loss: 0.3988 | Val Loss: 0.1449 | Val Acc: 0.9840 | Prec: 0.9819 | Rec: 0.9603 | F1: 0.9710
+  En iyi final model kaydedildi: son_en_iyi_model.pth, Val Acc: 0.9840
+Final Eğitim - Epoch 38/50: Train Loss: 0.4063 | Val Loss: 0.1464 | Val Acc: 0.9821 | Prec: 0.9796 | Rec: 0.9558 | F1: 0.9676
+Final Eğitim - Epoch 39/50: Train Loss: 0.4092 | Val Loss: 0.1364 | Val Acc: 0.9772 | Prec: 0.9837 | Rec: 0.9338 | F1: 0.9581
+Final Eğitim - Epoch 40/50: Train Loss: 0.4056 | Val Loss: 0.1654 | Val Acc: 0.9791 | Prec: 0.9666 | Rec: 0.9581 | F1: 0.9623
+Final Eğitim - Epoch 41/50: Train Loss: 0.4046 | Val Loss: 0.1339 | Val Acc: 0.9760 | Prec: 0.9882 | Rec: 0.9249 | F1: 0.9555
+Final Eğitim - Epoch 42/50: Train Loss: 0.4022 | Val Loss: 0.1378 | Val Acc: 0.9784 | Prec: 0.9838 | Rec: 0.9382 | F1: 0.9605
+Final Eğitim - Epoch 43/50: Train Loss: 0.3999 | Val Loss: 0.1457 | Val Acc: 0.9828 | Prec: 0.9775 | Rec: 0.9603 | F1: 0.9688
+Final Eğitim - Epoch 44/50: Train Loss: 0.4003 | Val Loss: 0.1346 | Val Acc: 0.9797 | Prec: 0.9861 | Rec: 0.9404 | F1: 0.9627
+Final Eğitim - Epoch 45/50: Train Loss: 0.3952 | Val Loss: 0.1310 | Val Acc: 0.9821 | Prec: 0.9907 | Rec: 0.9448 | F1: 0.9672
+Final Eğitim - Epoch 46/50: Train Loss: 0.3955 | Val Loss: 0.1356 | Val Acc: 0.9815 | Prec: 0.9862 | Rec: 0.9470 | F1: 0.9662
+Final Eğitim - Epoch 47/50: Train Loss: 0.3955 | Val Loss: 0.1418 | Val Acc: 0.9834 | Prec: 0.9863 | Rec: 0.9536 | F1: 0.9697
+  Final eğitim erken durduruldu epoch 47.
+Final eğitim tamamlandı. En iyi doğrulama doğruluğu: 0.9840
+
+--- Final Model Test Seti Değerlendirmesi ---
+
+--- Test (Final Model) Sonuçları ---
+Doğruluk (Accuracy): 0.9766
+Kesinlik (Precision): 0.9793
+Duyarlılık (Recall): 0.9441
+F1 Skoru: 0.9614
+Karışıklık Matrisi:
+  TN=1115  FP=10
+  FN=28  TP=473
+Karışıklık matrisi 'test_(final_model)_karisiklik_matrisi.png' olarak kaydedildi.
+Sınıf indeksleri (evaluate_model): {'inilebilir': 0, 'inilemez': 1}
+Test (Final Model) görüntüleri, tahmin sonuçlarına göre klasörlere kopyalandı: data/test_(final_model)_sonuclari
+
+Tüm süreç tamamlandı.
+
+Process finished with exit code 0

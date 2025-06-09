@@ -58,8 +58,8 @@ def otomatik_kirp(gorsel_klasoru, etiket_klasoru, cikti_klasoru):
                 continue
 
             kirp = img[y1:y2, x1:x2]
-            """gri = cv2.cvtColor(kirp, cv2.COLOR_BGR2GRAY)"""
-            gri = cv2.resize(kirp, (256, 256))
+            gri = cv2.cvtColor(kirp, cv2.COLOR_BGR2GRAY)
+            gri = cv2.resize(gri, (256, 256))
 
             dosya_adi = f"{ad[:-4]}_{i}.jpg"
             print(dosya_adi)
