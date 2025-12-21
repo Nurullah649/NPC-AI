@@ -1,36 +1,83 @@
-# TEKNOFEST ULAŞIMDA YAPAY ZEKA YARIŞMASI
-    Teknofest bünyesinde yapılan bu yarışma için oluşturulmuş bu deponun amacı yarışmaya yeni katılacak insanlara yardımcı olmaktır.
-    Bu depoda yarışma hakkında bilgiler, yarışma için gerekli olan kaynaklar ve yarışma için temel gereksinimlerin tamamı bulunmaktadır.
+<div align="center">
 
-# Depoyu Klonlayıp Kullanabilmek İçin Yapılması Gerekenler
-    Deponun Bütün Gereksinimleri Ubuntu 22.04 Üzerinde Test Edilmiştir.
-Depoyu Klonlamak İçin:
+# ✈️ TEKNOFEST HAVACILIKTA YAPAY ZEKA YARIŞMASI
+### (Eski Adıyla: Ulaşımda Yapay Zeka)
+
+<p>
+    Bu depo, TEKNOFEST kapsamında düzenlenen yapay zeka yarışmalarına katılacak yeni ekiplere rehberlik etmek,<br>
+    gerekli kaynakları sağlamak ve temel altyapıyı sunmak amacıyla oluşturulmuştur.
+</p>
+
+
+</div>
+
+---
+
+## 🚀 Proje Hakkında
+
+Bu proje, **NPC-AI** takımı tarafından geliştirilmiştir. Depo içerisinde model eğitimi için gerekli kodlar, yapılandırma dosyaları ve yarışma sürecinde edindiğimiz tecrübelere dayanan temel gereksinimler bulunmaktadır.
+
+**Başarılarımız:**
+Ekibimiz, 2024 yılında düzenlenen yarışmada finale kalarak **Türkiye 7.'si** olma başarısını göstermiştir.
+
+---
+
+## 🛠️ Kurulum ve Hazırlık
+
+Projenin tüm gereksinimleri **Ubuntu 22.04** üzerinde test edilmiştir.
+
+### 1. Depoyu Klonlayın
+Projeyi yerel bilgisayarınıza indirmek ve bağımlılıkları yüklemek için terminalde şu komutları çalıştırın:
+
 ```bash
-    git clone https://github.com/Nurullah649/NPC-AI.git
-    cd NPC-AI
-    pip install -r requirements.txt  
-```
-    
-# Eğitimi Başlatmak İçin:
-    Şimdide Ana klasördeki content Klasörünü açın ve bir adet Config.yaml dosyası oluşturun ve içine aşağıdaki gibi bilgileri girin:
-        path: /path/to/data_set
-        # Path klasörünün içinde bulunan train ve val eğer bu şekilde çalışmaz ve hata verirse klasörlerin tam konumunu yazınız
-        train: /train_data_Set
-        val:   /val_data_set
-        # İsteğe ve kullanılacak veri setine göre daha fazla class ekleyebilirsiniz
-        nc: 4
-        names:
-            - Araba
-            - Insan
-            - UAP
-            - UAI
-        
-            
-# Biz Kimiz
-    Bizler, 2024 Teknofest Ulaşımda Yapay Zeka Yarışması'nda yarışan ve finale kalan NPC-Aİ ekibi olarak bu depoyu oluşturduk.
-    Ekip Üyeleri:
-        - Nurullah Kurnaz (https://github.com/Nurullah649)
-        - Muhammed Bedir Ağdemir (https://github.com/Bediragd)
-        - Hikmet Eren İşaşir (https://github.com/Hikmet-isasir)
-        - Seyyit Mehmet Selvi (https://github.com/SeyyitMehmet)
+git clone [https://github.com/Nurullah649/NPC-AI.git](https://github.com/Nurullah649/NPC-AI.git)
+cd NPC-AI
+pip install -r requirements.txt
 
+```
+
+### 2. Yapılandırma Dosyasını (Config) Hazırlayın
+
+Eğitimi başlatmadan önce veri seti yollarını belirtmeniz gerekmektedir.
+Ana dizindeki `content` klasörü içerisinde `Config.yaml` adında bir dosya oluşturun ve aşağıdaki şablonu kendi dosya yollarınıza göre düzenleyerek kaydedin:
+
+```yaml
+# Veri seti ana dizini
+path: /path/to/data_set 
+
+# Eğitim ve Doğrulama (Validation) klasörleri
+# (Eğer hata alırsanız tam dosya yolunu yazınız)
+train: /train_data_set
+val:   /val_data_set
+
+# Sınıf Sayısı (Class Count)
+nc: 4
+
+# Sınıf İsimleri
+names:
+  - Araba
+  - Insan
+  - UAP
+  - UAI
+
+```
+
+> **Not:** Yarışma kurallarına veya kullanacağınız veri setine göre `names` kısmına yeni sınıflar ekleyebilir, `nc` (number of classes) değerini güncelleyebilirsiniz.
+
+---
+
+## 👥 Biz Kimiz? (NPC-AI Ekibi)
+
+Bizler, yapay zeka ve otonom sistemler üzerine çalışan tutkulu geliştiricileriz. Bu projeyi, yarışma sürecinde edindiğimiz bilgileri toplulukla paylaşmak için açık kaynaklı hale getirdik.
+
+**Ekip Üyeleri:**
+
+* 👤 **Nurullah Kurnaz** - [GitHub Profili](https://github.com/Nurullah649)
+* 👤 **Muhammed Bedir Ağdemir** - [GitHub Profili](https://github.com/Bediragd)
+* 👤 **Seyyit Mehmet Selvi** - [GitHub Profili](https://github.com/SeyyitMehmet)
+
+---
+
+<div align="center">
+<p>Bu proje açık kaynaklıdır ve geliştirmeye açıktır. Katkılarınızı bekliyoruz!</p>
+</div>
