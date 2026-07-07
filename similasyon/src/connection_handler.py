@@ -187,7 +187,7 @@ class ConnectionHandler:
             try:
                 response = requests.post(self.url_prediction, headers=headers, data=payload, files=files, timeout=60)
                 if response.status_code == 201:
-                    logging.info("Prediction sent successfully. \n\t{}".format(username))
+                    logging.info("Prediction sent successfully. \n\t{}".format(getattr(prediction, "frame_url", "unknown")))
                     return response
                 elif response.status_code == 406:
                     logging.error(

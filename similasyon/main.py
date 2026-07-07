@@ -133,10 +133,13 @@ def run():
         ref_image_url = (ref['image_url'] if ref['image_url'].startswith('http')
                          else evaluation_server_url.rstrip("/") + "/media" + ref['image_url'])
         auth_tok = server.auth_token
-        detection_model.download_image(ref_image_url, references_folder,
-                                       os.listdir(references_folder),
-                                       auth_token=auth_tok)
-        ref_image_paths[ref['url']] = references_folder + ref_image_url.split("/")[-1]
+        ok = detection_model.download_image(ref_image_url, references_folder,
+                                            os.listdir(references_folder),
+                                            auth_token=auth_tok)
+        if ok:
+            ref_image_paths[ref['url']] = references_folder + ref_image_url.split("/")[-1]
+        else:
+            logger.warning(f"Referans indirilemedi, atlanıyor: {ref_image_url}")
     logger.info(f"{len(ref_image_paths)} referans görüntüsü indirildi.")
 
     # Ana döngü
@@ -201,10 +204,8 @@ def run():
                 logger.error(f"Detection hatası: {e}")
                 import traceback
                 logger.error(traceback.format_exc())
-                print(f"\n❌ Frame {frame_index}: Detection hatası, atlanıyor.")
-                frame_index += 1
-                pbar.update(1)
-                continue
+                print(f"\n❌ Frame {frame_index}: Detection hatası, durduruluyor.")
+                break
 
             # Prediction gönder
             result = server.send_prediction(predictions)
