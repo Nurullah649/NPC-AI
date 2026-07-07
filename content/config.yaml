@@ -1,6 +1,6 @@
-path: /home/ailab/Desktop/DATA_SET/images/
-train:  train_split/
-val: val_split/
+path: /home/nurullah/Desktop/FINAL_YOLO_DATASET_V3/images/
+train:  train/
+val: train/
 
 nc: 4
 names:
