@@ -2,3 +2,18 @@
 /json
 /Nurullah_scripts
 /downloaded_frames
+
+# similasyon runtime
+similasyon/.env
+similasyon/_logs/
+similasyon/_images/
+similasyon/_payloads/
+similasyon/_debug/
+similasyon/__pycache__/
+similasyon/**/__pycache__/
+similasyon/**/*.pyc
+similasyon/sample_data/
+similasyon/offline_wheels/
+
+# Weights (tracked via LFS or manual)
+# similasyon/weights/ - uncomment if you want to ignore weights

@@ -1,0 +1,43 @@
+# NPC-AI HYZ 2026 - Ana Konfigürasyon Dosyası
+
+model_paths:
+  detector: weights/detector/best.pt
+  dpvo: weights/dpvo/dpvo.pth
+  dpvo_cfg: config/dpvo/npc.yaml
+  camera_calib: config/camera/calib.txt
+
+detector:
+  imgsz: 1280
+  conf_thresholds:
+    Tasit: 0.25
+    Insan: 0.20
+    UAP: 0.20
+    UAI: 0.20
+  iou_threshold: 0.7
+  max_det: 300
+
+motion:
+  min_track_len: 3
+  moving_pixel_threshold: 8.0
+
+landing:
+  overlap_threshold: 0.2
+  near_buffer_px: 20
+
+dpvo:
+  min_calib_frames: 50
+  fit_method: sim3
+  fallback_velocity: true
+  min_gt_samples: 5
+
+reference:
+  matcher: lightglue
+  extractor: aliked
+  min_matches: 10
+  min_inliers: 8
+  min_inlier_ratio: 0.25
+  use_dinov2_fallback: false
+
+debug:
+  save_visuals: false
+  save_payloads: true
