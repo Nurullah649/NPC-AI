@@ -6,6 +6,8 @@ import cv2
 import numpy as np
 import torch
 
+from .direction_guard import DirectionGuard
+
 
 class PositioningDPVO:
     """DPVO tabanlı pozisyon kestirimi - Görev 2.
@@ -53,17 +55,20 @@ class PositioningDPVO:
         # Kamera kalibrasyonu
         self.intrinsics = self._load_calibration()
 
+        # DirectionGuard (kalibrasyon sanity check)
+        self.direction_guard = DirectionGuard(config)
+
         # Frame sayacı
         self.frame_counter = 0
 
         self.logger.info(
             f"PositioningDPVO başlatıldı. "
             f"min_calib_frames={self.min_calib_frames}, "
-            f"fit_method={self.fit_method}"
+            f"fit_method={self.fit_method}, "
+            f"direction_guard={'aktif' if self.direction_guard.use_guard else 'pasif'}"
         )
 
     def _resolve_path(self, rel_path: str) -> str:
-        """Dosya yolunu similasyon/ köküne göre çözümle."""
         candidates = [
             Path(rel_path),
             Path(".") / rel_path,
@@ -75,7 +80,6 @@ class PositioningDPVO:
         return str(Path(rel_path).resolve())
 
     def _load_calibration(self) -> np.ndarray:
-        """Kamera kalibrasyon dosyasını yükle."""
         try:
             if os.path.exists(self.calib_path):
                 intrinsics = np.loadtxt(self.calib_path)
@@ -85,8 +89,6 @@ class PositioningDPVO:
             self.logger.warning(f"Kalibrasyon dosyası bulunamadı: {self.calib_path}, varsayılan kullanılıyor.")
         except Exception as e:
             self.logger.warning(f"Kalibrasyon yüklenemedi: {e}, varsayılan kullanılıyor.")
-
-        # Varsayılan intrinsics
         return np.array([
             [1413.3, 0.0, 950.0639],
             [0.0, 1418.8, 543.3796],
@@ -94,10 +96,8 @@ class PositioningDPVO:
         ])
 
     def _init_dpvo(self, H: int, W: int):
-        """DPVO'yu lazy initialize et."""
         if self._dpvo_available:
             return
-
         try:
             from .dpvo_standalone import DPVOStandalone
             self.slam = DPVOStandalone(
@@ -109,54 +109,38 @@ class PositioningDPVO:
             self._dpvo_available = True
             self.logger.info("DPVO başarıyla başlatıldı.")
         except ImportError:
-            self.logger.warning(
-                "DPVO modülü bulunamadı. DPVO olmadan çalışılıyor. "
-                "Lütfen third_party/DPVO kurulumunu yapın."
-            )
+            self.logger.warning("DPVO modülü bulunamadı. DPVO olmadan çalışılıyor.")
             self._dpvo_available = False
         except Exception as e:
             self.logger.error(f"DPVO başlatılamadı: {e}")
             self._dpvo_available = False
 
     def _sim3_umeyama(self, src: np.ndarray, dst: np.ndarray) -> tuple:
-        """Umeyama Sim(3) hizalama.
-
-        Args:
-            src: (N, 3) kaynak noktalar (DPVO raw)
-            dst: (N, 3) hedef noktalar (GT)
-
-        Returns:
-            (R, t, s) 3x3 rotation, 3 translation, scalar scale
-        """
         src_mean = np.mean(src, axis=0)
         dst_mean = np.mean(dst, axis=0)
-
         src_centered = src - src_mean
         dst_centered = dst - dst_mean
-
         H_mat = src_centered.T @ dst_centered
         U, S, Vt = np.linalg.svd(H_mat)
-
         R = Vt.T @ U.T
         if np.linalg.det(R) < 0:
             Vt[-1, :] *= -1
             R = Vt.T @ U.T
-
         src_var = np.sum(np.linalg.norm(src_centered, axis=1) ** 2) / src.shape[0]
         s = np.trace(np.diag(S)) / src_var if src_var > 1e-10 else 1.0
-
         t = dst_mean - s * R @ src_mean
-
         return R, t, s
 
     def _align_dpvo_to_gt(self, dpvo_pos: np.ndarray) -> np.ndarray:
-        """Hizalanmış DPVO pozisyonunu GT koordinatına dönüştür."""
         if not self.is_calibrated:
-            return dpvo_pos  # Henüz kalibrasyon yok
+            return dpvo_pos
         return self.sim3_s * (self.sim3_R @ dpvo_pos) + self.sim3_t
 
     def _update_calibration(self):
-        """Birikmiş verilerle Sim(3) hizalamasını güncelle."""
+        """Birikmiş verilerle Sim(3) hizalamasını güncelle.
+
+        DirectionGuard ile doğrula; guard fail ederse calibration'ı kabul etme.
+        """
         if len(self.gt_buffer) < self.min_calib_frames:
             return
 
@@ -167,7 +151,6 @@ class PositioningDPVO:
             if self.fit_method == "sim3":
                 R, t, s = self._sim3_umeyama(src, dst)
             else:
-                # Ridge regression fallback
                 from sklearn.linear_model import Ridge
                 model = Ridge(alpha=1.0, fit_intercept=True)
                 model.fit(src, dst)
@@ -175,19 +158,30 @@ class PositioningDPVO:
                 t = model.intercept_
                 s = 1.0
 
+            # DirectionGuard ile doğrula
+            guard_result = self.direction_guard.evaluate(self.gt_buffer, self.dpvo_buffer)
+            if not guard_result["ok"]:
+                self.logger.warning(
+                    f"Kalibrasyon REDDEDİLDİ (guard): {guard_result['reason']} "
+                    f"sim={guard_result['direction_similarity']:.3f}, "
+                    f"scale={guard_result['scale_factor']:.3f}"
+                )
+                if self.is_calibrated:
+                    # Eski iyi kalibrasyonu koru
+                    self.logger.info("Eski kalibrasyon korunuyor.")
+                return  # Yeni calibration'ı kabul etme
+
             self.sim3_R = R
             self.sim3_t = t
             self.sim3_s = s
             self.is_calibrated = True
 
-            # Kalibrasyon hatasını hesapla
             aligned = np.array([self._align_dpvo_to_gt(p) for p in src])
             error = np.mean(np.linalg.norm(aligned - dst, axis=1))
             self.logger.info(
                 f"Kalibrasyon güncellendi. "
                 f"N={len(self.gt_buffer)}, "
-                f"Ortalama hata={error:.4f}m, "
-                f"scale={s:.4f}"
+                f"hata={error:.4f}m, scale={s:.4f}"
             )
         except Exception as e:
             self.logger.error(f"Kalibrasyon hatası: {e}")
@@ -195,28 +189,18 @@ class PositioningDPVO:
     def process_frame(self, frame_idx: int, frame_path: str,
                       health_status: str,
                       gt_x: float = 0.0, gt_y: float = 0.0, gt_z: float = 0.0) -> tuple:
-        """Tek frame işle.
-
-        Returns:
-            (predicted_x, predicted_y, predicted_z)
-        """
         self.frame_counter += 1
-
-        # Frame'i oku
         image = cv2.imread(frame_path)
         if image is None:
             self.logger.error(f"Frame okunamadı: {frame_path}")
             return (self.last_known_position[0],
                     self.last_known_position[1],
                     self.last_known_position[2])
-
         H, W = image.shape[:2]
 
-        # DPVO'yu başlat (lazy)
         if not self._dpvo_available:
             self._init_dpvo(H, W)
 
-        # DPVO raw pose al
         dpvo_raw = None
         if self._dpvo_available and self.slam is not None:
             try:
@@ -226,53 +210,37 @@ class PositioningDPVO:
                 dpvo_raw = None
 
         if health_status == '1':
-            # GT'yi aynen gönder, kalibrasyon biriktir
             result = (float(gt_x), float(gt_y), float(gt_z))
-
             if dpvo_raw is not None:
                 self.gt_buffer.append([float(gt_x), float(gt_y), float(gt_z)])
                 self.dpvo_buffer.append([float(dpvo_raw[0]), float(dpvo_raw[1]), float(dpvo_raw[2])])
                 self.frame_indices.append(frame_idx)
-
-                # Periyodik kalibrasyon güncellemesi
                 if len(self.gt_buffer) % 10 == 0:
                     self._update_calibration()
-
             self.last_known_position = np.array([float(gt_x), float(gt_y), float(gt_z)])
             self.last_health_was_one = True
-
         elif health_status == '0':
             if dpvo_raw is not None and self.is_calibrated:
-                # Hizalanmış DPVO kullan
                 dpvo_arr = np.array([dpvo_raw[0], dpvo_raw[1], dpvo_raw[2]])
                 aligned = self._align_dpvo_to_gt(dpvo_arr)
                 result = (float(aligned[0]), float(aligned[1]), float(aligned[2]))
-
-                # Velocity hesapla
                 self.last_velocity = aligned - self.last_known_position
                 self.last_known_position = aligned
                 self.last_health_was_one = False
-
             elif dpvo_raw is not None and not self.is_calibrated:
-                # Kalibrasyon yok, raw DPVO'yu döndür
                 result = (float(dpvo_raw[0]), float(dpvo_raw[1]), float(dpvo_raw[2]))
                 self.last_known_position = np.array(result)
-
             elif self.fallback_velocity and self.last_health_was_one:
-                # DPVO fail: velocity fallback
                 fallback = self.last_known_position + self.last_velocity
                 result = (float(fallback[0]), float(fallback[1]), float(fallback[2]))
                 self.last_known_position = fallback
                 self.logger.debug(f"Velocity fallback kullanıldı: {result}")
             else:
-                # Son bilinen pozisyon
                 result = (float(self.last_known_position[0]),
                           float(self.last_known_position[1]),
                           float(self.last_known_position[2]))
         else:
-            # Bilinmeyen health_status
             result = (float(self.last_known_position[0]),
                       float(self.last_known_position[1]),
                       float(self.last_known_position[2]))
-
         return result

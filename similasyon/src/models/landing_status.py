@@ -1,27 +1,41 @@
+"""UAP/UAI iniş durumu çözümleyicisi - Görev 1 ek.
+
+Fusion: rule-based + optional ResNet50 classifier.
+
+Kurallar:
+- cls 0/1 (Tasit, Insan) → landing_status = "-1" (İniş Alanı Değil)
+- cls 2/3 (UAP, UAI):
+  1. Rule-based: center_inside + IoU ile engel kontrolü
+  2. Obstacle varsa + hard_veto_obstacles → kesin "0"
+  3. Obstacle yoksa + classifier varsa → classifier kararı
+  4. Obstacle yoksa + classifier yoksa → rule fallback "1"
+"""
 import logging
 
 import numpy as np
 
+from .landing_classifier import LandingClassifier
+
 
 class LandingStatusResolver:
-    """UAP/UAI iniş durumu çözümleyicisi - Görev 1 ek.
-
-    UAP ve UAI sınıfları için:
-    - Alan üzerinde/çok yakınında insan, taşıt veya başka tespit varsa → Inilemez
-    - Engel yoksa → Inilebilir
-    - Taşıt/İnsan için → İniş Alanı Değil
-    """
+    """UAP/UAI iniş durumu çözümleyicisi - rule-based + classifier fusion."""
 
     def __init__(self, config: dict):
         self.logger = logging.getLogger(self.__class__.__name__)
         landing_cfg = config.get("landing", {})
         self.overlap_threshold = landing_cfg.get("overlap_threshold", 0.2)
         self.near_buffer_px = landing_cfg.get("near_buffer_px", 20)
+        self.hard_veto_obstacles = landing_cfg.get("hard_veto_obstacles", True)
+        self.classifier_threshold = landing_cfg.get("classifier_threshold", 0.5)
+
+        # Classifier (yüklenemezse available=False, crash yok)
+        self.classifier = LandingClassifier(config)
 
         self.logger.info(
             f"LandingStatusResolver başlatıldı. "
-            f"overlap_threshold={self.overlap_threshold}, "
-            f"near_buffer={self.near_buffer_px}px"
+            f"overlap={self.overlap_threshold}, buffer={self.near_buffer_px}px, "
+            f"hard_veto={self.hard_veto_obstacles}, "
+            f"classifier={'available' if self.classifier.available else 'unavailable'}"
         )
 
     @staticmethod
@@ -60,59 +74,82 @@ class LandingStatusResolver:
         y2 = min(H - 1, bbox[3] + buffer_px)
         return (x1, y1, x2, y2)
 
-    def resolve(self, detections: list, img_shape: tuple) -> list:
+    def resolve(self, detections: list, image_bgr_or_shape) -> list:
         """Tüm detection'lar için landing_status hesapla.
 
         Args:
-            detections: DetectorYOLO çıktısı + moving_status eklenmiş liste.
-            img_shape: (H, W)
+            detections: Detection listesi (cls, bbox, moving_status vb.)
+            image_bgr_or_shape: numpy array (H,W,3) veya (H, W) tuple/shape.
 
         Returns:
             Her detection'a 'landing_status' eklenmiş liste.
         """
-        H, W = img_shape[:2]
+        # Backward compatibility: tuple shape ise sadece rule-based
+        use_classifier = False
+        image_bgr = None
+        if isinstance(image_bgr_or_shape, np.ndarray) and image_bgr_or_shape.ndim == 3:
+            image_bgr = image_bgr_or_shape
+            if self.classifier.available:
+                use_classifier = True
+            img_shape = image_bgr.shape[:2]
+        else:
+            # tuple/list shape
+            img_shape = image_bgr_or_shape[:2]
 
-        # Önce UAP/UAI olmayanları işaretle
+        H, W = img_shape
+
+        # Non-landing classes
         for det in detections:
             if det['cls'] not in (2, 3):
-                det['landing_status'] = "-1"  # İniş Alanı Değil
+                det['landing_status'] = "-1"
 
-        # UAP/UAI için engel kontrolü
         uap_uai = [d for d in detections if d['cls'] in (2, 3)]
-        obstacles = [d for d in detections if d['cls'] in (0, 1)]  # Taşıt + İnsan
+        # Obstacle: cls 0/1 veya SAHI kaynaklı extra person
+        obstacles = [
+            d for d in detections
+            if d['cls'] in (0, 1) or d.get('source') == 'sahi'
+        ]
 
         if not uap_uai:
             return detections
 
         for uap in uap_uai:
             uap_bbox = uap['bbox']
-            # Buffer ekle
             expanded = self._expanded_bbox(uap_bbox, self.near_buffer_px, (H, W))
 
+            # Rule-based obstacle check (center_inside + IoU)
             is_blocked = False
             for obs in obstacles:
                 obs_bbox = obs['bbox']
-
-                # 1. Center-inside kontrolü
                 if self._center_inside(obs_bbox, expanded):
                     is_blocked = True
                     self.logger.debug(
-                        f"UAP/UAI engellendi: obstacle center inside. "
-                        f"UAP bbox: {uap_bbox}, Obstacle: {obs_bbox}"
+                        f"UAP/UAI blocked: center inside. "
+                        f"UAP={uap_bbox}, obs={obs_bbox}"
                     )
                     break
-
-                # 2. IoU kontrolü
                 iou = self._iou(expanded, obs_bbox)
                 if iou > self.overlap_threshold:
                     is_blocked = True
                     self.logger.debug(
-                        f"UAP/UAI engellendi: IoU={iou:.3f}. "
-                        f"UAP bbox: {uap_bbox}, Obstacle: {obs_bbox}"
+                        f"UAP/UAI blocked: IoU={iou:.3f}. "
+                        f"UAP={uap_bbox}, obs={obs_bbox}"
                     )
                     break
 
+            # Hard veto: obstacle varsa classifier sonucu yok sayılır
+            if is_blocked and self.hard_veto_obstacles:
+                uap['landing_status'] = "0"  # Inilemez
+                continue
+
+            # Obstacle yoksa classifier kararı
+            if use_classifier and image_bgr is not None:
+                result = self.classifier.predict_crop(image_bgr, uap_bbox)
+                if result["available"]:
+                    uap['landing_status'] = result["status"]  # "1" veya "0"
+                    continue
+
+            # Rule-based fallback (obstacle var ama hard_veto kapalı, ya da classifier yok)
             uap['landing_status'] = "0" if is_blocked else "1"
-            # "0" = Inilemez, "1" = Inilebilir
 
         return detections

@@ -5,6 +5,18 @@ model_paths:
   dpvo: weights/dpvo/dpvo.pth
   dpvo_cfg: config/dpvo/npc.yaml
   camera_calib: config/camera/calib.txt
+  landing_classifier: weights/landing/son_en_iyi_model.pth
+
+preprocessing:
+  use_clahe: false
+  clahe_clip_limit: 2.0
+  clahe_tile_grid_size: 8
+  split_rows: 2
+  split_cols: 3
+  brightness_threshold: 50
+  apply_to_detector: false
+  apply_to_landing_classifier: true
+  apply_to_reference_matcher: false
 
 detector:
   imgsz: 1280
@@ -15,6 +27,14 @@ detector:
     UAI: 0.20
   iou_threshold: 0.7
   max_det: 300
+  use_sahi_for_person: false
+  sahi_slice_height: 640
+  sahi_slice_width: 640
+  sahi_overlap_height_ratio: 0.25
+  sahi_overlap_width_ratio: 0.25
+  sahi_person_conf: 0.15
+  sahi_person_iou_merge: 0.5
+  sahi_max_extra_persons: 100
 
 motion:
   min_track_len: 3
@@ -23,12 +43,22 @@ motion:
 landing:
   overlap_threshold: 0.2
   near_buffer_px: 20
+  use_classifier: true
+  classifier_threshold: 0.5
+  classifier_dropout: 0.36
+  hard_veto_obstacles: true
+  classifier_hard_fail_open: true
 
 dpvo:
   min_calib_frames: 50
   fit_method: sim3
   fallback_velocity: true
   min_gt_samples: 5
+  use_direction_guard: true
+  direction_guard_min_points: 30
+  max_allowed_scale: 50.0
+  min_allowed_scale: 0.02
+  min_direction_similarity: -0.2
 
 reference:
   matcher: lightglue

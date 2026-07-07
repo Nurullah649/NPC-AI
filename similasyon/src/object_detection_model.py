@@ -89,6 +89,11 @@ class ObjectDetectionModel:
             else:
                 raise
 
+        # ImagePreprocessor
+        from .models.image_preprocess import ImagePreprocessor
+        self.preprocessor = ImagePreprocessor(self.settings)
+        self.logger.info("✅ ImagePreprocessor başlatıldı.")
+
         self.logger.info("✅ Tüm modüller başlatıldı.")
 
     @staticmethod
@@ -189,8 +194,14 @@ class ObjectDetectionModel:
         # --- Görev 1: YOLO Deteksiyonu ---
         detections = []
         if image is not None:
+            # Opsiyonel preprocessing (detector)
+            detect_img = image
+            if self.preprocessor.is_active_for("detector"):
+                processed = self.preprocessor.apply(image, purpose="detector")
+                if processed is not None:
+                    detect_img = processed
             try:
-                detections = self.detector.detect(image)
+                detections = self.detector.detect(detect_img)
                 self.logger.debug(f"YOLO: {len(detections)} nesne tespit edildi.")
             except Exception as e:
                 self.logger.error(f"DetectorYOLO hatası: {e}")
@@ -208,7 +219,7 @@ class ObjectDetectionModel:
         # --- Görev 1 ek: İniş Durumu ---
         if image is not None and detections:
             try:
-                detections = self.landing.resolve(detections, image.shape)
+                detections = self.landing.resolve(detections, image)
             except Exception as e:
                 self.logger.error(f"LandingStatusResolver hatası: {e}")
 
