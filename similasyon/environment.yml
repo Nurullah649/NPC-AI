@@ -8,18 +8,15 @@ channels:
 dependencies:
   - pip
   - python=3.10
-  - pytorch=2.3.1
+  - pytorch=2.4.1
+  - pytorch-cuda=12.4
+  - torchvision=0.19.1
   - pytorch-scatter=2.1.2
-  - pytorch-cuda=12.1
-  - torchvision=0.18
   - pip:
-    # Official TEKNOFEST requirements
     - python-decouple
     - requests>=2.31.0
     - pillow>=10.4.0
     - tqdm
-    
-    # DPVO dependencies
     - tensorboard
     - numba
     - einops
@@ -30,8 +27,6 @@ dependencies:
     - evo
     - opencv-python
     - yacs
-    
-    # Our model deps
     - ultralytics
     - scipy
     - scikit-learn
