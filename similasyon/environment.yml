@@ -1,33 +1,40 @@
 name: hyz
 channels:
+  - pyg
   - pytorch
   - nvidia
   - conda-forge
   - defaults
-  - pyg
 dependencies:
   - pip
   - python=3.10
   - pytorch=2.3.1
-  - pytorch-cuda=12.1
-  - torchvision=0.18.1
   - pytorch-scatter=2.1.2
+  - pytorch-cuda=12.1
+  - torchvision=0.18
   - pip:
-    - ultralytics
-    - opencv-python==4.9.0.80
+    # Official TEKNOFEST requirements
+    - python-decouple
+    - requests>=2.31.0
+    - pillow>=10.4.0
+    - tqdm
+    
+    # DPVO dependencies
+    - tensorboard
+    - numba
+    - einops
+    - pypose
+    - kornia
     - numpy==1.26.4
+    - plyfile
+    - evo
+    - opencv-python
+    - yacs
+    
+    # Our model deps
+    - ultralytics
     - scipy
     - scikit-learn
     - filterpy
-    - kornia
-    - yacs
-    - einops
-    - pypose
-    - tqdm
-    - pillow
-    - requests
-    - python-decouple
     - pytest
-    - tensorboard
-    - numba
-    - plyfile
+    - git+https://github.com/cvg/LightGlue.git

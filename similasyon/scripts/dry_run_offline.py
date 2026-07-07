@@ -91,15 +91,13 @@ def run_dry_run(limit: int = 20, sample_dir: str = "./sample_data"):
     print("\n🔧 ObjectDetectionModel başlatılıyor...")
     try:
         from src.object_detection_model import ObjectDetectionModel
-        model = ObjectDetectionModel()
+        from src.frame_predictions import FramePredictions
+        model = ObjectDetectionModel("http://localhost:1025/")
     except Exception as e:
         print(f"\n❌ Model başlatılamadı: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)
-
-    # Referansları ayarla
-    model.set_references(active_refs, ref_image_paths, os.path.join(sample_dir, "refs"))
 
     # Frame'leri işle
     print(f"\n🔄 {limit} frame işleniyor...\n")
@@ -114,15 +112,25 @@ def run_dry_run(limit: int = 20, sample_dir: str = "./sample_data"):
 
             # Her frame'de health_status değişimini simüle et
             hs = trans.get('health_status', '0')
+            gt_x = float(trans.get('translation_x', 0))
+            gt_y = float(trans.get('translation_y', 0))
+            gt_z = float(trans.get('translation_z', 0))
+
+            predictions = FramePredictions(
+                frame_url=f"frame/{i}/",
+                image_url=f"img/{i}.jpg",
+                video_name="dry_run_video",
+                gt_translation_x=gt_x,
+                gt_translation_y=gt_y,
+                gt_translation_z=gt_z,
+            )
 
             predictions = model.detect(
-                frame_img=frame_img,
-                frame_url=f"frame/{i}/",
+                prediction=predictions,
                 health_status=hs,
-                gt_x=float(trans.get('translation_x', 0)),
-                gt_y=float(trans.get('translation_y', 0)),
-                gt_z=float(trans.get('translation_z', 0)),
-                frame_path=frame_path,
+                active_refs=active_refs,
+                ref_image_paths=ref_image_paths,
+                frame_image_path=frame_path,
             )
 
             # Payload'ı hazırla

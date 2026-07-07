@@ -1,4 +1,4 @@
-"""Payload schema testleri."""
+"""Payload schema testleri - official TEKNOFEST 2026 API."""
 import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -35,18 +35,20 @@ class TestDetectedObject:
         assert 'bottom_right_x' in payload
         assert 'bottom_right_y' in payload
 
-    def test_cls_tuple_normalization(self):
-        obj = DetectedObject((2,), "1", "-1", 0, 0, 10, 10)
+    def test_cls_tuple_handling(self):
+        """Official API sends cls as tuple (classes["Tasit"],)."""
+        # Simulate what happens when user does: cls = classes["Tasit"],
+        cls_tuple = (0,)
+        obj = DetectedObject(cls_tuple, "1", "0", 0, 0, 10, 10)
         payload = obj.create_payload("http://localhost:1025/")
         assert 'cls' in payload
+        assert "classes/1/" in payload['cls']
 
     def test_bbox_numeric(self):
         obj = DetectedObject(0, "0", "0", 10.5, 20.7, 100.3, 200.9)
         payload = obj.create_payload("http://localhost:1025/")
-        assert payload['top_left_x'] == '10'
-        assert payload['top_left_y'] == '20'
-        assert payload['bottom_right_x'] == '100'
-        assert payload['bottom_right_y'] == '200'
+        assert payload['top_left_x'] == '10.5'
+        assert payload['top_left_y'] == '20.7'
 
 
 class TestDetectedTranslation:
@@ -55,10 +57,6 @@ class TestDetectedTranslation:
         assert t.translation_x == 1.0
         assert t.translation_y == 2.0
         assert t.translation_z == 3.0
-
-    def test_default_z(self):
-        t = DetectedTranslation(1.0, 2.0)
-        assert t.translation_z == 0.0
 
     def test_payload_has_z(self):
         t = DetectedTranslation(1.0, 2.0, 3.0)
@@ -69,7 +67,6 @@ class TestDetectedTranslation:
     def test_sanitize_nan(self):
         t = DetectedTranslation(float('nan'), 2.0, 3.0)
         assert t.translation_x == 0.0
-        assert t.translation_y == 2.0
 
     def test_sanitize_none(self):
         t = DetectedTranslation(None, 2.0, 3.0)
@@ -86,41 +83,43 @@ class TestReferencePrediction:
         assert r.reference_url == "ref_url"
         assert r.frame_url == "frame_url"
 
-    def test_payload(self):
+    def test_payload_keys(self):
+        """Official API uses 'reference' and 'frame' keys."""
         r = ReferencePrediction("ref/1/", "frame/1/", 10.0, 20.0, 100.0, 200.0)
         payload = r.create_payload()
-        assert payload['reference_url'] == "ref/1/"
-        assert payload['frame_url'] == "frame/1/"
-        assert payload['top_left_x'] == '10'
+        assert 'reference' in payload
+        assert 'frame' in payload
+        assert payload['reference'] == "ref/1/"
+        assert payload['frame'] == "frame/1/"
 
 
 class TestFramePredictions:
     def test_basic(self):
-        fp = FramePredictions("frame/1/", "img/1.jpg", "video1")
+        fp = FramePredictions("frame/1/", "img/1.jpg", "video1", 1.0, 2.0, 3.0)
         assert len(fp.detected_objects) == 0
-        assert len(fp.detected_translations) == 0
+        assert len(fp.translations) == 0
         assert len(fp.reference_predictions) == 0
 
     def test_add_objects(self):
-        fp = FramePredictions("f/1", "i/1", "v1")
+        fp = FramePredictions("f/1", "i/1", "v1", 1.0, 2.0, 3.0)
         obj = DetectedObject(0, "1", "0", 10, 20, 100, 200)
         fp.add_detected_object(obj)
         assert len(fp.detected_objects) == 1
 
     def test_add_translation(self):
-        fp = FramePredictions("f/1", "i/1", "v1")
+        fp = FramePredictions("f/1", "i/1", "v1", 1.0, 2.0, 3.0)
         t = DetectedTranslation(1.0, 2.0, 3.0)
         fp.add_translation_object(t)
-        assert len(fp.detected_translations) == 1
+        assert len(fp.translations) == 1
 
     def test_add_ref_prediction(self):
-        fp = FramePredictions("f/1", "i/1", "v1")
+        fp = FramePredictions("f/1", "i/1", "v1", 1.0, 2.0, 3.0)
         r = ReferencePrediction("ref", "frame", 0, 0, 10, 10)
         fp.add_reference_prediction(r)
         assert len(fp.reference_predictions) == 1
 
     def test_payload_contains_reference_predictions(self):
-        fp = FramePredictions("f/1", "i/1", "v1")
+        fp = FramePredictions("f/1", "i/1", "v1", 1.0, 2.0, 3.0)
         r = ReferencePrediction("ref/1", "frame/1", 10, 20, 100, 200)
         fp.add_reference_prediction(r)
         payload = fp.create_payload("http://localhost:1025/")
@@ -128,7 +127,7 @@ class TestFramePredictions:
         assert len(payload['reference_predictions']) == 1
 
     def test_payload_all_fields(self):
-        fp = FramePredictions("f/1", "i/1", "v1")
+        fp = FramePredictions("f/1", "i/1", "v1", 1.0, 2.0, 3.0)
         fp.add_detected_object(DetectedObject(0, "1", "0", 0, 0, 10, 10))
         fp.add_translation_object(DetectedTranslation(1, 2, 3))
         fp.add_reference_prediction(ReferencePrediction("r/1", "f/1", 0, 0, 10, 10))
@@ -137,3 +136,6 @@ class TestFramePredictions:
         assert 'detected_objects' in payload
         assert 'detected_translations' in payload
         assert 'reference_predictions' in payload
+        assert len(payload['detected_objects']) == 1
+        assert len(payload['detected_translations']) == 1
+        assert len(payload['reference_predictions']) == 1

@@ -1,268 +1,146 @@
-"""
-Ana Nesne Tespit Modeli - Tüm görevlerin birleştiği ana akış.
-
-Görev 1: YOLO deteksiyon + hareket durumu + iniş durumu
-Görev 2: DPVO pozisyon kestirimi
-Görev 3: Referans görüntü eşleme
-
-Her frame'de ObjectDetectionModel.process() veya detect() çağrılır.
-"""
 import logging
-import os
-from pathlib import Path
-
-import cv2
-import numpy as np
-import yaml
+import time
+import random
+import requests
 
 from .constants import classes, landing_statuses, moving_statuses
 from .detected_object import DetectedObject
 from .detected_translation import DetectedTranslation
 from .reference_prediction import ReferencePrediction
-from .frame_predictions import FramePredictions
-
-from .models.detector_yolo import DetectorYOLO
-from .models.motion_classifier import MotionClassifier
-from .models.landing_status import LandingStatusResolver
-from .models.positioning_dpvo import PositioningDPVO
-from .models.reference_matcher import ReferenceMatcher
 
 
 class ObjectDetectionModel:
-    """Ana model sınıfı - tüm görevleri tek akışta birleştirir."""
+    # Base class for team models
 
-    def __init__(self, config_path=None):
-        self.logger = logging.getLogger(self.__class__.__name__)
+    def __init__(self, evaluation_server_url):
+        logging.info('Created Object Detection Model')
+        self.evaulation_server = evaluation_server_url
+        # Modelinizi bu kısımda init edebilirsiniz.
+        # self.model = get_model() # Örnektir!
 
-        # Config yükle
-        if config_path is None:
-            config_path = self._find_config()
-        self.config = self._load_config(config_path)
+    @staticmethod
+    def download_image(img_url, images_folder, images_files, retries=3, initial_wait_time=0.1, auth_token=None):
+        t1 = time.perf_counter()
+        wait_time = initial_wait_time
+        # Indirmek istedigimiz frame frames.json dosyasinda mevcut mu kontrol edelim
+        image_name = img_url.split("/")[-1]
+        # Eger indirecegimiz frame'i daha once indirmediysek indirme islemine gecelim
+        if image_name not in images_files:
+            headers = {'Authorization': f'Token {auth_token}'} if auth_token else {}
+            for attempt in range(retries):
+                    try:
+                        response = requests.get(img_url, headers=headers, timeout=60)
+                        response.raise_for_status()
+                        
+                        img_bytes = response.content
+                        with open(images_folder + image_name, 'wb') as img_file:
+                            img_file.write(img_bytes)
 
-        # Alt modülleri başlat
-        self.logger.info("Alt modüller başlatılıyor...")
-        self.detector = DetectorYOLO(self.config)
-        self.motion_classifier = MotionClassifier(self.config)
-        self.landing_resolver = LandingStatusResolver(self.config)
-        self.positioning = PositioningDPVO(self.config)
-        self.reference_matcher = ReferenceMatcher(self.config)
+                        t2 = time.perf_counter()
+                        logging.info(f'{img_url} - Download Finished in {t2 - t1} seconds to {images_folder + image_name}')
+                        return
 
-        # Debug ayarları
-        debug_cfg = self.config.get("debug", {})
-        self.save_visuals = debug_cfg.get("save_visuals", False)
-        self.save_payloads = debug_cfg.get("save_payloads", True)
+                    except requests.exceptions.RequestException as e:
+                        logging.error(f"Download failed for {img_url} on attempt {attempt + 1}: {e}")
+                        logging.info(f"Retrying in {wait_time} seconds...")
+                        time.sleep(wait_time)
+                        wait_time *= 2
 
-        # Referans cache
-        self.active_refs = []
-        self.ref_image_paths = {}
-        self.ref_cache_dir = None
-
-        self.frame_count = 0
-
-        self.logger.info("ObjectDetectionModel başarıyla başlatıldı.")
-
-    def _find_config(self):
-        """settings.yaml dosyasını bul."""
-        candidates = [
-            "config/settings.yaml",
-            "../config/settings.yaml",
-            str(Path(__file__).resolve().parent.parent / "config" / "settings.yaml"),
-            str(Path(__file__).resolve().parent.parent.parent / "similasyon" / "config" / "settings.yaml"),
-        ]
-        for cand in candidates:
-            if os.path.exists(cand):
-                return cand
-        # Varsayılan
-        return "config/settings.yaml"
-
-    def _load_config(self, config_path: str) -> dict:
-        """YAML config dosyasını yükle."""
-        if not os.path.exists(config_path):
-            self.logger.warning(f"Config dosyası bulunamadı: {config_path}, varsayılanlar kullanılacak.")
-            return {}
-
-        with open(config_path, 'r') as f:
-            config = yaml.safe_load(f)
-        self.logger.info(f"Config yüklendi: {config_path}")
-        return config
-
-    def set_references(self, active_refs: list, ref_image_paths: dict, cache_dir: str):
-        """Aktif referansları ayarla ve cache'le.
-
-        Args:
-            active_refs: Referans URL listesi.
-            ref_image_paths: {ref_url: image_url} dict.
-            cache_dir: Referans görüntülerinin kaydedileceği dizin.
-        """
-        self.active_refs = active_refs or []
-        self.ref_image_paths = ref_image_paths or {}
-        self.ref_cache_dir = cache_dir
-
-        if cache_dir:
-            os.makedirs(cache_dir, exist_ok=True)
-
-        # Referansları önceden cache'le
-        for ref in self.active_refs:
-            ref_url = ref if isinstance(ref, str) else ref.get('url', '')
-            if not ref_url:
-                continue
-            img_url = self.ref_image_paths.get(ref_url, '')
-            if not img_url:
-                continue
-
-            # Referans görüntüsünü indir
-            ref_filename = ref_url.split("/")[-1] + ".jpg"
-            ref_path = os.path.join(cache_dir, ref_filename)
-
-            if not os.path.exists(ref_path) and img_url:
-                try:
-                    import requests
-                    response = requests.get(img_url, timeout=60)
-                    with open(ref_path, 'wb') as f:
-                        f.write(response.content)
-                except Exception as e:
-                    self.logger.error(f"Referans indirilemedi {ref_url}: {e}")
-                    continue
-
-            # Feature'ları önceden hesapla
-            self.reference_matcher.precompute_reference(ref_url, ref_path)
-
-        self.logger.info(f"{len(self.active_refs)} referans hazırlandı.")
-
-    def detect(self, frame_img: np.ndarray,
-               frame_url: str = "",
-               health_status: str = "0",
-               gt_x: float = 0.0, gt_y: float = 0.0, gt_z: float = 0.0,
-               frame_path: str = None) -> FramePredictions:
-        """Ana detection akışı - tüm görevleri çalıştırır.
-
-        Args:
-            frame_img: BGR frame (H, W, 3)
-            frame_url: Frame'in sunucudaki URL'si
-            health_status: '0' veya '1'
-            gt_x, gt_y, gt_z: Health=1 iken gelen ground truth değerler
-            frame_path: Frame'in yerel dosya yolu (DPVO için)
-
-        Returns:
-            FramePredictions objesi (payload'a çevrilebilir).
-        """
-        self.frame_count += 1
-        H, W = frame_img.shape[:2]
-
-        # --- Görev 1: YOLO Deteksiyonu ---
-        detections = self.detector.detect(frame_img)
-
-        # --- Görev 1 ek: Hareket Durumu ---
-        gray = cv2.cvtColor(frame_img, cv2.COLOR_BGR2GRAY)
-        detections = self.motion_classifier.update(detections, gray)
-
-        # --- Görev 1 ek: İniş Durumu ---
-        detections = self.landing_resolver.resolve(detections, frame_img.shape)
-
-        # --- Görev 2: Pozisyon Kestirimi ---
-        if frame_path and os.path.exists(frame_path):
-            tx, ty, tz = self.positioning.process_frame(
-                self.frame_count, frame_path,
-                health_status, gt_x, gt_y, gt_z
-            )
+            logging.error(f"Failed to download image from {img_url} after {retries} attempts.")
+        # Eger indirecegimiz frame'i daha once indirdiysek indirme yapmadan devam edebiliriz
         else:
-            tx, ty, tz = gt_x, gt_y, gt_z
+            logging.info(f'{image_name} already exists in {images_folder}, skipping download.')
 
-        # --- FramePredictions oluştur ---
-        pred = FramePredictions(
-            frame_url=frame_url,
-            image_url="",  # doldurulacak
-            video_name="",
-            gt_translation_x=gt_x,
-            gt_translation_y=gt_y,
-            gt_translation_z=gt_z,
-        )
+    def process(self, prediction, evaluation_server_url, health_status, images_folder, images_files,
+                active_refs=None, ref_image_paths=None, auth_token=None):
+        # Yarışmacılar resim indirme, pre ve post process vb işlemlerini burada gerçekleştirebilir.
+        # Download image (Ornek)
+        self.download_image(evaluation_server_url + "media" + prediction.image_url, images_folder, images_files, auth_token=auth_token)
+        # Örnek: Burada OpenCV gibi bir tool ile preprocessing işlemi yapılabilir. (Tercihe Bağlı)
+        # ...
+        # Nesne tespiti (Gorev 1), pozisyon kestirim (Gorev 2) ve referans nesne tespiti (Gorev 3)
+        # modellerinin tumu self.detect() icinde sira ile calistirilir.
+        frame_image_path = images_folder + prediction.image_url.split("/")[-1]
+        frame_results = self.detect(prediction, health_status,
+                                    active_refs=active_refs or [],
+                                    ref_image_paths=ref_image_paths or {},
+                                    frame_image_path=frame_image_path)
+        # Tahminler objesi FramePrediction sınıfında return olarak dönülmelidir.
+        return frame_results
 
-        # DetectedObject'leri ekle
-        for det in detections:
-            bbox = det['bbox']
-            d_obj = DetectedObject(
-                cls=det['cls'],
-                landing_status=det.get('landing_status', "-1"),
-                moving_status=det.get('moving_status', "-1"),
-                top_left_x=bbox[0],
-                top_left_y=bbox[1],
-                bottom_right_x=bbox[2],
-                bottom_right_y=bbox[3],
+    def detect(self, prediction, health_status, active_refs=None, ref_image_paths=None, frame_image_path=None):
+        # Modelinizle bu fonksiyon içerisinde tahmin yapınız.
+        # results = self.model.evaluate(...) # Örnektir.
+
+        # Burada örnek olması amacıyla 2 adet tahmin yapıldığı simüle edilmiştir.
+        # Yarışma esnasında modelin tahmin olarak ürettiği sonuçlar kullanılmalıdır.
+        # Örneğin :
+        # for i in results: # gibi
+        for i in range(1, 3):
+            cls = classes["UAP"],  # Tahmin edilen nesnenin sınıfı classes sözlüğü kullanılarak atanmalıdır.
+            landing_status = landing_statuses["Inilebilir"]  # Tahmin edilen nesnenin inilebilir durumu landing_statuses sözlüğü kullanılarak atanmalıdır.
+            # Moving status yalnizca Tasit (Vehicle) sinifi icin "Hareketli"/"Sabit" degerini alir.
+            # UAP/UAI/Insan gibi tasit olmayan siniflar icin "Tasit Degil" ("-1") gonderilmelidir.
+            moving_status = moving_statuses["Tasit Degil"] if int(cls[0]) != classes["Tasit"] else moving_statuses["Sabit"]
+            top_left_x = 12 * i  # Örnek olması için rastgele değer atanmıştır. Modelin sonuçları kullanılmalıdır.
+            top_left_y = 12 * i  # Örnek olması için rastgele değer atanmıştır. Modelin sonuçları kullanılmalıdır.
+            bottom_right_x = 12 * i  # Örnek olması için rastgele değer atanmıştır. Modelin sonuçları kullanılmalıdır.
+            bottom_right_y = 12 * i  # Örnek olması için rastgele değer atanmıştır. Modelin sonuçları kullanılmalıdır.
+
+            # Modelin tespit ettiği herbir nesne için bir DetectedObject sınıfına ait nesne oluşturularak
+            # tahmin modelinin sonuçları parametre olarak verilmelidir.
+            d_obj = DetectedObject(cls,
+                                   landing_status,
+                                   moving_status,
+                                   top_left_x,
+                                   top_left_y,
+                                   bottom_right_x,
+                                   bottom_right_y
+                                        )
+
+            # Modelin tahmin ettiği her nesne prediction nesnesi içerisinde bulunan detected_objects listesine eklenmelidir.
+            prediction.add_detected_object(d_obj)
+
+        # Health Status biti hava aracinin uydu haberlesmesinin saglikli olup olmadigini gosterir.
+        # Health Status 0 ise sistem calismali 1 ise gelen verinin aynisini gonderilebilir.
+        # health_status None ise (ceviri sunucudan alinamadi) Gorev 2 ciktisi uretmeyiz; kare
+        # yine de Gorev 1/3 ile gonderilip ilerletilir (bos detected_translations gecerlidir).
+        if health_status is None:
+            logging.info("No translation/health_status for this frame; skipping Mission 2 output.")
+        elif health_status == '0':
+            # Takimlar buraya kendi gelistirdikleri algoritmalarin sonuclarini entegre edebilirler.
+            pred_translation_x = random.randint(1, 10) # Ornek olmasi icin rastgele degerler atanmistir takimlar kendi sonuclarini kullanmalidirlar.
+            pred_translation_y = random.randint(1, 10) # Ornek olmasi icin rastgele degerler atanmistir takimlar kendi sonuclarini kullanmalidirlar.
+            pred_translation_z = random.randint(1, 10) # Ornek olmasi icin rastgele degerler atanmistir takimlar kendi sonuclarini kullanmalidirlar.
+            prediction.add_translation_object(
+                DetectedTranslation(pred_translation_x, pred_translation_y, pred_translation_z))
+        else:
+            # Saglikli (health_status '1'): GT konum mevcut, oldugu gibi gonderilir. GT degerleri
+            # null ise float'a cevrilemez (str(None) -> "None" sunucuda reddedilir); bu durumda atla.
+            if None not in (prediction.gt_translation_x, prediction.gt_translation_y, prediction.gt_translation_z):
+                prediction.add_translation_object(DetectedTranslation(
+                    prediction.gt_translation_x, prediction.gt_translation_y, prediction.gt_translation_z))
+            else:
+                logging.info("Healthy frame but GT translation is null; skipping Mission 2 output.")
+
+        # --- Gorev 3 (Referans Nesne Tespiti) ---
+        # Gorev 1 ve Gorev 2'den sonra, ayni kare icin aktif olan her referans nesnesi
+        # uzerinde sira ile calisir. `active_refs` ana donguden gelen pencere-ici aktif
+        # referanslari tutar. Aralik disindaki kareler icin buraya hic aktif referans
+        # iletilmez; dolayisi ile bu blok hicbir sey eklemez.
+        for ref in (active_refs or []):
+            start_img = ref.get('frame_start_image_url', '')
+            end_img = ref.get('frame_end_image_url', '')
+            if not (start_img and end_img and start_img <= prediction.image_url <= end_img):
+                continue
+            
+            # Gorev 3 model cagrisi !
+            # Ornek olmasi icin sabit bir bbox donuluyor. Takimlar kendi modellerini kullanmalidir.
+            bbox = (10.0, 10.0, 120.0, 120.0)
+            if not bbox:
+                continue
+            prediction.add_reference_prediction(
+                ReferencePrediction(ref['url'], prediction.frame_url, *bbox)
             )
-            pred.add_detected_object(d_obj)
 
-        # DetectedTranslation ekle
-        t_obj = DetectedTranslation(tx, ty, tz)
-        pred.add_translation_object(t_obj)
-
-        # --- Görev 3: Referans Eşleme ---
-        for ref in self.active_refs:
-            ref_url = ref if isinstance(ref, str) else ref.get('url', '')
-            if not ref_url:
-                continue
-
-            img_url = self.ref_image_paths.get(ref_url, '')
-            if not img_url:
-                continue
-
-            # Cache'te referans yolu
-            ref_path = None
-            if self.ref_cache_dir:
-                ref_filename = ref_url.split("/")[-1] + ".jpg"
-                ref_path = os.path.join(self.ref_cache_dir, ref_filename)
-
-            # Eşleme yap
-            bbox = self.reference_matcher.match(ref_url, ref_path, frame_img)
-
-            if bbox is not None:
-                ref_pred = ReferencePrediction(
-                    reference_url=ref_url,
-                    frame_url=frame_url,
-                    top_left_x=bbox[0],
-                    top_left_y=bbox[1],
-                    bottom_right_x=bbox[2],
-                    bottom_right_y=bbox[3],
-                )
-                pred.add_reference_prediction(ref_pred)
-
-        # Debug: payload validasyonu
-        self._validate_payload(pred)
-
-        # Debug: görsel kaydet
-        if self.save_visuals:
-            self._save_debug_visual(frame_img, detections, pred, self.frame_count)
-
-        return pred
-
-    def _validate_payload(self, pred: FramePredictions):
-        """Payload'ı doğrula, hataları logla."""
-        for d_obj in pred.detected_objects:
-            # moving_status kontrol
-            if d_obj.moving_status not in ["-1", "0", "1"]:
-                self.logger.warning(f"Geçersiz moving_status: {d_obj.moving_status}")
-
-        for t_obj in pred.detected_translations:
-            if t_obj.translation_z is None:
-                self.logger.warning("translation_z None!")
-
-        # reference_predictions
-        if self.active_refs and not pred.reference_predictions:
-            self.logger.debug("Aktif referans var ama eşleşme bulunamadı.")
-
-    def _save_debug_visual(self, frame, detections, pred, frame_count):
-        """Debug için görsel kaydet."""
-        debug_dir = f"_debug/session_{frame_count // 100}"
-        os.makedirs(debug_dir, exist_ok=True)
-
-        vis = frame.copy()
-        for det in detections:
-            bbox = det['bbox']
-            cls_name = det['cls_name']
-            cv2.rectangle(vis, (int(bbox[0]), int(bbox[1])),
-                          (int(bbox[2]), int(bbox[3])), (0, 255, 0), 2)
-            label = f"{cls_name} {det.get('moving_status', '?')} {det.get('landing_status', '?')}"
-            cv2.putText(vis, label, (int(bbox[0]), int(bbox[1]) - 5),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
-
-        cv2.imwrite(f"{debug_dir}/frame_{frame_count:06d}.jpg", vis)
+        return prediction

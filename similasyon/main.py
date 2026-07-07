@@ -1,327 +1,156 @@
-#!/usr/bin/env python3
-"""
-TEKNOFEST 2026 Havacılıkta Yapay Zeka Yarışması - Ana Giriş Noktası.
-
-Kullanım:
-    conda activate hyz
-    cd similasyon
-    python main.py
-
-Bu script:
-1. .env'den takım bilgilerini okur
-2. Sunucuya bağlanır
-3. Progress/aktif session kontrolü yapar
-4. Frame-by-frame işleme yapar:
-   - Frame indir
-   - Translation çek
-   - Referans objeleri yükle
-   - ObjectDetectionModel.detect() çağır
-   - Prediction gönder
-5. Koparsa kaldığı yerden devam eder
-"""
 import logging
 import os
-import sys
 import time
 from datetime import datetime
 from pathlib import Path
-
 from decouple import config
+from tqdm import tqdm
+from similasyon.src.connection_handler import ConnectionHandler
+from similasyon.src.frame_predictions import FramePredictions
+from similasyon.src.object_detection_model import ObjectDetectionModel
+
+# Minimum seconds between frames. Keeps GET /frames/ well under the 300/m rate limit
+# even when image downloads are fast. 300/m = 5/s; 0.25s floor → max ~4/s with headroom.
+MIN_FRAME_INTERVAL = 0.25
 
 
-def configure_logger(team_name: str):
-    """Logger'ı yapılandır."""
-    log_dir = "./_logs/"
-    os.makedirs(log_dir, exist_ok=True)
-    log_filename = datetime.now().strftime(
-        os.path.join(log_dir, f"{team_name}_%Y_%m_%d__%H_%M_%S_%f.log")
-    )
-    logging.basicConfig(
-        filename=log_filename,
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    )
-    # Konsola da yaz
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    console.setFormatter(logging.Formatter('%(levelname)s - %(message)s'))
-    logging.getLogger('').addHandler(console)
-
-
-def ensure_dirs():
-    """Gerekli dizinleri oluştur."""
-    for d in ["./_logs", "./_images", "./_payloads", "./_debug"]:
-        os.makedirs(d, exist_ok=True)
+def configure_logger(team_name):
+    log_folder = "./_logs/"
+    Path(log_folder).mkdir(parents=True, exist_ok=True)
+    log_filename = datetime.now().strftime(log_folder + team_name + '_%Y_%m_%d__%H_%M_%S_%f.log')
+    logging.basicConfig(filename=log_filename, level=logging.INFO,
+                        format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def run():
-    """Ana çalışma döngüsü."""
-    print("=" * 60)
-    print("NPC-AI HYZ 2026 - TEKNOFEST Havacılıkta Yapay Zeka")
-    print("=" * 60)
-
-    # Ortam değişkenlerini kontrol et
-    env_path = "./.env"
-    if not os.path.exists(env_path):
-        print("\n❌ .env dosyası bulunamadı!")
-        print(f"   Lütfen {env_path} dosyasını oluşturun.")
-        print("   Örnek için .env.example dosyasını kullanabilirsiniz.")
-        print("\n   cp .env.example .env")
-        print("   # ve .env içindeki değerleri kendi bilgilerinizle doldurun.\n")
-        sys.exit(1)
-
-    # .env'den ayarları oku
-    config.search_path = "./"
+    print("Started...")
+    config.search_path = "./config/"
     team_name = config('TEAM_NAME')
     password = config('PASSWORD')
-    evaluation_server_url = config('EVALUATION_SERVER_URL')
+    evaluation_server_url = config("EVALUATION_SERVER_URL")
 
-    # Logger
     configure_logger(team_name)
-    logger = logging.getLogger('main')
-    logger.info("NPC-AI HYZ 2026 başlatılıyor...")
-    logger.info(f"Takım: {team_name}, Sunucu: {evaluation_server_url}")
 
-    # Dizinler
-    ensure_dirs()
+    detection_model = ObjectDetectionModel(evaluation_server_url)
 
-    # Modülleri import et
-    try:
-        from src.connection_handler import ConnectionHandler
-        from src.object_detection_model import ObjectDetectionModel
-        from src.config_loader import load_settings
-        from src.frame_predictions import FramePredictions
-    except ImportError as e:
-        logger.error(f"Modül import hatası: {e}")
-        print(f"\n❌ Modül yüklenemedi: {e}")
-        print("   Lütfen bağımlılıkların kurulu olduğunu kontrol edin:")
-        print("   conda env create -f environment.yml\n")
-        sys.exit(1)
+    server = ConnectionHandler(evaluation_server_url, username=team_name, password=password)
 
-    # Config yükle
-    try:
-        config_data = load_settings()
-        logger.info("Config dosyası yüklendi.")
-    except Exception as e:
-        logger.warning(f"Config yüklenemedi: {e}, varsayılanlar kullanılacak.")
-        config_data = {}
-
-    # Model başlat
-    try:
-        logger.info("ObjectDetectionModel başlatılıyor...")
-        detection_model = ObjectDetectionModel()
-        logger.info("Model başarıyla başlatıldı.")
-    except Exception as e:
-        logger.error(f"Model başlatılamadı: {e}")
-        print(f"\n❌ Model başlatılamadı: {e}")
-        print("   Kontrol edin:")
-        print("   - Model ağırlıkları weights/detector/best.pt mevcut mu?")
-        print("   - CUDA kurulu mu?")
-        print("   - Bağımlılıklar tam mı?\n")
-        sys.exit(1)
-
-    # Sunucuya bağlan
-    print(f"\n🔗 Sunucuya bağlanılıyor: {evaluation_server_url}")
-    try:
-        server = ConnectionHandler(
-            evaluation_server_url,
-            username=team_name,
-            password=password
-        )
-        if not server.auth_token:
-            logger.error("Sunucuya bağlanılamadı!")
-            print("\n❌ Sunucuya bağlanılamadı!")
-            print("   Kontrol edin:")
-            print("   - Sunucu çalışıyor mu?")
-            print("   - .env bilgileri doğru mu?")
-            print(f"   - URL: {evaluation_server_url}\n")
-            sys.exit(1)
-        logger.info("Sunucuya başarıyla bağlanıldı.")
-        print("✅ Sunucuya bağlanıldı.")
-    except Exception as e:
-        logger.error(f"Sunucu bağlantı hatası: {e}")
-        print(f"\n❌ Sunucu bağlantı hatası: {e}\n")
-        sys.exit(1)
-
-    # Aktif session kontrolü
-    print("\n📋 Session kontrol ediliyor...")
-    session_info = server.get_session_info()
+    # Check where we left off — safe to call after reconnect.
+    # get_progress() returns None ONLY when the server is unreachable (after retries);
+    # a genuine "no active session" comes back as a dict with session_name == None.
     progress = server.get_progress()
+    if progress is None:
+        print("Could not reach the evaluation server (progress check failed). "
+              "Check your connection and try again.")
+        return
+    if not progress['session_name']:
+        print("No active session found. Exiting.")
+        return
 
-    if session_info:
-        logger.info(f"Aktif session: {session_info}")
-        print(f"✅ Session: {session_info.get('name', 'Bilinmiyor')}")
-    else:
-        logger.info("Session bilgisi alınamadı, devam ediliyor.")
-        print("⚠️  Session bilgisi alınamadı.")
+    if progress['completed']:
+        print(f"All {progress['total_frames']} frames already submitted. Nothing to do.")
+        return
 
-    if progress:
-        logger.info(f"Progress: {progress}")
-        print(f"📊 Progress: {progress}")
-    else:
-        logger.info("Progress alınamadı.")
-        print("⚠️  Progress alınamadı.")
+    session_name = progress['session_name']
+    total_frames = progress['total_frames']
+    start_index = progress['frame_index']
+    print(f"Session: {session_name} — resuming from frame {start_index + 1} of {total_frames}")
 
-    # Referans objelerini yükle
-    print("\n🖼️  Referans objeleri yükleniyor...")
-    try:
-        active_refs, ref_image_paths = server.get_references()
-        if active_refs:
-            ref_cache_dir = "./_images/refs"
-            detection_model.set_references(
-                active_refs, ref_image_paths, ref_cache_dir
-            )
-            print(f"✅ {len(active_refs)} referans yüklendi.")
-        else:
-            print("ℹ️  Aktif referans bulunamadı (Görev 3 devre dışı).")
-    except Exception as e:
-        logger.warning(f"Referans yükleme hatası: {e}")
-        print(f"⚠️  Referans yüklenemedi: {e}")
+    # Prepare image storage
+    server.video_name = session_name + "/"
+    server.create_img_folder(server.video_name)
+    images_folder = os.path.join(server.img_save_path, server.video_name)
 
-    # Ana döngü
-    print("\n" + "=" * 60)
-    print("🔄 Frame işleme başlıyor...")
-    print("   (Durdurmak için Ctrl+C)")
-    print("=" * 60 + "\n")
+    references_folder = os.path.join(images_folder, "references") + os.sep
+    Path(references_folder).mkdir(parents=True, exist_ok=True)
 
-    frame_count = 0
-    max_empty_frames = 10  # Art arda boş frame gelirse dur
-    empty_count = 0
+    # Gorev 3: TUM referans nesnelerini ve [frame_start, frame_end] araliklarini en
+    # bastan TEK seferde cek (GET /reference/, 5/m limit).
+    all_references = server.get_reference_objects(force_download=True) or []
+    logging.info(f"Loaded {len(all_references)} reference object(s) for the session.")
+    ref_image_paths = {}
 
-    while True:
-        try:
-            # --- Frame çek ---
-            frame_data = server.get_next_frame()
-            if frame_data is None:
-                empty_count += 1
-                logger.warning(f"Frame alınamadı ({empty_count}/{max_empty_frames})")
-                if empty_count >= max_empty_frames:
-                    logger.info("Art arda boş frame, işlem tamamlandı.")
-                    print("\n✅ Tüm frameler işlendi.")
+    # Gorev 3: TUM referans goruntularini pencereyi beklemeden en bastan indir.
+    # NOT: Bu yalnizca sunucu media-auth kapisi referans goruntulerini ilerlemeden
+    # bagimsiz actiysa calisir; aksi halde penceresi henuz baslamayan referanslar
+    # icin sunucu 403 doner. Her indirme bir media-auth alt-istegi uretir (300/m
+    # limit); referans sayisi cok yuksekse bu baslangic patlamasini limit altinda tutun.
+    for ref in all_references:
+        ref_image_url = (ref['image_url'] if ref['image_url'].startswith('http')
+                         else evaluation_server_url + "media" + ref['image_url'])
+        detection_model.download_image(ref_image_url, references_folder,
+                                       os.listdir(references_folder),
+                                       auth_token=server.auth_token)
+        ref_image_paths[ref['url']] = references_folder + ref_image_url.split("/")[-1]
+    logging.info(f"Pre-downloaded {len(ref_image_paths)} reference image(s) up front.")
+
+    # tqdm progress bar — mutlak yarisma ilerlemesi (resume'de gercek yuzdeyi gosterir;
+    # orn. 1000'in 500'unden devam edince %50'den baslar). ETA degismez (kalan = total - n).
+    stuck_image_url = None
+    stuck_count = 0
+    with tqdm(total=total_frames, initial=start_index, desc="Frames") as pbar:
+        while True:
+            frame_start = time.monotonic()
+            # Sunucu her çağrıda yalnızca sıradaki tek kareyi döner.
+            frame = server.get_current_frame()
+            if frame is None:
+                print("Session complete or no active session.")
+                break
+
+            if frame['image_url'] == stuck_image_url:
+                stuck_count += 1
+                if stuck_count >= 5:
+                    logging.error(f"Frame {frame['image_url']} did not advance after "
+                                  f"{stuck_count} submissions; aborting to avoid an infinite loop.")
+                    print("Aborting: current frame is not advancing (check logs).")
                     break
-                time.sleep(1)
-                continue
+            else:
+                stuck_image_url = frame['image_url']
+                stuck_count = 0
 
-            empty_count = 0
-            frame_count += 1
+            translation = server.get_current_translation()
+            if translation is None:
+                logging.warning("Translation unavailable for current frame; "
+                                "submitting a detection-only prediction to advance.")
+                health_status = None
+                gt_x = gt_y = gt_z = None
+            else:
+                health_status = translation['health_status']
+                gt_x = translation['translation_x']
+                gt_y = translation['translation_y']
+                gt_z = translation['translation_z']
 
-            # --- Translation çek ---
-            translation_data = server.get_next_translation()
-            if translation_data is None:
-                logger.warning(f"Translation alınamadı (frame {frame_count})")
-                translation_data = {}
+            images_files = os.listdir(images_folder)
 
-            # Frame bilgilerini parse et
-            frame_url = frame_data.get('url', '')
-            image_url = frame_data.get('image_url', '')
-            video_name = frame_data.get('video_name', '')
+            # Bu kare icin aktif (pencere-ici) referanslar. Goruntuleri yukarida en
+            # bastan toptan indirildigi icin burada ayrica indirme yapilmaz; bu liste
+            # yalnizca asagidaki detect() cagrisina iletilir.
+            active_refs = [
+                r for r in all_references
+                if r.get('frame_start_image_url') and r.get('frame_end_image_url')
+                and r['frame_start_image_url'] <= frame['image_url'] <= r['frame_end_image_url']
+            ]
 
-            # Translation bilgileri
-            gt_x = float(translation_data.get('translation_x', 0))
-            gt_y = float(translation_data.get('translation_y', 0))
-            gt_z = float(translation_data.get('translation_z', 0))
-            health_status = str(translation_data.get('health_status', '0'))
+            predictions = FramePredictions(
+                frame['url'], frame['image_url'], frame['video_name'],
+                gt_x, gt_y, gt_z
+            )
 
-            # Frame indir
-            full_img_url = evaluation_server_url.rstrip("/") + "/media" + image_url
-            images_dir = "./_images"
-            frame_path = server.download_frame(full_img_url, images_dir)
+            predictions = detection_model.process(
+                predictions, evaluation_server_url, health_status,
+                images_folder, images_files,
+                active_refs=active_refs,
+                ref_image_paths=ref_image_paths,
+                auth_token=server.auth_token,
+            )
 
-            if frame_path is None:
-                logger.error(f"Frame indirilemedi: {full_img_url}")
-                continue
+            server.send_prediction(predictions)
+            pbar.update(1)
 
-            # Frame'i oku
-            frame_img = cv2.imread(frame_path)
-            if frame_img is None:
-                logger.error(f"Frame okunamadı: {frame_path}")
-                continue
-
-            # --- Model tahmini ---
-            try:
-                predictions = detection_model.detect(
-                    frame_img=frame_img,
-                    frame_url=frame_url,
-                    health_status=health_status,
-                    gt_x=gt_x,
-                    gt_y=gt_y,
-                    gt_z=gt_z,
-                    frame_path=frame_path,
-                )
-                # Frame bilgilerini ekle (manuel)
-                predictions.image_url = image_url
-                predictions.video_name = video_name
-            except Exception as e:
-                logger.error(f"Detection hatası (frame {frame_count}): {e}")
-                import traceback
-                logger.error(traceback.format_exc())
-                continue
-
-            # --- Prediction gönder ---
-            try:
-                result = server.send_prediction(predictions)
-
-                # Payload'ı kaydet (opsiyonel)
-                if detection_model.save_payloads:
-                    payload_dir = f"./_payloads"
-                    os.makedirs(payload_dir, exist_ok=True)
-                    payload = predictions.create_payload(evaluation_server_url)
-                    with open(
-                        os.path.join(payload_dir, f"frame_{frame_count:06d}.json"),
-                        'w'
-                    ) as f:
-                        import json
-                        json.dump(payload, f, indent=2)
-
-                if result is not None and result.status_code == 201:
-                    logger.info(f"Frame {frame_count}: ✅ Tahmin gönderildi.")
-                    print(f"  Frame {frame_count}: ✅", end="", flush=True)
-                elif result is not None and result.status_code == 406:
-                    logger.info(f"Frame {frame_count}: ⏭️ Daha önce gönderilmiş.")
-                    print(f"  Frame {frame_count}: ⏭️", end="", flush=True)
-                else:
-                    logger.warning(f"Frame {frame_count}: ⚠️ Gönderilemedi.")
-                    print(f"  Frame {frame_count}: ⚠️", end="", flush=True)
-
-                # Frame interval
-                objects_count = len(predictions.detected_objects)
-                ref_count = len(predictions.reference_predictions)
-                print(f" [{objects_count} obj, {ref_count} ref]")
-
-            except Exception as e:
-                logger.error(f"Prediction gönderme hatası (frame {frame_count}): {e}")
-                print(f"  Frame {frame_count}: ❌ Gönderme hatası")
-
-            # Rate limit için minimum bekleme
-            time.sleep(0.1)
-
-        except KeyboardInterrupt:
-            print("\n\n🛑 Kullanıcı tarafından durduruldu.")
-            logger.info("Kullanıcı tarafından durduruldu.")
-            break
-
-        except Exception as e:
-            logger.error(f"Ana döngü hatası: {e}")
-            import traceback
-            logger.error(traceback.format_exc())
-            print(f"\n❌ Hata: {e}")
-            time.sleep(2)
-            # Devam et (kaldığı yerden)
-
-    print("\n" + "=" * 60)
-    print(f"🏁 İşlem tamamlandı. Toplam {frame_count} frame işlendi.")
-    print(f"   Loglar: ./_logs/")
-    print("=" * 60)
+            elapsed = time.monotonic() - frame_start
+            if elapsed < MIN_FRAME_INTERVAL:
+                time.sleep(MIN_FRAME_INTERVAL - elapsed)
 
 
 if __name__ == '__main__':
-    # cv2 import'u (main içinde kullanılıyor)
-    try:
-        import cv2
-    except ImportError:
-        print("❌ opencv-python kurulu değil!")
-        print("   conda activate hyz")
-        print("   pip install opencv-python\n")
-        sys.exit(1)
-
     run()

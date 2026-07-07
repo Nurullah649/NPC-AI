@@ -88,7 +88,7 @@ def validate_payload(payload: dict, img_width: int = 1920, img_height: int = 108
 
     # reference_predictions validasyonu
     for i, r in enumerate(payload.get('reference_predictions', [])):
-        for key in ['reference_url', 'frame_url', 'top_left_x', 'top_left_y', 'bottom_right_x', 'bottom_right_y']:
+        for key in ['reference', 'frame', 'top_left_x', 'top_left_y', 'bottom_right_x', 'bottom_right_y']:
             if key not in r:
                 errors.append(f"EKSİK: reference_predictions[{i}].{key}")
 
@@ -116,7 +116,7 @@ def validate_sample():
     from src.reference_prediction import ReferencePrediction
     from src.frame_predictions import FramePredictions
 
-    fp = FramePredictions("frame/1/", "img/1.jpg", "video1")
+    fp = FramePredictions("frame/1/", "img/1.jpg", "video1", 0.0, 0.0, 0.0)
 
     # Normal objeler
     fp.add_detected_object(DetectedObject(0, "1", "0", 100, 200, 300, 400))

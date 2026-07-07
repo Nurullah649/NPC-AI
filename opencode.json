@@ -1,0 +1,399 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "council",
+  "model": "opencode-go/glm-5.1",
+  "small_model": "opencode-go/glm-5.2",
+  "enabled_providers": [
+    "opencode-go",
+    "openai",
+    "opencode"
+  ],
+  "share": "manual",
+  "instructions": [
+    "AGENTS.md"
+  ],
+  "watcher": {
+    "ignore": [
+      ".git/**",
+      "**/node_modules/**",
+      "**/__pycache__/**",
+      "**/.venv/**",
+      "**/runs/**",
+      "**/.ipynb_checkpoints/**"
+    ]
+  },
+  "agent": {
+    "council": {
+      "description": "DeepSeek V4 Flash-led control council spokesperson. Delegates repo work to workers, requires DeepSeek V4 Pro, GPT-5.5 and Kimi K2.6 review, and is the only user-facing agent.",
+      "mode": "primary",
+      "model": "opencode-go/deepseek-v4-flash",
+      "color": "primary",
+      "steps": 24,
+      "prompt": "{file:./.opencode/prompts/council.md}",
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow",
+        "question": "allow",
+        "skill": {
+          "*": "deny",
+          "council-*": "allow"
+        },
+        "edit": "deny",
+        "bash": "deny",
+        "task": {
+          "*": "deny",
+          "worker-kimi": "allow",
+          "worker-minimax": "allow",
+          "worker-deepseek": "allow",
+          "council-planner": "allow",
+          "council-review-glm": "allow",
+          "council-review-gpt5x": "allow",
+          "council-review-deepseek": "allow",
+          "council-review-kimi": "allow",
+          "council-vision": "allow",
+          "council-ideator": "allow",
+          "council-impl-refiner": "allow"
+        }
+      }
+    },
+    "worker-kimi": {
+      "description": "Focused implementation worker using Kimi K2.6 for normal coding, file reading, and targeted edits.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "opencode-go/kimi-k2.6",
+      "color": "accent",
+      "steps": 18,
+      "prompt": "{file:./.opencode/prompts/worker-kimi.md}",
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow",
+        "skill": {
+          "*": "deny",
+          "council-*": "allow"
+        },
+        "edit": "allow",
+        "bash": "allow",
+        "question": "deny",
+        "todowrite": "deny",
+        "task": {
+          "*": "deny"
+        }
+      }
+    },
+    "worker-minimax": {
+      "description": "High-throughput implementation worker using Minimax M2.7 for broad searches, repetitive edits, and heavy repo tasks.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "opencode-go/minimax-m2.7",
+      "color": "warning",
+      "steps": 22,
+      "prompt": "{file:./.opencode/prompts/worker-minimax.md}",
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow",
+        "skill": {
+          "*": "deny",
+          "council-*": "allow"
+        },
+        "edit": "allow",
+        "bash": "allow",
+        "question": "deny",
+        "todowrite": "deny",
+        "task": {
+          "*": "deny"
+        }
+      }
+    },
+    "worker-deepseek": {
+      "description": "Focused implementation worker using DeepSeek V4 Flash for normal coding, file reading, and targeted edits.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "opencode-go/deepseek-v4-flash",
+      "color": "success",
+      "steps": 18,
+      "prompt": "{file:./.opencode/prompts/worker-deepseek.md}",
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow",
+        "skill": {
+          "*": "deny",
+          "council-*": "allow"
+        },
+        "edit": "allow",
+        "bash": "allow",
+        "question": "deny",
+        "todowrite": "deny",
+        "task": {
+          "*": "deny"
+        }
+      }
+    },
+    "council-planner": {
+      "description": "Hidden GPT-5.5 planner. Receives the council's collected findings and creates a structured implementation plan with worker assignments, verification strategy, and risk assessment.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "openai/gpt-5.5",
+      "reasoning_effort": "medium",
+      "color": "warning",
+      "steps": 15,
+      "prompt": "{file:./.opencode/prompts/council-planner.md}",
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow",
+        "skill": {
+          "*": "deny",
+          "council-*": "allow"
+        },
+        "edit": "deny",
+        "question": "deny",
+        "todowrite": "deny",
+        "bash": "deny",
+        "task": {
+          "*": "deny"
+        }
+      }
+    },
+    "council-review-glm": {
+      "description": "Hidden GLM-5.1 reviewer. Performs adversarial second-pass review before the council answers.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "opencode-go/glm-5.1",
+      "color": "info",
+      "steps": 10,
+      "prompt": "{file:./.opencode/prompts/council-review-glm.md}",
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "skill": {
+          "*": "deny",
+          "council-*": "allow"
+        },
+        "edit": "deny",
+        "question": "deny",
+        "todowrite": "deny",
+        "task": {
+          "*": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git status*": "allow",
+          "git diff*": "allow",
+          "git log*": "allow",
+          "pytest*": "allow",
+          "npm test*": "allow",
+          "npm run test*": "allow",
+          "npm run build*": "allow",
+          "npm run lint*": "allow",
+          "npx tsc*": "allow"
+        }
+      }
+    },
+    "council-review-gpt5x": {
+      "description": "Hidden GPT-5.5 executive reviewer. Provides strategic oversight, high-level architectural judgment, and final arbiter decisions alongside the DeepSeek and Kimi reviewers.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "openai/gpt-5.5",
+      "reasoning_effort": "medium",
+      "color": "warning",
+      "steps": 12,
+      "prompt": "{file:./.opencode/prompts/council-review-gpt5x.md}",
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "skill": {
+          "*": "deny",
+          "council-*": "allow"
+        },
+        "edit": "deny",
+        "question": "deny",
+        "todowrite": "deny",
+        "task": {
+          "*": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git status*": "allow",
+          "git diff*": "allow",
+          "git log*": "allow",
+          "pytest*": "allow",
+          "npm test*": "allow",
+          "npm run test*": "allow",
+          "npm run build*": "allow",
+          "npm run lint*": "allow",
+          "npx tsc*": "allow"
+        }
+      }
+    },
+    "council-review-deepseek": {
+      "description": "Hidden DeepSeek V4 Pro reviewer. Performs adversarial second-pass review alongside the other reviewers before the council answers.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "opencode-go/deepseek-v4-pro",
+      "color": "info",
+      "steps": 10,
+      "prompt": "{file:./.opencode/prompts/council-review-deepseek.md}",
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "skill": {
+          "*": "deny",
+          "council-*": "allow"
+        },
+        "edit": "deny",
+        "question": "deny",
+        "todowrite": "deny",
+        "task": {
+          "*": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git status*": "allow",
+          "git diff*": "allow",
+          "git log*": "allow",
+          "pytest*": "allow",
+          "npm test*": "allow",
+          "npm run test*": "allow",
+          "npm run build*": "allow",
+          "npm run lint*": "allow",
+          "npx tsc*": "allow"
+        }
+      }
+    },
+    "council-review-kimi": {
+      "description": "Hidden Kimi K2.6 executive reviewer. Provides strategic oversight, high-level architectural judgment, and final arbiter decisions alongside the DeepSeek and GPT-5.5 reviewers.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "opencode-go/kimi-k2.6",
+      "color": "primary",
+      "steps": 12,
+      "prompt": "{file:./.opencode/prompts/council-review-kimi.md}",
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "skill": {
+          "*": "deny",
+          "council-*": "allow"
+        },
+        "edit": "deny",
+        "question": "deny",
+        "todowrite": "deny",
+        "task": {
+          "*": "deny"
+        },
+        "bash": {
+          "*": "deny",
+          "git status*": "allow",
+          "git diff*": "allow",
+          "git log*": "allow",
+          "pytest*": "allow",
+          "npm test*": "allow",
+          "npm run test*": "allow",
+          "npm run build*": "allow",
+          "npm run lint*": "allow",
+          "npx tsc*": "allow"
+        }
+      }
+    },
+    "council-vision": {
+      "description": "Hidden MiMo-V2.5 vision interpreter. Analyzes images and describes their contents for the council, since the main council model cannot perceive images.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "opencode-go/mimo-v2.5",
+      "color": "warning",
+      "steps": 12,
+      "prompt": "{file:./.opencode/prompts/council-vision.md}",
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "skill": {
+          "*": "deny",
+          "council-*": "allow"
+        },
+        "edit": "deny",
+        "question": "deny",
+        "todowrite": "deny",
+        "bash": "deny",
+        "task": {
+          "*": "deny"
+        }
+      }
+    },
+    "council-ideator": {
+      "description": "Hidden GPT-5.5 creative ideation engine. Generates diverse ideas and approaches for problem-solving before implementation.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "openai/gpt-5.5",
+      "reasoning_effort": "medium",
+      "color": "success",
+      "steps": 14,
+      "prompt": "{file:./.opencode/prompts/council-ideator.md}",
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "skill": {
+          "*": "deny",
+          "council-*": "allow"
+        },
+        "edit": "deny",
+        "question": "deny",
+        "todowrite": "deny",
+        "bash": "deny",
+        "task": {
+          "*": "deny"
+        }
+      }
+    },
+    "council-impl-refiner": {
+      "description": "Hidden DeepSeek V4 Pro implementation refiner. Takes raw ideas and makes them actionable with feasibility assessment and structured implementation plans.",
+      "mode": "subagent",
+      "hidden": true,
+      "model": "opencode-go/deepseek-v4-pro",
+      "color": "info",
+      "steps": 12,
+      "prompt": "{file:./.opencode/prompts/council-impl-refiner.md}",
+      "permission": {
+        "read": "allow",
+        "list": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "skill": {
+          "*": "deny",
+          "council-*": "allow"
+        },
+        "edit": "deny",
+        "question": "deny",
+        "todowrite": "deny",
+        "task": {
+          "*": "deny"
+        }
+      }
+    }
+  }
+}
