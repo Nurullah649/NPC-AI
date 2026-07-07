@@ -9,6 +9,7 @@ from decouple import config
 class ConnectionHandler:
     def __init__(self, base_url, username=None, password=None):
         self.base_url = base_url
+        self.base_url = base_url.rstrip("/") + "/"
         self.auth_token = None
         self.classes = None
         self.video_name = ''
@@ -34,7 +35,7 @@ class ConnectionHandler:
             response_json = json.loads(response.text)
             if response.status_code == 200:
                 self.auth_token = response_json['token']
-                logging.info("Login Successfully Completed : {}".format(payload))
+                logging.info("Login Successfully Completed : user={}".format(username))
             else:
                 logging.error("Login Failed : {}".format(response.text))
         except requests.exceptions.RequestException as e:
@@ -186,7 +187,7 @@ class ConnectionHandler:
             try:
                 response = requests.post(self.url_prediction, headers=headers, data=payload, files=files, timeout=60)
                 if response.status_code == 201:
-                    logging.info("Prediction sent successfully. \n\t{}".format(payload))
+                    logging.info("Prediction sent successfully. \n\t{}".format(username))
                     return response
                 elif response.status_code == 406:
                     logging.error(

@@ -2,6 +2,7 @@ import logging
 from collections import OrderedDict
 
 import numpy as np
+import cv2
 
 
 class MotionClassifier:
@@ -175,4 +176,3 @@ class MotionClassifier:
 
 
 # cv2 import'u burada yapıyoruz (döngüsel import önlemek için)
-import cv2

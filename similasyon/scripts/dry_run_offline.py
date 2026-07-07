@@ -87,12 +87,13 @@ def run_dry_run(limit: int = 20, sample_dir: str = "./sample_data"):
     print(f"   {len(frame_paths)} frame oluşturuldu.")
     print(f"   {len(translations)} translation oluşturuldu.")
 
-    # Model başlat
+    # Model başlat (allow_dummy=True -> ağırlık yoksa dummy kullan)
     print("\n🔧 ObjectDetectionModel başlatılıyor...")
     try:
         from src.object_detection_model import ObjectDetectionModel
         from src.frame_predictions import FramePredictions
-        model = ObjectDetectionModel("http://localhost:1025/")
+        model = ObjectDetectionModel("http://localhost:1025/", allow_dummy=True)
+        print("   ℹ️  Dry-run modu: dummy detector kullanılıyor (gerçek ağırlıklar yok).")
     except Exception as e:
         print(f"\n❌ Model başlatılamadı: {e}")
         import traceback

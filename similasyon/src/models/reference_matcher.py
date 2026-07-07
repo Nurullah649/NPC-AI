@@ -153,7 +153,10 @@ class ReferenceMatcher:
                 else:
                     processed_rgb = cv2.cvtColor(processed, cv2.COLOR_BGR2RGB)
 
-                feats = self._extractor.extract(torch.from_numpy(processed_rgb).permute(2, 0, 1).float() / 255.0)
+                device = 'cuda' if torch.cuda.is_available() else 'cpu'
+                feats = self._extractor.extract(
+                    torch.from_numpy(processed_rgb).permute(2, 0, 1).float().unsqueeze(0).to(device) / 255.0
+                )
                 features['lightglue'] = feats
             except Exception as e:
                 self.logger.warning(f"LightGlue feature çıkarma hatası (ref): {e}")
@@ -166,6 +169,8 @@ class ReferenceMatcher:
 
         # ORB template (bütün görüntü)
         features['template'] = processed
+
+        features['shape'] = img.shape[:2]
 
         self.feature_cache[ref_url] = {
             'features': features,
@@ -186,13 +191,15 @@ class ReferenceMatcher:
         try:
             import torch
 
+            device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
             processed = self._preprocess_for_matching(frame_img)
             if len(processed.shape) == 2:
                 processed_rgb = cv2.cvtColor(processed, cv2.COLOR_GRAY2RGB)
             else:
                 processed_rgb = cv2.cvtColor(processed, cv2.COLOR_BGR2RGB)
 
-            frame_tensor = torch.from_numpy(processed_rgb).permute(2, 0, 1).float() / 255.0
+            frame_tensor = torch.from_numpy(processed_rgb).permute(2, 0, 1).float().unsqueeze(0).to(device) / 255.0
 
             # Frame feature'larını çıkar
             frame_feats = self._extractor.extract(frame_tensor)
