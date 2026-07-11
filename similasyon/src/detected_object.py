@@ -6,6 +6,8 @@ class DetectedObject:
                  top_left_y: float,
                  bottom_right_x: float,
                  bottom_right_y: float,
+                 track_id=None,
+                 _motion_score=None,
                  ):
         self.cls = cls
         self.landing_status = str(landing_status)
@@ -14,6 +16,8 @@ class DetectedObject:
         self.top_left_y = top_left_y
         self.bottom_right_x = bottom_right_x
         self.bottom_right_y = bottom_right_y
+        self.track_id = track_id
+        self._motion_score = _motion_score
 
     def create_payload(self, evaluation_server):
         # Official: cls is a tuple (classes["Tasit"],) so we index [0]

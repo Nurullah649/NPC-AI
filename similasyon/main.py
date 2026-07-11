@@ -5,14 +5,33 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+import cv2
 from decouple import config
 from tqdm import tqdm
+
+# CUDA allocator ayarı torch ilk kez import edilmeden önce uygulanmalı.
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
 # NOTE: This file is meant to be run from the similasyon/ directory:
 #   cd similasyon && python main.py
 # That's why imports use "from src..." (not "from similasyon.src...").
 
 MIN_FRAME_INTERVAL = 0.25
+
+CLASS_NAMES = {
+    0: "Tasit",
+    1: "Insan",
+    2: "UAP",
+    3: "UAI",
+}
+
+COLORS = {
+    0: (0, 200, 255),
+    1: (0, 255, 0),
+    2: (255, 80, 0),
+    3: (255, 0, 200),
+    "ref": (255, 255, 0),
+}
 
 
 def configure_logger(team_name):
@@ -41,6 +60,109 @@ def save_failed_payload(payload, frame_url, frame_index):
     with open(path, 'w') as f:
         json.dump(payload, f, indent=2)
     logging.getLogger('main').error(f"Failed payload saved to {path}")
+
+
+def _cls_id_from_payload(cls_url: str) -> int:
+    try:
+        cls_api_id = int(str(cls_url).rstrip("/").split("/")[-1])
+        return cls_api_id - 1
+    except Exception:
+        return -1
+
+
+def _ref_id_from_url(ref_url: str) -> str:
+    try:
+        return str(ref_url).rstrip("/").split("/")[-1]
+    except Exception:
+        return "?"
+
+
+def _draw_label(image, text, x1, y1, color, font_scale=0.65):
+    y_text = max(25, int(y1) - 8)
+    (tw, th), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, 2)
+    x2 = min(int(x1) + tw + 10, image.shape[1] - 1)
+    cv2.rectangle(image, (int(x1), y_text - th - 8), (x2, y_text + 5), color, -1)
+    cv2.putText(
+        image,
+        text,
+        (int(x1) + 5, y_text),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        font_scale,
+        (0, 0, 0),
+        2,
+        cv2.LINE_AA,
+    )
+
+
+def save_annotated_prediction(predictions, evaluation_server_url, frame_image_path,
+                              session_name, frame_index, debug_cfg):
+    """Gerçek server akışında etiketli preview görseli kaydet.
+
+    Payload koordinatları orijinal frame üstünde çizilir. Disk kullanımını
+    sınırlamak için kaydedilen çıktı opsiyonel olarak küçültülür.
+    """
+    if not debug_cfg.get("save_visuals", False):
+        return
+    if not frame_image_path or not os.path.exists(frame_image_path):
+        return
+
+    image = cv2.imread(frame_image_path)
+    if image is None:
+        return
+
+    payload = predictions.create_payload(evaluation_server_url)
+
+    local_objects = getattr(predictions, "detected_objects", [])
+    for idx, obj in enumerate(payload.get("detected_objects", [])):
+        cls_id = _cls_id_from_payload(obj.get("cls", ""))
+        color = COLORS.get(cls_id, (255, 255, 255))
+        label = CLASS_NAMES.get(cls_id, f"cls={cls_id}")
+        try:
+            x1 = int(float(obj["top_left_x"]))
+            y1 = int(float(obj["top_left_y"]))
+            x2 = int(float(obj["bottom_right_x"]))
+            y2 = int(float(obj["bottom_right_y"]))
+        except Exception:
+            continue
+
+        landing = obj.get("landing_status", "-")
+        moving = obj.get("moving_status", "-")
+        track_id = getattr(local_objects[idx], "track_id", None) if idx < len(local_objects) else None
+        if cls_id == 0 and track_id is not None:
+            motion_score = getattr(local_objects[idx], '_motion_score', None) if idx < len(local_objects) else None
+            if motion_score is not None:
+                text = f"{label} T#{track_id} M:{moving} S:{motion_score:.1f}"
+            else:
+                text = f"{label} T#{track_id} M:{moving}"
+        else:
+            text = f"{label} L:{landing} M:{moving}"
+        cv2.rectangle(image, (x1, y1), (x2, y2), color, 3)
+        _draw_label(image, text, x1, y1, color)
+
+    for ref in payload.get("reference_predictions", []):
+        try:
+            x1 = int(float(ref["top_left_x"]))
+            y1 = int(float(ref["top_left_y"]))
+            x2 = int(float(ref["bottom_right_x"]))
+            y2 = int(float(ref["bottom_right_y"]))
+        except Exception:
+            continue
+        color = COLORS["ref"]
+        cv2.rectangle(image, (x1, y1), (x2, y2), color, 3)
+        _draw_label(image, f"REF#{_ref_id_from_url(ref.get('reference', ''))}", x1, y1, color)
+
+    max_width = int(debug_cfg.get("visual_max_width", 0) or 0)
+    if max_width > 0 and image.shape[1] > max_width:
+        scale = max_width / float(image.shape[1])
+        new_h = max(1, int(round(image.shape[0] * scale)))
+        image = cv2.resize(image, (max_width, new_h), interpolation=cv2.INTER_AREA)
+
+    base_dir = debug_cfg.get("visual_output_dir", "_debug/server_annotated")
+    out_dir = Path(base_dir) / session_name
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / f"annotated_frame_{frame_index:06d}.jpg"
+    quality = int(debug_cfg.get("visual_jpeg_quality", 80))
+    cv2.imwrite(str(out_path), image, [cv2.IMWRITE_JPEG_QUALITY, quality])
 
 
 def run():
@@ -90,6 +212,13 @@ def run():
         logger.error(traceback.format_exc())
         print(f"\n❌ Model başlatılamadı: {e}\n")
         return
+
+    debug_cfg = detection_model.settings.get("debug", {})
+    if debug_cfg.get("save_visuals", False):
+        logger.info(
+            "Etiketli görsel kaydı aktif: %s",
+            debug_cfg.get("visual_output_dir", "_debug/server_annotated"),
+        )
 
     # Sunucu bağlantısı
     print(f"\n🔗 Sunucu: {evaluation_server_url}")
@@ -206,6 +335,19 @@ def run():
                 logger.error(traceback.format_exc())
                 print(f"\n❌ Frame {frame_index}: Detection hatası, durduruluyor.")
                 break
+
+            frame_image_path = os.path.join(images_folder, image_url.split("/")[-1])
+            try:
+                save_annotated_prediction(
+                    predictions,
+                    evaluation_server_url,
+                    frame_image_path,
+                    session_name,
+                    frame_index,
+                    debug_cfg,
+                )
+            except Exception as e:
+                logger.warning(f"Etiketli görsel kaydedilemedi: {e}")
 
             # Prediction gönder
             result = server.send_prediction(predictions)

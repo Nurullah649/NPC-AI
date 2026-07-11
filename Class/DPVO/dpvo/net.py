@@ -1,5 +1,8 @@
 import numpy as np
+import torch
 import torch.nn as nn
+import torch.nn.functional as F
+from functools import partial
 
 from . import fastba
 from . import altcorr
@@ -12,7 +15,7 @@ from .utils import *
 from .ba import BA
 from . import projective_ops as pops
 
-autocast = torch.cuda.amp.autocast
+autocast = partial(torch.amp.autocast, "cuda")
 
 DIM = 384
 
@@ -232,35 +235,28 @@ class Patchifier(nn.Module):
         return fmap, gmap_patches, imap_patches, patches, index
 
     def __compute_edge_map(self, images):
-        """
-        Sobel operatörü kullanarak kenar haritası hesaplar.
-
-        Args:
-            images: Giriş görüntü tensörü. Beklenen boyut: [batch, channel, height, width]
-                    Eğer tensör [batch, 1, channel, height, width] şeklinde geliyorsa, ekstra boyut
-                    kaldırılır.
-        Returns:
-            Kenar haritası tensörü.
-        """
-        # Eğer görüntü tensörü 5 boyutlu ise ve ikinci boyut 1 ise, bu boyutu kaldırıyoruz.
-        if images.dim() == 5 and images.size(1) == 1:
-            images = images.squeeze(1)
-
-        # Renkli görüntüyü gri tonlamaya çeviriyoruz.
-        gray = images.mean(dim=1, keepdim=True)
-
-        sobel_x = torch.tensor([[1, 0, -1],
-                                [2, 0, -2],
-                                [1, 0, -1]], dtype=gray.dtype, device=gray.device).unsqueeze(0).unsqueeze(0)
-        sobel_y = torch.tensor([[1, 2, 1],
-                                [0, 0, 0],
-                                [-1, -2, -1]], dtype=gray.dtype, device=gray.device).unsqueeze(0).unsqueeze(0)
-
-        grad_x = torch.nn.functional.conv2d(gray, sobel_x, padding=1)
-        grad_y = torch.nn.functional.conv2d(gray, sobel_y, padding=1)
-
-        edge_map = torch.sqrt(grad_x ** 2 + grad_y ** 2)
-        return edge_map
+        """Sobel büyüklüğünü DPVO'nun 1/4 feature-grid boyutunda döndür."""
+        if images.dim() != 5:
+            raise ValueError(
+                f"DPVO images tensörü [B,N,C,H,W] olmalı, gelen={tuple(images.shape)}"
+            )
+        batch, frames, _, height, width = images.shape
+        gray = images.mean(dim=2).reshape(batch * frames, 1, height, width)
+        sobel_x = torch.tensor(
+            [[1, 0, -1], [2, 0, -2], [1, 0, -1]],
+            dtype=gray.dtype,
+            device=gray.device,
+        ).view(1, 1, 3, 3)
+        sobel_y = torch.tensor(
+            [[1, 2, 1], [0, 0, 0], [-1, -2, -1]],
+            dtype=gray.dtype,
+            device=gray.device,
+        ).view(1, 1, 3, 3)
+        grad_x = F.conv2d(gray, sobel_x, padding=1)
+        grad_y = F.conv2d(gray, sobel_y, padding=1)
+        magnitude = torch.sqrt(grad_x.square() + grad_y.square() + 1e-12)
+        magnitude = F.avg_pool2d(magnitude, kernel_size=4, stride=4)
+        return magnitude.view(batch, frames, magnitude.shape[-2], magnitude.shape[-1])
 
 
 class CorrBlock:
@@ -376,4 +372,3 @@ class VONet(nn.Module):
             traj.append((valid, coords, coords_gt, Gs[:,:n], Ps[:,:n], kl))
 
         return traj
-

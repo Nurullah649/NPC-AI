@@ -17,3 +17,7 @@ similasyon/offline_wheels/
 
 # Weights (tracked via LFS or manual)
 # similasyon/weights/ - uncomment if you want to ignore weights
+/similasyon/results/map_eval_test
+/similasyon/results/map_eval
+/similasyon/deneysel/adaptive_sahi
+/DPVO_DENEYSEL/results

@@ -66,10 +66,10 @@ def formatter(results,path,idx,gt_data_,health_status):
     print(translation)
     x, y ,z= translation  # Unpack the translation
     if health_status == '1':
-        calibration_frames.append((x, y))
-        gt_data.append([float(gt_data_[0]), float(gt_data_[1])])
-        positions_data.append([x, y])
-        x,y=gt_data_[0], gt_data_[1]
+        calibration_frames.append((x, y, z))
+        gt_data.append([float(gt_data_[0]), float(gt_data_[1]), float(gt_data_[2])])
+        positions_data.append([x, y, z])
+        x,y,z=gt_data_[0], gt_data_[1], gt_data_[2]
     elif health_status == '0':
         if scale_factor is None:
             detected = Calculate_Direction(gt_data=gt_data, alg_data=positions_data)
@@ -80,17 +80,20 @@ def formatter(results,path,idx,gt_data_,health_status):
                 model.fit(alg_positions, gt_positions)
                 scale_factor = model.coef_
                 offset = model.intercept_
-                scaled_positions = np.dot(translation[:2], scale_factor.T) + offset
+                scaled_positions = np.dot(translation[:3], scale_factor.T) + offset
                 x = scaled_positions[0]
                 y = scaled_positions[1]
+                z = scaled_positions[2]
 
         elif detected.calculate_direction_change():
-            scaled_positions = np.dot(translation[:2], scale_factor.T) + offset
+            scaled_positions = np.dot(translation[:3], scale_factor.T) + offset
             x = scaled_positions[0]
             y = scaled_positions[1]
+            z = scaled_positions[2]
         else:
             x = x / detected.get_scale_factor()
             y = y / detected.get_scale_factor()
+            z = z / detected.get_scale_factor()
             match detected.compare_total_directions():
                 case 0:
                     ters_dizi = list(map(lambda pair: (pair[1], pair[0]), positions_data))
@@ -116,7 +119,7 @@ def formatter(results,path,idx,gt_data_,health_status):
                     x = (x * -1) / detected.get_scale_factor()
                     y = (y * -1) / detected.get_scale_factor()
 
-    print([x,y])
+    print([x,y,z])
 
     '''detected_translation = [{
         "translation_x": x,
@@ -137,4 +140,4 @@ def formatter(results,path,idx,gt_data_,health_status):
     with open(json_file_path, 'w') as json_file:
         json.dump(json_data, json_file, indent=2)
         print(f"JSON dosyası oluşturuldu: {json_file_path}")'''
-    return x,y
+    return x,y,z

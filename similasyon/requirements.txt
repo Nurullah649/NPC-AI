@@ -1,4 +1,5 @@
+filterpy
+pillow>=10.4.0
 python-decouple
 requests>=2.31.0
-pillow>=10.4.0
 tqdm

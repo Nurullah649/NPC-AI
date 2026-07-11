@@ -96,6 +96,60 @@ class ObjectDetectionModel:
 
         self.logger.info("✅ Tüm modüller başlatıldı.")
 
+    def _resize_for_detector(self, image):
+        """Detector/SAHI girişini opsiyonel olarak küçült.
+
+        Sunucuya gönderilecek bbox koordinatları orijinal frame koordinatında
+        kalmalı. Bu yüzden detector çıktılarını daha sonra ters ölçekliyoruz.
+        Config:
+            detector:
+              resize_max_height: 1080  # 0/None ise kapalı
+        """
+        det_cfg = self.settings.get("detector", {})
+        max_h = det_cfg.get("resize_max_height")
+        if not max_h:
+            return image, 1.0, 1.0
+
+        try:
+            max_h = int(max_h)
+        except (TypeError, ValueError):
+            return image, 1.0, 1.0
+
+        if max_h <= 0:
+            return image, 1.0, 1.0
+
+        h, w = image.shape[:2]
+        if h <= max_h:
+            return image, 1.0, 1.0
+
+        scale = max_h / float(h)
+        new_w = max(1, int(round(w * scale)))
+        resized = cv2.resize(image, (new_w, max_h), interpolation=cv2.INTER_AREA)
+        sx = w / float(new_w)
+        sy = h / float(max_h)
+        return resized, sx, sy
+
+    @staticmethod
+    def _scale_detection_bboxes(detections, sx, sy, original_shape):
+        """Detector çıktılarını orijinal frame koordinatlarına geri ölçekle."""
+        if sx == 1.0 and sy == 1.0:
+            return detections
+
+        h, w = original_shape[:2]
+        scaled = []
+        for det in detections:
+            det = dict(det)
+            x1, y1, x2, y2 = det["bbox"]
+            x1 = max(0.0, min(float(x1) * sx, w - 1))
+            y1 = max(0.0, min(float(y1) * sy, h - 1))
+            x2 = max(0.0, min(float(x2) * sx, w - 1))
+            y2 = max(0.0, min(float(y2) * sy, h - 1))
+            if x1 >= x2 or y1 >= y2:
+                continue
+            det["bbox"] = (x1, y1, x2, y2)
+            scaled.append(det)
+        return scaled
+
     @staticmethod
     def download_image(img_url, images_folder, images_files, retries=3, initial_wait_time=0.1, auth_token=None):
         """Frame görüntüsünü indir. Başarılı olursa True döndür."""
@@ -200,8 +254,10 @@ class ObjectDetectionModel:
                 processed = self.preprocessor.apply(image, purpose="detector")
                 if processed is not None:
                     detect_img = processed
+            detect_img, det_sx, det_sy = self._resize_for_detector(detect_img)
             try:
                 detections = self.detector.detect(detect_img)
+                detections = self._scale_detection_bboxes(detections, det_sx, det_sy, image.shape)
                 self.logger.debug(f"YOLO: {len(detections)} nesne tespit edildi.")
             except Exception as e:
                 self.logger.error(f"DetectorYOLO hatası: {e}")
@@ -241,6 +297,8 @@ class ObjectDetectionModel:
                 top_left_y=bbox[1],
                 bottom_right_x=bbox[2],
                 bottom_right_y=bbox[3],
+                track_id=det.get("_track_id"),
+                _motion_score=det.get("_motion_score"),
             )
             prediction.add_detected_object(d_obj)
 
@@ -256,7 +314,8 @@ class ObjectDetectionModel:
 
                 if frame_image_path and os.path.exists(frame_image_path):
                     tx, ty, tz = self.positioning.process_frame(
-                        self.frame_idx, frame_image_path, '1', gt_x, gt_y, gt_z
+                        self.frame_idx, frame_image_path, '1', gt_x, gt_y, gt_z,
+                        image=image,
                     )
                 else:
                     tx, ty, tz = gt_x, gt_y, gt_z
@@ -270,7 +329,8 @@ class ObjectDetectionModel:
 
                 if frame_image_path and os.path.exists(frame_image_path):
                     tx, ty, tz = self.positioning.process_frame(
-                        self.frame_idx, frame_image_path, '0', gt_x, gt_y, gt_z
+                        self.frame_idx, frame_image_path, '0', gt_x, gt_y, gt_z,
+                        image=image,
                     )
                 else:
                     tx, ty, tz = gt_x, gt_y, gt_z
@@ -280,8 +340,15 @@ class ObjectDetectionModel:
             self.logger.error(f"PositioningDPVO hatası: {e}")
             import traceback
             self.logger.error(traceback.format_exc())
-            # Fallback: son bilinen pozisyon veya 0
-            prediction.add_translation_object(DetectedTranslation(0.0, 0.0, 0.0))
+            # Bir modül hatasında koordinatı aniden (0,0,0)'a sıçratma.
+            last_position = getattr(self.positioning, "last_known_position", (0.0, 0.0, 0.0))
+            prediction.add_translation_object(
+                DetectedTranslation(
+                    float(last_position[0]),
+                    float(last_position[1]),
+                    float(last_position[2]),
+                )
+            )
 
         # --- Görev 3: Referans Nesne Tespiti ---
         if image is not None:
@@ -350,7 +417,8 @@ class _DummyPositioning:
         self.last_pos = (0.0, 0.0, 0.0)
         self.logger = logging.getLogger(self.__class__.__name__)
 
-    def process_frame(self, frame_idx, frame_path, health_status, gt_x=0.0, gt_y=0.0, gt_z=0.0):
+    def process_frame(self, frame_idx, frame_path, health_status, gt_x=0.0, gt_y=0.0,
+                      gt_z=0.0, image=None):
         if health_status == '1':
             self.last_pos = (gt_x, gt_y, gt_z)
         else:

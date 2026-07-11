@@ -1,5 +1,8 @@
 import numpy as np
+import torch
 import torch.multiprocessing as mp
+import torch.nn.functional as F
+from functools import partial
 
 from . import altcorr, fastba, lietorch
 from . import projective_ops as pops
@@ -11,7 +14,7 @@ from .utils import *
 mp.set_start_method('spawn', True)
 
 
-autocast = torch.cuda.amp.autocast
+autocast = partial(torch.amp.autocast, "cuda")
 Id = SE3.Identity(1, device="cuda")
 
 
@@ -89,7 +92,7 @@ class DPVO:
         # load network from checkpoint file
         if isinstance(network, str):
             from collections import OrderedDict
-            state_dict = torch.load(network)
+            state_dict = torch.load(network, map_location="cpu", weights_only=True)
             new_state_dict = OrderedDict()
             for k, v in state_dict.items():
                 if "update.lmbda" not in k:
@@ -372,76 +375,46 @@ class DPVO:
         return flatmeshgrid(torch.arange(t0, t1, device="cuda"),
             torch.arange(max(self.n-r, 0), self.n, device="cuda"), indexing='ij')
 
-    def quaternion_to_rotation_matrix(self,q):
-        # q: tensor şeklinde [qx, qy, qz, qw]
-        qx, qy, qz, qw = q
-        norm = torch.sqrt(qx * qx + qy * qy + qz * qz + qw * qw)
-        qx, qy, qz, qw = qx / norm, qy / norm, qz / norm, qw / norm
-
-        R = torch.zeros(3, 3, device=q.device)
-        R[0, 0] = 1 - 2 * qy ** 2 - 2 * qz ** 2
-        R[0, 1] = 2 * qx * qy - 2 * qz * qw
-        R[0, 2] = 2 * qx * qz + 2 * qy * qw
-
-        R[1, 0] = 2 * qx * qy + 2 * qz * qw
-        R[1, 1] = 1 - 2 * qx ** 2 - 2 * qz ** 2
-        R[1, 2] = 2 * qy * qz - 2 * qx * qw
-
-        R[2, 0] = 2 * qx * qz - 2 * qy * qw
-        R[2, 1] = 2 * qy * qz + 2 * qx * qw
-        R[2, 2] = 1 - 2 * qx ** 2 - 2 * qy ** 2
-        return R
-
     def get_current_pose(self):
-        """
-        Güncel pose bilgisini 4x4 dönüşüm matrisi (numpy array) olarak döndürür.
-        self.pg.poses_[self.n-1] 7 elemanlı pose vektörüdür: [x, y, z, qx, qy, qz, qw]
-        Bu işlemler CPU'da yapılır.
+        """Güncel camera-to-world pozunu 4x4 numpy matrisi olarak döndür.
+
+        ``PatchGraph.poses_`` DPVO içinde world-to-camera konvansiyonunda
+        tutulur. Resmî ``terminate()`` yolu dışarı vermeden önce aynı nedenle
+        ``poses.inv()`` uygular. Çevrimiçi accessor da aynı konvansiyonu
+        kullanmalıdır; iç translation vektörünü doğrudan döndürmek, kamera
+        döndükçe translation'a rotasyon karıştırır.
         """
         if self.n == 0:
             raise Exception("Henüz herhangi bir frame işlenmedi; pozisyon mevcut değil.")
 
-        # GPU'dan CPU'ya transfer ve grad takibi kapatılıyor
         with torch.no_grad():
-            pose_vec = self.pg.poses_[self.n - 1].detach().cpu()  # 7 elemanlı vektör
-            t = pose_vec[:3]  # çeviri bileşeni
-            q = pose_vec[3:]  # quaternion: [qx, qy, qz, qw]
-
-            # Quaternion'ı normalize ediyoruz
-            norm = torch.sqrt(torch.sum(q * q))
-            q = q / norm
-            qx, qy, qz, qw = q
-
-            # CPU'da 3x3 rotasyon matrisi hesaplanıyor
-            R = torch.tensor([
-                [1 - 2 * qy ** 2 - 2 * qz ** 2, 2 * qx * qy - 2 * qz * qw, 2 * qx * qz + 2 * qy * qw],
-                [2 * qx * qy + 2 * qz * qw, 1 - 2 * qx ** 2 - 2 * qz ** 2, 2 * qy * qz - 2 * qx * qw],
-                [2 * qx * qz - 2 * qy * qw, 2 * qy * qz + 2 * qx * qw, 1 - 2 * qx ** 2 - 2 * qy ** 2]
-            ], dtype=torch.float32)
-
-            # 4x4 dönüşüm matrisi oluşturuluyor
-            T = torch.eye(4, dtype=torch.float32)
-            T[:3, :3] = R
-            T[:3, 3] = t
-            return T.numpy()
+            return (
+                SE3(self.pg.poses_[self.n - 1])
+                .inv()
+                .matrix()
+                .detach()
+                .float()
+                .cpu()
+                .numpy()
+                .copy()
+            )
 
     def get_quaternion(self):
-        """
-        Returns the quaternion of the current pose as [qx, qy, qz, qw].
-        """
+        """Camera-to-world quaternion'ını ``[qx, qy, qz, qw]`` döndür."""
         if self.n == 0:
             raise Exception("Henüz herhangi bir frame işlenmedi; pozisyon mevcut değil.")
 
-        # GPU'dan CPU'ya transfer ve grad takibi kapatılıyor
         with torch.no_grad():
-            pose_vec = self.pg.poses_[self.n - 1].detach().cpu()  # 7 elemanlı vektör
-            q = pose_vec[3:]  # quaternion: [qx, qy, qz, qw]
-
-            # Quaternion'ı normalize ediyoruz
-            norm = torch.sqrt(torch.sum(q * q))
-            q = q / norm
-
-        return q.numpy()  # returns the quaternion as a numpy array [qx, qy, qz, qw]
+            return (
+                SE3(self.pg.poses_[self.n - 1])
+                .inv()
+                .data[3:]
+                .detach()
+                .float()
+                .cpu()
+                .numpy()
+                .copy()
+            )
 
     def __call__(self, tstamp, image, intrinsics):
         """ track new frame """
@@ -569,5 +542,3 @@ class DPVO:
         if self.cfg.CLASSIC_LOOP_CLOSURE:
             self.long_term_lc.attempt_loop_closure(self.n)
             self.long_term_lc.lc_callback()
-
-

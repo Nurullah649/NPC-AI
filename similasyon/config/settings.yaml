@@ -1,73 +1,93 @@
-# NPC-AI HYZ 2026 - Ana Konfigürasyon Dosyası
-
-model_paths:
-  detector: weights/detector/best.pt
-  dpvo: weights/dpvo/dpvo.pth
-  dpvo_cfg: config/dpvo/npc.yaml
-  camera_calib: config/camera/calib.txt
-  landing_classifier: weights/landing/son_en_iyi_model.pth
-
-preprocessing:
-  use_clahe: false
-  clahe_clip_limit: 2.0
-  clahe_tile_grid_size: 8
-  split_rows: 2
-  split_cols: 3
-  brightness_threshold: 50
-  apply_to_detector: false
-  apply_to_landing_classifier: true
-  apply_to_reference_matcher: false
-
+debug:
+  save_payloads: true
+  save_visuals: true
+  visual_jpeg_quality: 80
+  visual_max_width: 1600
+  visual_output_dir: _debug/server_annotated_test1
 detector:
-  imgsz: 1280
   conf_thresholds:
+    Insan: 0.2
     Tasit: 0.25
-    Insan: 0.20
-    UAP: 0.20
-    UAI: 0.20
+    UAI: 0.2
+    UAP: 0.2
+  imgsz: 1280
   iou_threshold: 0.7
   max_det: 300
-  use_sahi_for_person: false
-  sahi_slice_height: 640
-  sahi_slice_width: 640
+  resize_max_height: 1080
+  sahi_max_extra_persons: 100
   sahi_overlap_height_ratio: 0.25
   sahi_overlap_width_ratio: 0.25
   sahi_person_conf: 0.15
   sahi_person_iou_merge: 0.5
-  sahi_max_extra_persons: 100
-
-motion:
-  min_track_len: 3
-  moving_pixel_threshold: 8.0
-
-landing:
-  overlap_threshold: 0.2
-  near_buffer_px: 20
-  use_classifier: true
-  classifier_threshold: 0.5
-  classifier_dropout: 0.36
-  hard_veto_obstacles: true
-  classifier_hard_fail_open: true
-
+  sahi_slice_height: 640
+  sahi_slice_width: 640
+  use_sahi_for_person: false
 dpvo:
-  min_calib_frames: 50
-  fit_method: sim3
-  fallback_velocity: true
-  min_gt_samples: 5
-  use_direction_guard: true
+  absolute_ridge_alpha: 0.1
+  anchor_at_calib_end: true
+  buffer_size: 4096
+  calibration_height: 1080
+  calibration_width: 1920
+  cuda_empty_cache_every: 25
+  delta_fit_intercept: false
+  delta_ridge_alpha: 0.0
+  delta_window: 9
   direction_guard_min_points: 30
+  fallback_velocity: true
+  fallback_velocity_decay: 0.98
+  fit_method: linear
+  input_height: 360
+  input_width: 640
+  linear_condition_max: 1000000.0
   max_allowed_scale: 50.0
+  max_fallback_frames: 30
   min_allowed_scale: 0.02
+  min_calib_frames: 50
   min_direction_similarity: -0.2
-
+  min_gt_samples: 5
+  random_seed: 0
+  runtime_log_every: 25
+  use_direction_guard: true
+landing:
+  classifier_dropout: 0.36
+  classifier_hard_fail_open: true
+  classifier_threshold: 0.5
+  hard_veto_obstacles: true
+  near_buffer_px: 20
+  overlap_threshold: 0.2
+  use_classifier: true
+model_paths:
+  camera_calib: config/camera/calib.txt
+  detector: weights/detector/best.pt
+  dpvo: weights/dpvo/dpvo.pth
+  dpvo_cfg: config/dpvo/npc.yaml
+  landing_classifier: weights/landing/son_en_iyi_model.pth
+motion:
+  kalman_enabled: true
+  kalman_process_noise: 1.0
+  kalman_measurement_noise: 10.0
+  min_track_len: 4
+  max_track_age: 15
+  track_match_distance: 90.0
+  moving_start_threshold: 18.0
+  moving_stop_threshold: 8.0
+  motion_window: 6
+  affine_min_matches: 12
+  affine_ransac_threshold: 5.0
+preprocessing:
+  apply_to_detector: true
+  apply_to_landing_classifier: true
+  apply_to_reference_matcher: false
+  brightness_threshold: 50
+  clahe_clip_limit: 2.0
+  clahe_tile_grid_size: 8
+  split_cols: 3
+  split_rows: 2
+  use_clahe: true
 reference:
-  matcher: lightglue
   extractor: aliked
-  min_matches: 10
-  min_inliers: 8
+  matcher: lightglue
   min_inlier_ratio: 0.25
+  min_inliers: 8
+  min_matches: 10
   use_dinov2_fallback: false
-
-debug:
-  save_visuals: false
-  save_payloads: true

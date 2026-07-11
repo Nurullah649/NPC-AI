@@ -132,7 +132,7 @@ class DetectorYOLO:
             if cls_id != 1:
                 continue
             conf = float(obj.score.value)
-            bbox = obj.bbox.to_voc_ltbr()  # (x1, y1, x2, y2) formatında
+            bbox = (obj.bbox.minx, obj.bbox.miny, obj.bbox.maxx, obj.bbox.maxy)  # (x1, y1, x2, y2)
             x1 = max(0, min(float(bbox[0]), W - 1))
             y1 = max(0, min(float(bbox[1]), H - 1))
             x2 = max(0, min(float(bbox[2]), W - 1))
