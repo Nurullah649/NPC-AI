@@ -18,6 +18,11 @@ class PositioningDPVO:
     - DPVO fail ederse sınırlı ve sönümlü velocity fallback kullanır.
     """
 
+    # The base live positioner intentionally cannot consume a global-BA gauge
+    # event. Experimental subclasses must opt in explicitly before DPVO loop
+    # closure is allowed to initialize.
+    supports_loop_gauge_repair = False
+
     def __init__(self, config: dict):
         self.logger = logging.getLogger(self.__class__.__name__)
         dpvo_cfg = config.get("dpvo", {})
@@ -48,6 +53,39 @@ class PositioningDPVO:
         self.dpvo_weight = self._resolve_path(model_paths.get("dpvo", "weights/dpvo/dpvo.pth"))
         self.dpvo_cfg_path = self._resolve_path(model_paths.get("dpvo_cfg", "config/dpvo/npc.yaml"))
         self.calib_path = self._resolve_path(model_paths.get("camera_calib", "config/camera/calib.txt"))
+
+        # Camera profile is the canonical source for new sessions. The legacy
+        # numeric K path remains for consumers that cannot read a profile.
+        camera_cfg = config.get("camera", {})
+        self.camera_profile_path = None
+        self.camera_profile = None
+        self.camera_profile_id = None
+        self.camera_distortion = None
+        self.camera_undistort = False
+        profile_path = camera_cfg.get("profile")
+        if profile_path:
+            self.camera_profile_path = self._resolve_path(profile_path)
+            self.camera_profile = self._load_camera_profile(self.camera_profile_path)
+            self.camera_profile_id = self.camera_profile["profile_id"]
+            native_size = self.camera_profile["native_size"]
+            profile_width = int(native_size["width"])
+            profile_height = int(native_size["height"])
+            if (int(self.calibration_width), int(self.calibration_height)) != (
+                profile_width,
+                profile_height,
+            ):
+                raise ValueError(
+                    "DPVO calibration size and selected camera profile disagree: "
+                    f"dpvo={self.calibration_width}x{self.calibration_height}, "
+                    f"profile={profile_width}x{profile_height}"
+                )
+            distortion_cfg = self.camera_profile["distortion"]
+            self.camera_distortion = np.asarray(
+                distortion_cfg["coefficients"], dtype=np.float64
+            )
+            self.camera_undistort = bool(
+                self.camera_profile.get("runtime", {}).get("undistort", False)
+            )
 
         # DPVO instance (lazy init)
         self.slam = None
@@ -97,6 +135,7 @@ class PositioningDPVO:
             f"fit_method={self.fit_method}, "
             f"input={self.input_width}x{self.input_height}, "
             f"calibration_native={self.calibration_width}x{self.calibration_height}, "
+            f"camera_profile={self.camera_profile_id or 'legacy'}, "
             f"delta_window={self.delta_window}, "
             f"direction_guard={'aktif' if self.direction_guard.use_guard else 'pasif'}"
         )
@@ -112,7 +151,69 @@ class PositioningDPVO:
                 return str(cand.resolve())
         return str(Path(rel_path).resolve())
 
+    def _load_camera_profile(self, path: str) -> dict:
+        """Load and validate the versioned camera-profile contract.
+
+        A profile prevents a camera's K, distortion values, and native size
+        from being selected independently. Distortion is retained for
+        experiments, but is not applied unless an explicitly validated path
+        enables it.
+        """
+        import yaml
+
+        with open(path, "r", encoding="utf-8") as handle:
+            profile = yaml.safe_load(handle) or {}
+
+        profile_id = profile.get("profile_id")
+        native_size = profile.get("native_size")
+        intrinsics_cfg = profile.get("intrinsics")
+        distortion_cfg = profile.get("distortion")
+        if not isinstance(profile_id, str) or not profile_id:
+            raise ValueError(f"Camera profile has no valid profile_id: {path}")
+        if not isinstance(native_size, dict):
+            raise ValueError(f"Camera profile has no native_size mapping: {path}")
+        width = int(native_size.get("width", 0))
+        height = int(native_size.get("height", 0))
+        if width <= 0 or height <= 0:
+            raise ValueError(f"Camera profile has invalid native_size: {path}")
+        if not isinstance(intrinsics_cfg, dict) or intrinsics_cfg.get("model") != "pinhole":
+            raise ValueError(f"Camera profile must define pinhole intrinsics: {path}")
+        matrix = np.asarray(intrinsics_cfg.get("matrix"), dtype=np.float64)
+        if matrix.shape != (3, 3) or not np.all(np.isfinite(matrix)):
+            raise ValueError(f"Camera profile has invalid 3x3 intrinsic matrix: {path}")
+        if matrix[0, 0] <= 0 or matrix[1, 1] <= 0:
+            raise ValueError(f"Camera profile focal lengths must be positive: {path}")
+        if not np.allclose(matrix[2], [0.0, 0.0, 1.0], atol=1e-12):
+            raise ValueError(f"Camera profile intrinsic matrix last row must be [0, 0, 1]: {path}")
+        if not (0.0 <= matrix[0, 2] < width and 0.0 <= matrix[1, 2] < height):
+            raise ValueError(f"Camera profile principal point lies outside native image: {path}")
+        if not isinstance(distortion_cfg, dict):
+            raise ValueError(f"Camera profile has no distortion mapping: {path}")
+        if distortion_cfg.get("model") != "opencv_radial_tangential":
+            raise ValueError(f"Unsupported camera-profile distortion model: {path}")
+        coefficients = np.asarray(distortion_cfg.get("coefficients"), dtype=np.float64)
+        if coefficients.shape != (4,) or not np.all(np.isfinite(coefficients)):
+            raise ValueError(f"Camera profile distortion must contain finite [k1,k2,p1,p2]: {path}")
+
+        self.logger.info(
+            "Kamera profili yüklendi: id=%s path=%s native=%dx%d undistort=%s",
+            profile_id,
+            path,
+            width,
+            height,
+            bool(profile.get("runtime", {}).get("undistort", False)),
+        )
+        return profile
+
     def _load_calibration(self) -> np.ndarray:
+        if self.camera_profile is not None:
+            intrinsics = np.asarray(
+                self.camera_profile["intrinsics"]["matrix"], dtype=np.float64
+            )
+            self.logger.info(
+                "Kamera profilinden K yüklendi: %s", self.camera_profile_id
+            )
+            return intrinsics.copy()
         try:
             if os.path.exists(self.calib_path):
                 intrinsics = np.loadtxt(self.calib_path)
@@ -184,6 +285,21 @@ class PositioningDPVO:
             )
             if not self.slam.initialized:
                 raise RuntimeError("DPVOStandalone initialize edilemedi.")
+            loop_enabled = bool(getattr(self.slam.cfg, "LOOP_CLOSURE", False))
+            periodic_normalize_frequency = int(
+                getattr(self.slam.cfg, "PERIODIC_NORMALIZE_FREQ", 0)
+            )
+            if (loop_enabled or periodic_normalize_frequency > 0) and not self.supports_loop_gauge_repair:
+                # A static DPVO->NED transform is invalid after any gauge
+                # change (global BA or explicit periodic normalization).
+                # Keep production fail-closed rather than silently emitting a
+                # potentially kilometre-scale coordinate jump.
+                self.slam = None
+                raise RuntimeError(
+                    "Gauge değiştiren DPVO modu (loop/periodic normalize) canlı "
+                    "PositioningDPVO için kapalı olmalı; yalnız gauge-aware "
+                    "deneysel positioner ile desteklenir."
+                )
             self._dpvo_available = True
             self.logger.info("DPVO başarıyla başlatıldı.")
         except ImportError:

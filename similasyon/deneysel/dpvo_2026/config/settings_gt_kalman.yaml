@@ -1,0 +1,8 @@
+# GT is consumed only by health=1. The base linear mapping remains the scale
+# learner; this filter is an optional output smoother/re-anchorer.
+experimental_kalman:
+  enabled: true
+  dt: 0.13333333333333333
+  process_noise: 0.1
+  vo_measurement_noise: 1.0
+  gt_measurement_noise: 0.0001

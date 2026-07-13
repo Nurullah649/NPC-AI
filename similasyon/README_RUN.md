@@ -82,7 +82,7 @@ similasyon/
 ├── README_RUN.md              # Bu dosya
 ├── config/
 │   ├── settings.yaml          # Ana konfigürasyon
-│   ├── camera/calib.txt       # Kamera kalibrasyonu
+│   ├── camera/profiles/       # Sürüm/kamera/çözünürlük kimlikli profiller
 │   └── dpvo/npc.yaml          # DPVO konfigürasyonu
 ├── src/
 │   ├── constants.py           # Resmi sabitler (classes, statuses)
@@ -119,6 +119,16 @@ similasyon/
 ├── _payloads/                 # Kaydedilen payload'lar
 └── _debug/                    # Debug görselleri
 ```
+
+`settings.yaml` içindeki canlı kamera seçimi, 2026 RGB 1080p için
+`camera/profiles/thyz_2026_rgb_1920x1080_v1.yaml` profilidir. Eski
+`camera/calib.txt` geriye dönük deneyler için korunur; canlı profil yerine
+kullanılmamalıdır. Loop-closure ve distorsiyon A/B çalışmaları
+`deneysel/dpvo_2026/` altında izole edilir. Loop closure deneyinde global BA
+gauge değişimi, DPVO içinden alınan tam pre/post snapshot ile düzeltilir;
+mevcut kabul sonucu loop flag'ini canlı `npc.yaml` dosyasına taşımaya henüz
+izin vermez. Base canlı positioner, gauge-aware deneysel katman olmadan loop
+flag'i açılırsa güvenli biçimde DPVO'yu devre dışı bırakır.
 
 ## ⚠️ Sık Hatalar ve Çözümleri
 

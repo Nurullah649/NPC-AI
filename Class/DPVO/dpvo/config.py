@@ -30,6 +30,13 @@ _C.BACKEND_THRESH = 64.0
 _C.MAX_EDGE_AGE = 1000
 _C.GLOBAL_OPT_FREQ = 15
 
+# Experimental numerical gauge conditioning. A non-zero value calls
+# PatchGraph.normalize() every N input frames after tracking has initialized.
+# It is disabled in the live config because an external DPVO->NED alignment
+# must consume the emitted gauge event before it can safely be used.
+_C.PERIODIC_NORMALIZE_FREQ = 0
+_C.PERIODIC_NORMALIZE_START_FRAME = 0
+
 # Classic loop closure
 _C.CLASSIC_LOOP_CLOSURE = False
 _C.LOOP_CLOSE_WINDOW_SIZE = 3

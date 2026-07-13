@@ -2,11 +2,14 @@
 
 import os
 import sys
+from pathlib import Path
+from types import SimpleNamespace
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import cv2
 import numpy as np
+import pytest
 
 from src.models.positioning_dpvo import PositioningDPVO
 
@@ -47,6 +50,54 @@ def test_intrinsics_scale_is_independent_of_source_frame_size():
     )
     assert (height, width) == (360, 640)
     np.testing.assert_allclose(intrinsics, expected, rtol=1e-6)
+
+
+def test_2026_camera_profile_is_selected_and_scaled():
+    profile = (
+        Path(__file__).resolve().parents[1]
+        / "config/camera/profiles/thyz_2026_rgb_1920x1080_v1.yaml"
+    )
+    positioning = PositioningDPVO(
+        {
+            "camera": {"profile": str(profile)},
+            "dpvo": {
+                "use_direction_guard": False,
+                "calibration_width": 1920,
+                "calibration_height": 1080,
+                "input_width": 640,
+                "input_height": 360,
+            },
+        }
+    )
+
+    assert positioning.camera_profile_id == "thyz_2026_rgb_1920x1080_v1"
+    np.testing.assert_allclose(
+        positioning._intrinsics_matrix_to_vec(positioning._scaled_intrinsics(640, 360)),
+        [463.233333, 462.366667, 318.002333, 186.298667],
+        atol=1e-5,
+    )
+    np.testing.assert_allclose(
+        positioning.camera_distortion,
+        [0.1378, -0.2564, 0.0, 0.0],
+        atol=1e-12,
+    )
+
+
+def test_camera_profile_rejects_mismatched_native_size():
+    profile = (
+        Path(__file__).resolve().parents[1]
+        / "config/camera/profiles/thyz_2026_rgb_1920x1080_v1.yaml"
+    )
+    with pytest.raises(ValueError, match="calibration size"):
+        PositioningDPVO(
+            {
+                "camera": {"profile": str(profile)},
+                "dpvo": {
+                    "calibration_width": 4000,
+                    "calibration_height": 3000,
+                },
+            }
+        )
 
 
 def test_umeyama_recovers_scale_rotation_and_translation():
@@ -155,6 +206,23 @@ def test_uncalibrated_dpvo_raw_is_not_sent_as_ned(tmp_path):
     result = positioning.process_frame(0, str(frame_path), "0")
 
     np.testing.assert_allclose(result, [1.1, 1.8, 3.3])
+
+
+def test_base_positioner_fails_closed_if_loop_closure_is_accidentally_enabled(monkeypatch):
+    import src.models.dpvo_standalone as standalone_module
+
+    class FakeDPVOStandalone:
+        def __init__(self, *_args, **_kwargs):
+            self.initialized = True
+            self.cfg = SimpleNamespace(LOOP_CLOSURE=True)
+
+    monkeypatch.setattr(standalone_module, "DPVOStandalone", FakeDPVOStandalone)
+    positioning = make_positioner()
+
+    positioning._init_dpvo(360, 640)
+
+    assert not positioning._dpvo_available
+    assert positioning.slam is None
 
 
 def test_delta_ma_mapping_matches_causal_restart_math():

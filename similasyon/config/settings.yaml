@@ -4,6 +4,8 @@ debug:
   visual_jpeg_quality: 80
   visual_max_width: 1600
   visual_output_dir: _debug/server_annotated_test1
+camera:
+  profile: config/camera/profiles/thyz_2026_rgb_1920x1080_v1.yaml
 detector:
   conf_thresholds:
     Insan: 0.2
@@ -57,7 +59,9 @@ landing:
   overlap_threshold: 0.2
   use_classifier: true
 model_paths:
-  camera_calib: config/camera/calib.txt
+  # Compatibility path for consumers that only accept a numeric K matrix.
+  # PositioningDPVO uses the canonical camera.profile above.
+  camera_calib: config/camera/profiles/thyz_2026_rgb_1920x1080_v1_K.txt
   detector: weights/detector/best.pt
   dpvo: weights/dpvo/dpvo.pth
   dpvo_cfg: config/dpvo/npc.yaml

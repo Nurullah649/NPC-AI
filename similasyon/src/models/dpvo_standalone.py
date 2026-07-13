@@ -146,3 +146,53 @@ class DPVOStandalone:
             except Exception as e:
                 logger.error(f"DPVO terminate hatası: {e}")
         return None
+
+    def get_active_camera_positions(self) -> tuple[np.ndarray, np.ndarray]:
+        """Expose active C2W keyframe positions for debug observation."""
+        if not self.initialized or self.slam is None:
+            return np.empty(0, dtype=np.int64), np.empty((0, 3), dtype=np.float32)
+        try:
+            return self.slam.get_active_camera_positions()
+        except Exception as exc:
+            logger.warning("Aktif DPVO pozları alınamadı: %s", exc)
+            return np.empty(0, dtype=np.int64), np.empty((0, 3), dtype=np.float32)
+
+    def pop_global_ba_event(self) -> dict | None:
+        """Consume one exact pre/post global-BA event for an experiment.
+
+        The DPVO tracker remains the sole owner of the graph. This method only
+        exposes an already-completed snapshot, so an alignment experiment
+        cannot execute arbitrary code in the BA critical section.
+        """
+        if not self.initialized or self.slam is None:
+            return None
+        try:
+            return self.slam.pop_global_ba_event()
+        except Exception as exc:
+            logger.warning("Global BA snapshot alınamadı: %s", exc)
+            return None
+
+    def pop_gauge_event(self) -> dict | None:
+        """Consume one exact gauge-change event from an experiment tracker."""
+        if not self.initialized or self.slam is None:
+            return None
+        try:
+            return self.slam.pop_gauge_event()
+        except Exception as exc:
+            logger.warning("Gauge snapshot alınamadı: %s", exc)
+            return None
+
+    def get_loop_stats(self) -> dict[str, int | bool]:
+        """Return non-mutating loop-closure counters for experiment telemetry."""
+        if not self.initialized or self.slam is None:
+            return {}
+        return {
+            "enabled": bool(getattr(self.cfg, "LOOP_CLOSURE", False)),
+            "global_ba_calls": int(getattr(self.slam, "global_ba_count", 0)),
+            "periodic_normalizations": int(
+                getattr(self.slam, "periodic_normalization_count", 0)
+            ),
+            "search_attempts": int(getattr(self.slam, "loop_search_attempts", 0)),
+            "edge_batches": int(getattr(self.slam, "loop_edge_batches", 0)),
+            "edge_frames": int(getattr(self.slam, "loop_edge_frames", 0)),
+        }

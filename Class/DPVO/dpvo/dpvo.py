@@ -1,3 +1,5 @@
+from collections import deque
+
 import numpy as np
 import torch
 import torch.multiprocessing as mp
@@ -42,6 +44,19 @@ class DPVO:
 
         # keep track of global-BA calls
         self.ran_global_ba = np.zeros(100000, dtype=bool)
+        # Runtime-only loop-closure observability. These counters do not alter
+        # the graph; the simulation evaluator exports them for A/B decisions.
+        self.loop_search_attempts = 0
+        self.loop_edge_batches = 0
+        self.loop_edge_frames = 0
+        self.global_ba_count = 0
+        self.periodic_normalization_count = 0
+        self.gauge_event_count = 0
+        # A global BA or explicit normalization can change DPVO's coordinate
+        # gauge. Keep a small queue of exact pre/post snapshots so an
+        # experimental consumer can repair an external alignment without
+        # polling/copying the graph every frame.
+        self._global_ba_events = deque(maxlen=8)
 
         ht = ht // RES
         wd = wd // RES
@@ -319,12 +334,23 @@ class DPVO:
         full_jj = torch.cat((self.pg.jj_inac, self.pg.jj))
         full_kk = torch.cat((self.pg.kk_inac, self.pg.kk))
 
+        # Snapshot before normalize(): normalize itself may shift the gauge
+        # that an external DPVO->NED alignment depends on.
+        before_snapshot = self._capture_global_ba_pre_snapshot()
         self.pg.normalize()
         lmbda = torch.as_tensor([1e-4], device="cuda")
         t0 = self.pg.ii.min().item()
         fastba.BA(self.poses, self.patches, self.intrinsics,
                   full_target, full_weight, lmbda, full_ii, full_jj, full_kk, t0, self.n, M=self.M, iterations=2, eff_impl=True)
         self.ran_global_ba[self.n] = True
+        self.global_ba_count += 1
+        self._publish_gauge_event(
+            before_snapshot,
+            kind="global_ba",
+            reason="global_bundle_adjustment",
+            optimized_start_index=t0,
+            edge_count=full_ii.numel(),
+        )
 
     def update(self):
         with Timer("other", enabled=self.enable_timing):
@@ -398,6 +424,157 @@ class DPVO:
                 .numpy()
                 .copy()
             )
+
+    @staticmethod
+    def _c2w_positions_from_w2c(w2c_poses):
+        """Convert a batch of DPVO W2C poses into C2W XYZ positions."""
+        with torch.no_grad():
+            return (
+                SE3(w2c_poses)
+                .inv()
+                .data[..., :3]
+                .detach()
+                .float()
+                .cpu()
+                .numpy()
+                .copy()
+            )
+
+    def get_active_camera_positions(self):
+        """Return active internal timestamps and C2W positions for debugging.
+
+        ``pg.tstamps_`` contains DPVO's internal counter, not necessarily the
+        caller's input timestamp. New gauge-repair code should instead consume
+        :meth:`pop_gauge_event`, which records both timestamp domains at
+        the exact BA boundary.
+        """
+        if self.n == 0:
+            return np.empty(0, dtype=np.int64), np.empty((0, 3), dtype=np.float32)
+        return (
+            self.pg.tstamps_[: self.n].copy(),
+            self._c2w_positions_from_w2c(self.pg.poses_[: self.n]),
+        )
+
+    def _capture_global_ba_pre_snapshot(self):
+        """Capture the active graph before normalize()/global BA.
+
+        This instrumentation must never make a BA fail. It therefore returns
+        ``None`` on an observation failure and lets the optimization continue.
+        The cloned GPU poses are intentionally retained only until the BA has
+        completed; CPU transfer happens once for a successful event.
+        """
+        try:
+            active_count = int(self.n)
+            if active_count <= 0:
+                return None
+            internal_timestamps = self.pg.tstamps_[:active_count].copy()
+            input_timestamps = np.asarray(
+                [self.tlist[int(index)] for index in internal_timestamps],
+                dtype=np.float64,
+            )
+            return {
+                "active_count": active_count,
+                "internal_timestamps": internal_timestamps,
+                "input_timestamps": input_timestamps,
+                "w2c_poses": self.pg.poses_[:active_count].detach().clone(),
+            }
+        except Exception:
+            return None
+
+    def _publish_gauge_event(
+        self,
+        before,
+        *,
+        kind,
+        reason,
+        optimized_start_index,
+        edge_count,
+    ):
+        """Publish an exact, bounded pre/post coordinate-gauge event."""
+        if before is None:
+            return
+        try:
+            active_count = int(self.n)
+            if active_count != before["active_count"]:
+                return
+            after_w2c = self.pg.poses_[:active_count].detach().clone()
+            before_xyz = self._c2w_positions_from_w2c(before["w2c_poses"])
+            after_xyz = self._c2w_positions_from_w2c(after_w2c)
+            if (
+                before_xyz.shape != after_xyz.shape
+                or before_xyz.shape != (active_count, 3)
+                or not np.all(np.isfinite(before_xyz))
+                or not np.all(np.isfinite(after_xyz))
+            ):
+                return
+            trigger_internal_timestamp = int(self.counter - 1)
+            trigger_input_timestamp = (
+                self.tlist[trigger_internal_timestamp]
+                if 0 <= trigger_internal_timestamp < len(self.tlist)
+                else None
+            )
+            self.gauge_event_count += 1
+            self._global_ba_events.append(
+                {
+                    "event_id": int(self.gauge_event_count),
+                    "kind": str(kind),
+                    "reason": str(reason),
+                    "trigger_internal_timestamp": trigger_internal_timestamp,
+                    "trigger_input_timestamp": trigger_input_timestamp,
+                    "active_internal_timestamps": before["internal_timestamps"].copy(),
+                    "active_input_timestamps": before["input_timestamps"].copy(),
+                    "before_c2w_xyz": before_xyz,
+                    "after_c2w_xyz": after_xyz,
+                    "optimized_start_index": int(optimized_start_index),
+                    "n_active": active_count,
+                    "n_full_edges": int(edge_count),
+                }
+            )
+        except Exception:
+            # Observation is optional; never turn a successful BA into a
+            # tracking failure because telemetry could not be materialized.
+            return
+
+    def _normalize_with_gauge_event(self, reason):
+        """Normalize the active graph and emit a rebase event if it succeeds.
+
+        This is a numerical-conditioning experiment, not a source of new
+        geometry. An external DPVO->NED map must consume the emitted event;
+        otherwise the normalization would look like a position jump.
+        """
+        before_snapshot = self._capture_global_ba_pre_snapshot()
+        if before_snapshot is None:
+            return False
+        try:
+            depth_scale = self.pg.patches_[:self.n, :, 2].mean()
+            if not torch.isfinite(depth_scale) or torch.abs(depth_scale) < 1e-8:
+                return False
+            self.pg.normalize()
+            self.periodic_normalization_count += 1
+            self._publish_gauge_event(
+                before_snapshot,
+                kind="periodic_normalize",
+                reason=reason,
+                optimized_start_index=-1,
+                edge_count=self.pg.ii.numel(),
+            )
+            return True
+        except Exception:
+            return False
+
+    def pop_gauge_event(self):
+        """Return and consume the oldest exact coordinate-gauge event."""
+        if not self._global_ba_events:
+            return None
+        event = self._global_ba_events.popleft()
+        return {
+            key: value.copy() if isinstance(value, np.ndarray) else value
+            for key, value in event.items()
+        }
+
+    def pop_global_ba_event(self):
+        """Backward-compatible alias for :meth:`pop_gauge_event`."""
+        return self.pop_gauge_event()
 
     def get_quaternion(self):
         """Camera-to-world quaternion'ını ``[qx, qy, qz, qw]`` döndür."""
@@ -520,9 +697,12 @@ class DPVO:
         if self.cfg.LOOP_CLOSURE:
             if self.n - self.last_global_ba >= self.cfg.GLOBAL_OPT_FREQ:
                 """ Add loop closure factors """
+                self.loop_search_attempts += 1
                 lii, ljj = self.pg.edges_loop()
                 if lii.numel() > 0:
                     self.last_global_ba = self.n
+                    self.loop_edge_batches += 1
+                    self.loop_edge_frames += int(lii.numel() // self.M)
                     self.append_factors(lii, ljj)
 
         # Add forward and backward factors
@@ -542,3 +722,17 @@ class DPVO:
         if self.cfg.CLASSIC_LOOP_CLOSURE:
             self.long_term_lc.attempt_loop_closure(self.n)
             self.long_term_lc.lc_callback()
+
+        periodic_frequency = int(getattr(self.cfg, "PERIODIC_NORMALIZE_FREQ", 0))
+        periodic_start_frame = int(getattr(self.cfg, "PERIODIC_NORMALIZE_START_FRAME", 0))
+        if (
+            self.is_initialized
+            and periodic_frequency > 0
+            and self.counter >= periodic_start_frame
+            and self.counter % periodic_frequency == 0
+            and not self.ran_global_ba[self.n]
+        ):
+            # This must be the final operation in a frame: update(),
+            # keyframe() and any classic loop callback have completed, so the
+            # pre/post active-keyframe correspondence is stable.
+            self._normalize_with_gauge_event("periodic_frame_interval")

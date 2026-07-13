@@ -1,0 +1,7 @@
+# Chosen only from rolling holdouts inside the first 450 health=1 frames.
+# No health=0 GT is used for this selection or at runtime.
+dpvo:
+  fit_method: delta_linear
+  delta_window: 3
+  delta_ridge_alpha: 0.000001
+  delta_fit_intercept: false

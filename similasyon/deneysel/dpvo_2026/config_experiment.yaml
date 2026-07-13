@@ -1,0 +1,37 @@
+experiment_id: dpvo_2026_loop_closure
+
+sampling:
+  target_fps: 7.5
+  calibration_frames: 450
+  smoke_limit: 650
+  revisit_limit: 1300
+
+camera_profile: ../../config/camera/profiles/thyz_2026_rgb_1920x1080_v1.yaml
+
+variants:
+  baseline:
+    dpvo_config: ../../config/dpvo/npc.yaml
+    description: Live DPVO configuration; loop closure disabled.
+  loop_smoke_256:
+    dpvo_config: config/npc_loop_closure_smoke_256.yaml
+    description: Loop closure enabled with a 256-keyframe history smoke budget.
+  loop_revisit_384:
+    dpvo_config: config/npc_loop_closure_revisit_384.yaml
+    description: Second-stage early-revisit experiment; run only after smoke acceptance.
+  loop_revisit_384_gauge_aware:
+    dpvo_config: config/npc_loop_closure_revisit_384.yaml
+    positioner_path: closure_aware_positioning.py
+    description: Experimental exact-snapshot Sim3 gauge remap after a global BA event.
+  delta_linear_cv:
+    dpvo_config: ../../config/dpvo/npc.yaml
+    settings_override: config/settings_delta_linear_cv.yaml
+    description: GT-only rolling-holdout selected causal delta alignment.
+  periodic_normalize_100:
+    dpvo_config: config/npc_periodic_normalize_100.yaml
+    positioner_path: closure_aware_positioning.py
+    description: Gauge-aware numerical normalization every 100 input frames; not a drift correction claim.
+  gt_kalman:
+    dpvo_config: ../../config/dpvo/npc.yaml
+    positioner_path: gt_kalman_positioning.py
+    settings_override: config/settings_gt_kalman.yaml
+    description: GT-gated constant-velocity Kalman smoother; health=0 has no GT update.

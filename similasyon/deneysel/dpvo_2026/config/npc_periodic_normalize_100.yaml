@@ -1,0 +1,19 @@
+### Experimental numerical-gauge conditioning only.
+# This does not add geometric observations; the gauge-aware positioner must
+# consume each emitted pre/post event to keep NED continuous.
+PATCHES_PER_FRAME: 128
+REMOVAL_WINDOW: 30
+OPTIMIZATION_WINDOW: 25
+PATCH_LIFETIME: 26
+KEYFRAME_THRESH: 15.0
+MOTION_MODEL: 'CONSTANT_VELOCITY'
+MOTION_DAMPING: 0.5
+MIXED_PRECISION: False
+CENTROID_SEL_STRAT: 'RANDOM'
+
+LOOP_CLOSURE: False
+CLASSIC_LOOP_CLOSURE: False
+PERIODIC_NORMALIZE_FREQ: 100
+# The first 450 frames are the sanctioned GT calibration segment. Do not split
+# its raw calibration history across coordinate gauges.
+PERIODIC_NORMALIZE_START_FRAME: 450

@@ -1,0 +1,4 @@
+# Compatibility K matrix generated from thyz_2026_rgb_1920x1080_v1.yaml.
+1389.7 0.0 954.007
+0.0 1387.1 558.896
+0.0 0.0 1.0

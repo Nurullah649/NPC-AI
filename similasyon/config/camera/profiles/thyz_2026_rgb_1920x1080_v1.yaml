@@ -1,0 +1,32 @@
+# Canonical camera profile for the THYZ 2026 RGB 1080p stream.
+# Source: THYZ_2026_Ornek_Veri_Seti/Kamera_Kalibrasyon_Parametreleri_2026.txt
+#        "RGB Camera 1080p Intrinsics"
+schema_version: 1
+profile_id: thyz_2026_rgb_1920x1080_v1
+year: 2026
+modality: rgb
+
+native_size:
+  width: 1920
+  height: 1080
+
+intrinsics:
+  model: pinhole
+  matrix:
+    - [1389.7, 0.0, 954.007]
+    - [0.0, 1387.1, 558.896]
+    - [0.0, 0.0, 1.0]
+
+distortion:
+  model: opencv_radial_tangential
+  coefficient_order: [k1, k2, p1, p2]
+  coefficients: [0.1378, -0.2564, 0.0, 0.0]
+
+source:
+  document: Kamera_Kalibrasyon_Parametreleri_2026.txt
+  section: RGB Camera 1080p Intrinsics
+
+# DPVO has no distortion input. This stays false until its isolated A/B test
+# is accepted; the profile still preserves the official coefficients.
+runtime:
+  undistort: false

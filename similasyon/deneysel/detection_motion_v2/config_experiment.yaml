@@ -1,0 +1,117 @@
+# Detection and Motion V2 Deneysel Config
+# Bu config yalniz deneysel alanda kullanilir.
+# Ana settings.yaml dosyasina TAŞINMAZ.
+
+model_paths:
+  detector: ../../weights/detector/best.pt
+
+# Dondurulmus eval seti (plan Faz P0)
+eval:
+  # 770 val goruntusu - video sizintisi icerir, raporlarda isaretlenir
+  images_dir: /home/nurullah/Desktop/FINAL_YOLO_DATASET_V3/images/val
+  labels_dir: /home/nurullah/Desktop/FINAL_YOLO_DATASET_V3/labels/val
+  # Dondurulmus manifest dosyasi (ilk calistirmada olusturulur)
+  manifest_path: results/eval_manifest.json
+  # Tum sonraki deneyler bu manifesti kullanir
+  use_frozen_manifest: true
+
+detector:
+  # Mevcut best.pt - salt okunur
+  imgsz: 1280
+  conf_thresholds:
+    Tasit: 0.25
+    Insan: 0.20
+    UAP: 0.20
+    UAI: 0.20
+  iou_threshold: 0.7
+  max_det: 300
+  resize_max_height: 1080
+
+preprocessing:
+  use_clahe: false
+  apply_to_detector: false
+  clahe_clip_limit: 2.0
+  clahe_tile_grid_size: 8
+  split_rows: 2
+  split_cols: 3
+  brightness_threshold: 50
+
+# --- Insan tespiti (Faz P3/P4) ---
+
+person_detection:
+  enabled: true
+  # Mevcut model; person-only model egitimi ileriye donuk (Faz P2 beklemede)
+  person_only_model: false
+  imgsz: 640
+  confidence_threshold: 0.15
+  max_crops_per_frame: 2
+  min_discovery_slots: 1
+  grid_rows: 2
+  grid_cols: 3
+  crop_overlap_ratio: 0.10
+  discovery_interval_frames: 1
+  full_cycle_max_frames: 3
+  track_roi_expand_ratio: 1.8
+  global_nms_iou: 0.45
+
+person_tracking:
+  enabled: true
+  high_conf_threshold: 0.40
+  low_conf_threshold: 0.10
+  new_track_threshold: 0.30
+  max_age: 4
+  max_coast_output_frames: 1
+  coast_enabled: true
+  coast_confidence_decay: 0.3
+  use_camera_compensation: true
+  # Kalman box state: [cx, cy, w, h, vx, vy, vw, vh]
+  kalman:
+    std_weight_position: 0.05
+    std_weight_velocity: 0.00625
+    min_position_noise: 0.1
+    max_position_noise: 100.0
+  # Track confirmation
+  confirm_hits: 2
+  confirm_window: 6
+
+# --- Arac hareketi (Faz M0-M3) ---
+
+motion:
+  # Kamera kompanzasyonu
+  camera_model: homography          # homography -> affine -> median_shift -> none
+  affine_fallback: true
+  median_shift_fallback: true
+  mask_detection_regions: true
+  min_inlier_ratio: 0.35
+  max_reprojection_error: 5.0
+  # Feature matching
+  feature_type: orb                 # orb | gftt
+  max_features: 800
+  affine_min_matches: 12
+  affine_ransac_threshold: 5.0
+  # Normalizasyon
+  normalize_by_bbox_diagonal: true
+  use_local_optical_flow: true
+  min_diagonal: 20.0
+  # Karar penceresi
+  decision_window: 5
+  moving_votes_required: 3
+  # Hareket esikleri (normalize skor uzerinden, M3 sonrasi kalibre edilecek)
+  moving_start_threshold: 0.15      # normalized (diagonal/delta_time)
+  moving_stop_threshold: 0.08
+  # Tracker
+  kalman_enabled: true
+  kalman_process_noise: 1.0
+  kalman_measurement_noise: 10.0
+  min_track_len: 4
+  max_track_age: 15
+  track_match_distance: 90.0        # M2'de dynamic gate ile degistirilecek
+  motion_window: 6
+  # Association
+  high_conf_threshold: 0.40
+  low_conf_threshold: 0.15
+  # Two-stage ByteTrack style
+  two_stage_association: true
+  # Gate: bbox diagonal/uncertainty based (M2)
+  dynamic_gating: true
+  gate_diagonal_ratio: 1.5
