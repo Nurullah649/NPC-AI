@@ -124,7 +124,12 @@ class DPRetrieval {       // The class
         throw std::invalid_argument( "index invalid" );
 
       QueryResults ret;
-      db.query(features[i], ret, 4);
+      // The caller excludes a temporal radius (50 keyframes by default).
+      // Asking for only four neighbours means those slots are almost always
+      // occupied by adjacent frames and no non-local candidate can survive.
+      // Keep a wider shortlist so loop/relocalization candidates beyond the
+      // exclusion window are actually observable.
+      db.query(features[i], ret, 128);
       std::tuple<float, int, MatchList> output(-1, -1, {});
       for (const auto &r : ret){
         int j = r.Id;

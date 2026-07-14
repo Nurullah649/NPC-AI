@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import kornia as K
 import kornia.feature as KF
@@ -22,11 +23,13 @@ class LongTermLoopClosure:
         self.cfg = cfg
 
         # Data structures to manage retrieval
-        self.retrieval = RetrievalDBOW()
+        vocab_path = Path(__file__).resolve().parents[2] / "ORBvoc.txt"
+        self.retrieval = RetrievalDBOW(str(vocab_path))
         self.imcache = ImageCache()
 
         # Process to run PGO in parallel
         self.lc_pool = mp.Pool(processes=1)
+        self.lc_pool_terminated = False
         self.lc_process = self.lc_pool.apply_async(os.getpid)
         self.manager = mp.Manager()
         self.result_queue = self.manager.Queue()
@@ -38,6 +41,10 @@ class LongTermLoopClosure:
         self.loop_jj = torch.zeros(0, dtype=torch.long)
 
         self.lc_count = 0
+        self.lc_attempt_count = 0
+        self.lc_failure_count = 0
+        self.last_lc_error = None
+        self.accepted_loops = []
 
         # warmup the jit compiler
         ransac_umeyama(np.random.randn(3,3), np.random.randn(3,3), iterations=200, threshold=0.01)
@@ -144,6 +151,7 @@ class LongTermLoopClosure:
         cands = self.retrieval.detect_loop(thresh=self.cfg.LOOP_RETR_THRESH, num_repeat=self.cfg.LOOP_CLOSE_WINDOW_SIZE)
         if cands is not None:
             i, j = cands
+            self.lc_attempt_count += 1
 
             """ A loop was detected. Try to close it """
             lc_result = self.close_loop(i, j, n)
@@ -163,12 +171,41 @@ class LongTermLoopClosure:
         self.imcache.save_up_to(n-1)
         self.attempt_loop_closure(n)
         if self.lc_in_progress:
-            self.lc_callback(skip_if_empty=False)
-        self.lc_process.get()
+            timeout = float(
+                getattr(self.cfg, "CLASSIC_LOOP_PGO_TIMEOUT_SECONDS", 180)
+            )
+            try:
+                self.lc_process.get(timeout=timeout)
+            except mp.TimeoutError:
+                self._record_lc_failure(
+                    f"PGO worker timed out after {timeout:.1f}s"
+                )
+                self.lc_pool.terminate()
+                self.lc_pool_terminated = True
+            except Exception as exc:
+                self._record_lc_failure(f"PGO worker failed: {exc!r}")
+            else:
+                self.lc_callback(skip_if_empty=False)
+        elif self.lc_process is not None:
+            # Consume an initial warm-up result or surface a completed worker
+            # exception without waiting on an empty result queue.
+            try:
+                self.lc_process.get(timeout=1.0)
+            except mp.TimeoutError:
+                pass
+            except Exception as exc:
+                self._record_lc_failure(f"PGO worker failed: {exc!r}")
         self.imcache.close()
-        self.lc_pool.close()
+        if not self.lc_pool_terminated:
+            self.lc_pool.close()
         self.retrieval.close()
         print(f"LC COUNT: {self.lc_count}")
+
+    def _record_lc_failure(self, message):
+        self.lc_in_progress = False
+        self.lc_failure_count += 1
+        self.last_lc_error = str(message)
+        print(f"WARNING: classic loop closure {message}")
 
 
     def _rescale_deltas(self, s):
@@ -185,12 +222,23 @@ class LongTermLoopClosure:
             s1 = tstamp_2_rescale[t_src]
             self.pg.delta[t] = (t0, dP.scale(s1))
 
-    def lc_callback(self, skip_if_empty=True):
-        """ Check if the PGO finished running """
+    def lc_callback(self, skip_if_empty=True, pre_apply=None):
+        """Apply a finished PGO result and report the coordinate-gauge change.
+
+        ``pre_apply`` is deliberately invoked only after a result has been
+        dequeued.  This lets the owning DPVO instance capture an exact pose
+        snapshot without cloning the active graph on every input frame.
+        """
         if skip_if_empty and self.result_queue.empty():
-            return
+            if self.lc_in_progress and self.lc_process.ready():
+                try:
+                    self.lc_process.get(timeout=0.0)
+                except Exception as exc:
+                    self._record_lc_failure(f"PGO worker failed: {exc!r}")
+            return None
         self.lc_in_progress = False
         final_est = self.result_queue.get()
+        before = pre_apply() if pre_apply is not None else None
         safe_i, _ = final_est.shape
         res, s = final_est.tensor().cuda().split([7,1], dim=1)
         s1 = torch.ones(self.pg.n, device=s.device)
@@ -200,6 +248,7 @@ class LongTermLoopClosure:
         self.pg.patches_[:safe_i,:,2] /= s.view(safe_i, 1, 1, 1)
         self._rescale_deltas(s1)
         self.pg.normalize()
+        return {"before": before, "safe_i": int(safe_i)}
 
     def close_loop(self, i, j, n):
         """ This function tries to actually execute the loop closure """
@@ -244,6 +293,19 @@ class LongTermLoopClosure:
             # print(f"Too few inliers (C): {num_inliers=}")
             return False
 
+        transformed = (i_pts @ (r * s).T) + t
+        residual = np.linalg.norm(transformed - j_pts, axis=1)
+        inlier_residual = residual[residual < 0.1]
+        loop_metadata = {
+            "current_keyframe": int(i),
+            "matched_keyframe": int(j),
+            "active_keyframes": int(n),
+            "match_count": int(len(i_pts)),
+            "inlier_count": int(num_inliers),
+            "inlier_rmse": float(np.sqrt(np.mean(inlier_residual**2))),
+            "sim3_scale": float(s),
+        }
+
         """ Run Pose-Graph Optimization (PGO) """
         far_rel_pose = make_pypose_Sim3(r, t, s)[None]
         Gi = pp.SE3(self.pg.poses[:,self.loop_ii])
@@ -262,5 +324,33 @@ class LongTermLoopClosure:
         torch.set_num_threads(1)
 
         self.lc_in_progress = True
-        self.lc_process = self.lc_pool.apply_async(run_DPVO_PGO, (pred_poses.data, loop_poses.data, loop_ii, loop_jj, self.result_queue))
+        pgo_iterations = int(getattr(self.cfg, "CLASSIC_LOOP_PGO_ITERS", 30))
+        synchronous = bool(
+            getattr(self.cfg, "CLASSIC_LOOP_SYNCHRONOUS", False)
+        )
+        loop_metadata.update(
+            {"pgo_iterations": pgo_iterations, "synchronous": synchronous}
+        )
+        self.accepted_loops.append(loop_metadata)
+        if synchronous:
+            run_DPVO_PGO(
+                pred_poses.data,
+                loop_poses.data,
+                loop_ii,
+                loop_jj,
+                self.result_queue,
+                pgo_iterations,
+            )
+        else:
+            self.lc_process = self.lc_pool.apply_async(
+                run_DPVO_PGO,
+                (
+                    pred_poses.data,
+                    loop_poses.data,
+                    loop_ii,
+                    loop_jj,
+                    self.result_queue,
+                    pgo_iterations,
+                ),
+            )
         return True

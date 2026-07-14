@@ -126,6 +126,27 @@ class PositioningDPVO:
         # Kamera kalibrasyonu
         self.intrinsics = self._load_calibration()
 
+        # Yarışma protokolüne uygun, geçmiş tahmini değiştirmeyen düzlem
+        # odometrisi + calibration-map relocalization füzyonu. Bağımlılık veya
+        # vocabulary yoksa yardımcı sınıf kendi içinde fail-closed olur ve bu
+        # sınıfın mevcut DPVO çıktısı değişmeden kalır.
+        self.causal_fusion = None
+        try:
+            from .positioning_causal_fusion import CausalPositionFusion
+
+            fusion_cfg = dpvo_cfg.get("causal_fusion", {})
+            fusion_width = max(1, int(fusion_cfg.get("width", 640)))
+            fusion_height = max(1, int(fusion_cfg.get("height", 360)))
+            self.causal_fusion = CausalPositionFusion(
+                config,
+                self._scaled_intrinsics(fusion_width, fusion_height),
+            )
+        except Exception as exc:
+            self.logger.error(
+                "Causal position fusion başlatılamadı; baseline korunuyor: %s",
+                exc,
+            )
+
         # DirectionGuard (kalibrasyon sanity check)
         self.direction_guard = DirectionGuard(config)
 
@@ -144,6 +165,7 @@ class PositioningDPVO:
             f"camera_profile={self.camera_profile_id or 'legacy'}, "
             f"undistort={self.camera_undistort}, "
             f"delta_window={self.delta_window}, "
+            f"causal_fusion={bool(self.causal_fusion and self.causal_fusion.enabled)}, "
             f"direction_guard={'aktif' if self.direction_guard.use_guard else 'pasif'}"
         )
 
@@ -294,10 +316,17 @@ class PositioningDPVO:
             if not self.slam.initialized:
                 raise RuntimeError("DPVOStandalone initialize edilemedi.")
             loop_enabled = bool(getattr(self.slam.cfg, "LOOP_CLOSURE", False))
+            classic_loop_enabled = bool(
+                getattr(self.slam.cfg, "CLASSIC_LOOP_CLOSURE", False)
+            )
             periodic_normalize_frequency = int(
                 getattr(self.slam.cfg, "PERIODIC_NORMALIZE_FREQ", 0)
             )
-            if (loop_enabled or periodic_normalize_frequency > 0) and not self.supports_loop_gauge_repair:
+            if (
+                loop_enabled
+                or classic_loop_enabled
+                or periodic_normalize_frequency > 0
+            ) and not self.supports_loop_gauge_repair:
                 # A static DPVO->NED transform is invalid after any gauge
                 # change (global BA or explicit periodic normalization).
                 # Keep production fail-closed rather than silently emitting a
@@ -623,6 +652,8 @@ class PositioningDPVO:
                       gt_x: float = 0.0, gt_y: float = 0.0, gt_z: float = 0.0,
                       image: np.ndarray | None = None) -> tuple:
         self.frame_counter += 1
+        status = None if health_status is None else str(health_status)
+        position_before_frame = self.last_known_position.copy()
         if image is None:
             image = cv2.imread(frame_path)
         if image is None:
@@ -630,6 +661,23 @@ class PositioningDPVO:
             return (self.last_known_position[0],
                     self.last_known_position[1],
                     self.last_known_position[2])
+
+        if self.causal_fusion is not None:
+            try:
+                healthy_gt = None
+                if status == '1':
+                    healthy_gt = np.asarray(
+                        [float(gt_x), float(gt_y), float(gt_z)],
+                        dtype=np.float64,
+                    )
+                self.causal_fusion.observe_frame(image, status, healthy_gt)
+            except Exception as exc:
+                # Positioning görevi yardımcı füzyondaki tek bir görsel
+                # hatadan dolayı tahmin üretmeyi bırakmamalı.
+                self.logger.error(
+                    "Causal fusion frame gözlemi başarısız; baseline kullanılıyor: %s",
+                    exc,
+                )
         dpvo_image, dpvo_intrinsics, dpvo_H, dpvo_W = self._prepare_dpvo_input(image)
 
         if not self._dpvo_available:
@@ -660,8 +708,6 @@ class PositioningDPVO:
             # yorumlamamak için ardışıklığı sıfırla.
             self.last_dpvo_raw = None
             self.raw_delta_history = []
-
-        status = None if health_status is None else str(health_status)
 
         # GT'nin bittiği ilk karede, örnek sayısı 10'un katı olmasa bile son
         # kullanılabilir kalibrasyonu mutlaka hesapla.
@@ -720,6 +766,34 @@ class PositioningDPVO:
             result = (float(self.last_known_position[0]),
                       float(self.last_known_position[1]),
                       float(self.last_known_position[2]))
+
+        if self.causal_fusion is not None:
+            try:
+                # Plane/relocalization yalnız yeni ve kalibre bir DPVO mutlak
+                # pozu varsa uygulanır. DPVO init/dropout durumunda velocity
+                # fallback'e correction sıçraması enjekte edilmez.
+                fusion_status = status
+                if status == '0' and aligned is None:
+                    fusion_status = None
+                fused = self.causal_fusion.fuse_position(
+                    np.asarray(result, dtype=np.float64), fusion_status
+                )
+                if fused.shape != (3,) or not np.all(np.isfinite(fused)):
+                    raise ValueError(f"geçersiz fused position: {fused}")
+                result = tuple(float(value) for value in fused)
+                if status == '0':
+                    correction_delta = np.asarray(
+                        self.causal_fusion.last_applied_correction_delta,
+                        dtype=np.float64,
+                    )
+                    self.last_velocity = (
+                        fused - position_before_frame - correction_delta
+                    )
+                    self.last_known_position = fused.copy()
+            except Exception as exc:
+                self.logger.error(
+                    "Causal fusion çıktı hatası; baseline korunuyor: %s", exc
+                )
         self.previous_health_status = status
         if self.runtime_log_every and self.frame_counter % self.runtime_log_every == 0:
             raw_text = "None" if dpvo_arr is None else np.array2string(dpvo_arr, precision=5)

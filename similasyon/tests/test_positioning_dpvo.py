@@ -291,12 +291,27 @@ def test_uncalibrated_dpvo_raw_is_not_sent_as_ned(tmp_path):
     positioning._dpvo_available = True
     positioning.last_known_position = np.array([1.0, 2.0, 3.0])
     positioning.last_velocity = np.array([0.1, -0.2, 0.3])
+
+    class FakeFusion:
+        def __init__(self):
+            self.statuses = []
+            self.last_applied_correction_delta = np.zeros(3)
+
+        def observe_frame(self, *_args):
+            pass
+
+        def fuse_position(self, base, status):
+            self.statuses.append(status)
+            return np.asarray(base) + (100.0 if status == "0" else 0.0)
+
+    positioning.causal_fusion = FakeFusion()
     frame_path = tmp_path / "frame.jpg"
     cv2.imwrite(str(frame_path), np.zeros((36, 64, 3), dtype=np.uint8))
 
     result = positioning.process_frame(0, str(frame_path), "0")
 
     np.testing.assert_allclose(result, [1.1, 1.8, 3.3])
+    assert positioning.causal_fusion.statuses == [None]
 
 
 def test_base_positioner_fails_closed_if_loop_closure_is_accidentally_enabled(monkeypatch):

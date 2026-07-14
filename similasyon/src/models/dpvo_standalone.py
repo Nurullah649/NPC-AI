@@ -188,6 +188,24 @@ class DPVOStandalone:
             return {}
         return {
             "enabled": bool(getattr(self.cfg, "LOOP_CLOSURE", False)),
+            "classic_enabled": bool(
+                getattr(self.cfg, "CLASSIC_LOOP_CLOSURE", False)
+            ),
+            "classic_loop_count": int(
+                getattr(getattr(self.slam, "long_term_lc", None), "lc_count", 0)
+            ),
+            "classic_loop_attempt_count": int(
+                getattr(getattr(self.slam, "long_term_lc", None), "lc_attempt_count", 0)
+            ),
+            "classic_loop_failure_count": int(
+                getattr(getattr(self.slam, "long_term_lc", None), "lc_failure_count", 0)
+            ),
+            "classic_loop_last_error": getattr(
+                getattr(self.slam, "long_term_lc", None), "last_lc_error", None
+            ),
+            "classic_accepted_loops": list(
+                getattr(getattr(self.slam, "long_term_lc", None), "accepted_loops", [])
+            ),
             "global_ba_calls": int(getattr(self.slam, "global_ba_count", 0)),
             "periodic_normalizations": int(
                 getattr(self.slam, "periodic_normalization_count", 0)

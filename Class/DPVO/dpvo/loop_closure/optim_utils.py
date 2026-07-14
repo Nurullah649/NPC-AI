@@ -199,8 +199,10 @@ def residual(Ginv, input_poses, dSloop, ii, jj, jacobian=False):
 
     return resid, J, (J_Ginv_i, J_Ginv_j, iii, jjj)
 
-def run_DPVO_PGO(pred_poses, loop_poses, loop_ii, loop_jj, queue):
-    final_est = perform_updates(pred_poses, loop_poses, loop_ii, loop_jj, iters=30)
+def run_DPVO_PGO(pred_poses, loop_poses, loop_ii, loop_jj, queue, iters=30):
+    final_est = perform_updates(
+        pred_poses, loop_poses, loop_ii, loop_jj, iters=int(iters)
+    )
 
     safe_i = loop_ii.max().item() + 1
     aa = SE3_to_Sim3(pred_poses.cpu())

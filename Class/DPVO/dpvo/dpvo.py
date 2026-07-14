@@ -1,4 +1,5 @@
 from collections import deque
+import random
 
 import numpy as np
 import torch
@@ -96,12 +97,27 @@ class DPVO:
             self.start_viewer()
 
     def load_long_term_loop_closure(self):
+        # Loading DISK/LightGlue and warming the loop RANSAC consumes random
+        # numbers.  Preserve every parent-process RNG so enabling a backend
+        # cannot alter DPVO's RANDOM patch selection before the first loop.
+        python_rng = random.getstate()
+        numpy_rng = np.random.get_state()
+        torch_rng = torch.get_rng_state()
+        cuda_rng = torch.cuda.get_rng_state_all()
         try:
             from .loop_closure.long_term import LongTermLoopClosure
             self.long_term_lc = LongTermLoopClosure(self.cfg, self.pg)
         except ModuleNotFoundError as e:
-            self.cfg.CLASSIC_LOOP_CLOSURE = False
             print(f"WARNING: {e}")
+            # CLASSIC_LOOP_CLOSURE was explicitly requested.  Silently falling
+            # back to plain VO would make an experiment look successful while
+            # never running retrieval or geometric verification.
+            raise
+        finally:
+            random.setstate(python_rng)
+            np.random.set_state(numpy_rng)
+            torch.set_rng_state(torch_rng)
+            torch.cuda.set_rng_state_all(cuda_rng)
 
     def load_weights(self, network):
         # load network from checkpoint file
@@ -721,7 +737,17 @@ class DPVO:
 
         if self.cfg.CLASSIC_LOOP_CLOSURE:
             self.long_term_lc.attempt_loop_closure(self.n)
-            self.long_term_lc.lc_callback()
+            classic_result = self.long_term_lc.lc_callback(
+                pre_apply=self._capture_global_ba_pre_snapshot
+            )
+            if classic_result is not None:
+                self._publish_gauge_event(
+                    classic_result["before"],
+                    kind="classic_loop_closure",
+                    reason="retrieval_geometric_verification_pgo",
+                    optimized_start_index=0,
+                    edge_count=0,
+                )
 
         periodic_frequency = int(getattr(self.cfg, "PERIODIC_NORMALIZE_FREQ", 0))
         periodic_start_frame = int(getattr(self.cfg, "PERIODIC_NORMALIZE_START_FRAME", 0))

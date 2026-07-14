@@ -50,6 +50,29 @@ dpvo:
   random_seed: 0
   runtime_log_every: 25
   use_direction_guard: true
+  # Tek tahmin/kare yarışma protokolüne uygun nedensel füzyon. ORB vocabulary
+  # veya dpretrieval yoksa tüm füzyon kapanır ve mevcut DPVO baseline korunur.
+  causal_fusion:
+    enabled: true
+    plane_enabled: true
+    relocalization_enabled: true
+    require_relocalization: true
+    width: 640
+    height: 360
+    plane_xy_blend: 0.1
+    min_calibration_pairs: 49
+    plane_ridge: 0.000001
+    vocabulary_path: Class/DPVO/ORBvoc.txt
+    exclusion_radius: 50
+    dbow_score: 0.03
+    minimum_inliers: 50
+    minimum_inlier_ratio: 0.3
+    confirmations: 5
+    confirmation_max_gap: 2
+    innovation_min_m: 15.0
+    innovation_max_m: 50.0
+    relocalization_gain: 0.2
+    cooldown_frames: 100
 landing:
   classifier_dropout: 0.36
   classifier_hard_fail_open: true

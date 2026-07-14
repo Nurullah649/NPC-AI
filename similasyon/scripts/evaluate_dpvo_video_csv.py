@@ -165,6 +165,15 @@ def main() -> int:
         help="Optional experimental PositioningDPVO subclass file.",
     )
     parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument(
+        "--final-trajectory-output",
+        default=None,
+        type=Path,
+        help=(
+            "Optional CSV for DPVO's offline trajectory returned by terminate(). "
+            "This may revise past poses after loop closure and is not a live result."
+        ),
+    )
     parser.add_argument("--limit", default=0, type=int, help="Optional sampled-frame limit for smoke tests.")
     parser.add_argument(
         "--log-file",
@@ -339,6 +348,11 @@ def main() -> int:
     capture.release()
     if not errors:
         raise RuntimeError("No health=0 frames were evaluated.")
+    if not positioning._dpvo_available or not positioning.is_calibrated:
+        raise RuntimeError(
+            "Invalid DPVO evaluation: the model was unavailable or never "
+            "calibrated; refusing to score fallback-only predictions."
+        )
 
     # DPVO uses CUDA asynchronously. Synchronize before recording final results
     # so the reported elapsed time and cleanup status represent a completed run.
@@ -363,6 +377,7 @@ def main() -> int:
         except Exception as exc:
             logging.getLogger(__name__).warning("Loop telemetry alınamadı: %s", exc)
     global_ba_calls = loop_stats.get("global_ba_calls", fallback_global_ba_calls)
+    causal_fusion = getattr(positioning, "causal_fusion", None)
     gpu_peak_allocated = None
     gpu_peak_reserved = None
     if cuda_available:
@@ -401,6 +416,18 @@ def main() -> int:
             "classic_loop_closure_enabled": bool(
                 getattr(loop_cfg, "CLASSIC_LOOP_CLOSURE", False)
             ),
+            "classic_loop_count": loop_stats.get(
+                "classic_loop_count",
+                getattr(getattr(inner_slam, "long_term_lc", None), "lc_count", None),
+            ),
+            "classic_loop_attempt_count": loop_stats.get(
+                "classic_loop_attempt_count"
+            ),
+            "classic_loop_failure_count": loop_stats.get(
+                "classic_loop_failure_count"
+            ),
+            "classic_loop_last_error": loop_stats.get("classic_loop_last_error"),
+            "classic_accepted_loops": loop_stats.get("classic_accepted_loops"),
             "global_ba_calls": global_ba_calls,
             "loop_search_attempts": loop_stats.get(
                 "search_attempts", getattr(inner_slam, "loop_search_attempts", None)
@@ -417,6 +444,14 @@ def main() -> int:
             ),
             "closure_events": getattr(positioning, "closure_events", None),
             "kalman": getattr(positioning, "kalman_telemetry", None),
+            "causal_fusion": (
+                {
+                    **dict(getattr(causal_fusion, "telemetry", {})),
+                    "events": list(getattr(causal_fusion, "events", [])),
+                }
+                if causal_fusion is not None
+                else None
+            ),
             "frame_process_seconds": {
                 "mean": float(np.mean(frame_durations)),
                 "p95": float(np.percentile(frame_durations, 95)),
@@ -462,7 +497,44 @@ def main() -> int:
     # after metrics have already been written.
     try:
         if positioning.slam is not None:
-            positioning.slam.terminate()
+            terminal_trajectory = positioning.slam.terminate()
+            if args.final_trajectory_output is not None and terminal_trajectory is not None:
+                terminal_poses, terminal_timestamps = terminal_trajectory
+                terminal_poses = np.asarray(terminal_poses, dtype=np.float64)
+                terminal_timestamps = np.asarray(terminal_timestamps, dtype=np.float64)
+                if (
+                    terminal_poses.ndim != 2
+                    or terminal_poses.shape[1] < 7
+                    or len(terminal_poses) != len(terminal_timestamps)
+                ):
+                    raise ValueError(
+                        "DPVO terminal trajectory has an unexpected shape: "
+                        f"poses={terminal_poses.shape}, timestamps={terminal_timestamps.shape}"
+                    )
+                args.final_trajectory_output.parent.mkdir(parents=True, exist_ok=True)
+                with args.final_trajectory_output.open(
+                    "w", encoding="utf-8", newline=""
+                ) as handle:
+                    writer = csv.writer(handle)
+                    writer.writerow(
+                        [
+                            "internal_index",
+                            "input_timestamp",
+                            "raw_x",
+                            "raw_y",
+                            "raw_z",
+                            "qx",
+                            "qy",
+                            "qz",
+                            "qw",
+                        ]
+                    )
+                    for internal_index, (timestamp, pose) in enumerate(
+                        zip(terminal_timestamps, terminal_poses)
+                    ):
+                        writer.writerow(
+                            [internal_index, float(timestamp), *pose[:7].astype(float).tolist()]
+                        )
         if cuda_available:
             torch.cuda.empty_cache()
     except Exception as exc:
@@ -484,6 +556,11 @@ def main() -> int:
         f"(search={summary['loop_search_attempts']}, "
         f"edge_batches={summary['loop_edge_batches']}, "
         f"global BA calls={summary['global_ba_calls']})"
+    )
+    print(
+        "Classic loop: "
+        f"{summary['classic_loop_closure_enabled']} "
+        f"(accepted={summary['classic_loop_count']})"
     )
     print(f"Elapsed:    {summary['elapsed_seconds']:.2f} s")
     print(f"Outputs:    {output_csv} / {output_json} / {output_alignment}")

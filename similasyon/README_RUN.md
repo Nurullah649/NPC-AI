@@ -27,6 +27,7 @@ Aşağıdaki ağırlık dosyalarını **manuel olarak** yerleştirmeniz gerekiyo
 |-------|--------|-------|
 | YOLO modeli | `runs/train2/weights/best.pt` | `similasyon/weights/detector/best.pt` |
 | DPVO modeli | [DPVO releases](https://github.com/princeton-vl/DPVO) | `similasyon/weights/dpvo/dpvo.pth` |
+| ORB vocabulary | ORB-SLAM3 `ORBvoc.txt` | `Class/DPVO/ORBvoc.txt` |
 
 ```bash
 # YOLO modelini kopyala (eğer kök dizinde mevcutsa)
@@ -35,6 +36,10 @@ cp ../runs/train2/weights/best.pt weights/detector/best.pt
 # DPVO modelini indir (eğer yoksa)
 # wget https://github.com/princeton-vl/DPVO/releases/download/v1.0/dpvo.pth -O weights/dpvo/dpvo.pth
 ```
+
+Görev 2 causal fusion, `dpretrieval` modülünü ve yaklaşık 139 MB'lık
+`Class/DPVO/ORBvoc.txt` dosyasını başlangıçta doğrular. Bunlardan biri yoksa
+füzyon kısmi çalışmaz; fail-closed olarak mevcut DPVO baseline'ına döner.
 
 ## 🔧 Offline Hazırlık
 

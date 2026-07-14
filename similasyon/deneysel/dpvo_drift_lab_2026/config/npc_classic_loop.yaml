@@ -1,0 +1,25 @@
+### Experimental DPV-SLAM classic retrieval + geometric loop closure.
+
+PATCHES_PER_FRAME: 128
+REMOVAL_WINDOW: 30
+OPTIMIZATION_WINDOW: 25
+PATCH_LIFETIME: 26
+
+KEYFRAME_THRESH: 15.0
+
+MOTION_MODEL: 'CONSTANT_VELOCITY'
+MOTION_DAMPING: 0.5
+
+MIXED_PRECISION: False
+CENTROID_SEL_STRAT: 'RANDOM'
+
+# The proximity-based DPVO backend is intentionally disabled.  Classic loop
+# candidates come from image retrieval and are verified with DISK+LightGlue
+# before Sim3 pose-graph optimization.
+LOOP_CLOSURE: False
+CLASSIC_LOOP_CLOSURE: True
+LOOP_CLOSE_WINDOW_SIZE: 3
+LOOP_RETR_THRESH: 0.04
+CLASSIC_LOOP_SYNCHRONOUS: True
+CLASSIC_LOOP_PGO_ITERS: 10
+CLASSIC_LOOP_PGO_TIMEOUT_SECONDS: 180
