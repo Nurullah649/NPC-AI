@@ -3,6 +3,10 @@
 /Nurullah_scripts
 /downloaded_frames
 
+# Generated image artifacts
+*.[jJ][pP][gG]
+*.[jJ][pP][eE][gG]
+
 # similasyon runtime
 similasyon/.env
 similasyon/_logs/

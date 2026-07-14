@@ -16,6 +16,7 @@ Ek testler:
 import sys
 import os
 import pytest
+import cv2
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -392,3 +393,113 @@ class TestNormalization:
 
         assert abs(score_s - expected_s) < 0.01
         assert abs(score_l - expected_l) < 0.01
+
+
+class TestCameraRelativeVelocity:
+    """Kamera hareketi ile arac residual hizinin ayrilmasi."""
+
+    def test_moving_vehicle_survives_one_missed_detection(self, config):
+        config["motion"].update({
+            "normalize_by_bbox_diagonal": False,
+            "moving_start_threshold": 45.0,
+            "moving_stop_threshold": 35.0,
+            "camera_relative_velocity_enabled": True,
+            "relative_velocity_alpha": 1.0,
+            "maha_gate_min_distance": 60.0,
+            "maha_gate_diagonal_ratio": 0.25,
+        })
+        tracker = VehicleTrackerV2(config)
+        gray = make_gray_frame()
+
+        def vehicle(cx):
+            return [{
+                "cls": 0,
+                "cls_name": "Tasit",
+                "conf": 0.95,
+                "bbox": (cx - 50, 450, cx + 50, 500),
+            }]
+
+        first = tracker.update(vehicle(200), gray, None)
+        first_id = first[0]["_track_id"]
+        second = tracker.update(vehicle(300), gray, None)
+        assert second[0]["_track_id"] == first_id
+
+        tracker.update([], gray, None)
+        recovered = tracker.update(vehicle(500), gray, None)
+        assert recovered[0]["_track_id"] == first_id
+
+    def test_camera_shift_is_not_counted_twice_for_association(self, config):
+        config["motion"].update({
+            "camera_relative_velocity_enabled": True,
+            "relative_velocity_alpha": 1.0,
+        })
+        track = VehicleTrackV2(0, (100, 100, 200, 200), 0, config)
+        transform = CameraTransform()
+        transform.model_type = CameraModel.SHIFT
+        transform.shift = np.array([40.0, 0.0], dtype=np.float32)
+        transform.confidence = 0.9
+
+        prediction = track.predict(transform)
+        assert np.allclose(prediction["camera_expected_center"], [190, 150], atol=1.0)
+        assert np.allclose(prediction["association_center"], [190, 150], atol=1.0)
+
+    def test_local_flow_recovers_camera_relative_shift(self, config):
+        config["motion"].update({
+            "use_local_optical_flow": True,
+            "local_flow_min_points": 4,
+            "local_flow_max_error": 30.0,
+            "local_flow_max_mad": 10.0,
+            "local_flow_max_residual": 100.0,
+        })
+        tracker = VehicleTrackerV2(config)
+        rng = np.random.RandomState(7)
+        previous = np.zeros((240, 320), dtype=np.uint8)
+        previous[80:160, 100:200] = rng.randint(0, 256, (80, 100), dtype=np.uint8)
+        matrix = np.array([[1.0, 0.0, 8.0], [0.0, 1.0, 3.0]], dtype=np.float32)
+        current = cv2.warpAffine(previous, matrix, (320, 240))
+        track = VehicleTrackV2(0, (100, 80, 200, 160), 0, config)
+        identity = CameraTransform()
+        identity.model_type = CameraModel.SHIFT
+        identity.shift = np.zeros(2, dtype=np.float32)
+        identity.confidence = 0.9
+
+        velocity = tracker._estimate_local_relative_velocity(
+            track, previous, current, identity,
+        )
+
+        assert velocity is not None
+        assert np.allclose(velocity, [8.0, 3.0], atol=1.0)
+
+    def test_local_flow_reduces_local_homography_false_motion(self, config):
+        config["motion"].update({
+            "normalize_by_bbox_diagonal": False,
+            "local_flow_score_weight": 0.5,
+        })
+        track = VehicleTrackV2(0, (100, 100, 200, 200), 0, config)
+        track.last_local_flow_velocity = np.zeros(2, dtype=np.float32)
+
+        score = track.compute_motion_score(
+            np.array([210.0, 150.0], dtype=np.float32),
+            np.array([150.0, 150.0], dtype=np.float32),
+        )
+
+        assert score == pytest.approx(30.0, abs=0.1)
+
+
+class TestVehicleDeduplication:
+    def test_nearly_identical_vehicle_boxes_open_one_track(self, config):
+        config["motion"].update({
+            "deduplicate_vehicle_detections": True,
+            "duplicate_iou_threshold": 0.85,
+        })
+        tracker = VehicleTrackerV2(config)
+        gray = make_gray_frame()
+        detections = [
+            {"cls": 0, "conf": 0.95, "bbox": (100, 100, 200, 200)},
+            {"cls": 0, "conf": 0.70, "bbox": (102, 101, 201, 199)},
+        ]
+
+        result = tracker.update(detections, gray, None)
+
+        assert len(result) == 1
+        assert len(tracker.tracks) == 1

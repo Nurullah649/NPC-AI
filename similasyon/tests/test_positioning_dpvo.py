@@ -83,6 +83,97 @@ def test_2026_camera_profile_is_selected_and_scaled():
     )
 
 
+def test_2026_thermal_camera_profile_is_selected_and_scaled():
+    profile = (
+        Path(__file__).resolve().parents[1]
+        / "config/camera/profiles/thyz_2026_thermal_640x512_v1.yaml"
+    )
+    positioning = PositioningDPVO(
+        {
+            "camera": {"profile": str(profile)},
+            "dpvo": {
+                "use_direction_guard": False,
+                "calibration_width": 640,
+                "calibration_height": 512,
+                "input_width": 480,
+                "input_height": 384,
+            },
+        }
+    )
+
+    assert positioning.camera_profile_id == "thyz_2026_thermal_640x512_v1"
+    np.testing.assert_allclose(
+        positioning._intrinsics_matrix_to_vec(positioning._scaled_intrinsics(480, 384)),
+        [548.847375, 549.0129, 239.427525, 188.4318],
+        atol=1e-5,
+    )
+    np.testing.assert_allclose(
+        positioning.camera_distortion,
+        [-0.3507, 0.1137, 0.0, 0.0],
+        atol=1e-12,
+    )
+    assert not positioning.camera_undistort
+
+    image = np.arange(512 * 640 * 3, dtype=np.uint8).reshape(512, 640, 3)
+    prepared, _, _, _ = positioning._prepare_dpvo_input(image)
+    expected = cv2.resize(image, (480, 384), interpolation=cv2.INTER_AREA)
+    np.testing.assert_array_equal(prepared, expected)
+    assert positioning._undistort_map_cache == {}
+
+
+def test_explicit_camera_undistort_override_remaps_dpvo_input():
+    profile = (
+        Path(__file__).resolve().parents[1]
+        / "config/camera/profiles/thyz_2026_thermal_640x512_v1.yaml"
+    )
+    positioning = PositioningDPVO(
+        {
+            "camera": {"profile": str(profile), "undistort": True},
+            "dpvo": {
+                "use_direction_guard": False,
+                "calibration_width": 640,
+                "calibration_height": 512,
+                "input_width": 480,
+                "input_height": 384,
+            },
+        }
+    )
+    image = np.zeros((512, 640, 3), dtype=np.uint8)
+    image[:, ::32] = 255
+    image[::32, :] = 255
+
+    prepared, intrinsics, height, width = positioning._prepare_dpvo_input(image)
+    resized = cv2.resize(image, (480, 384), interpolation=cv2.INTER_AREA)
+    scaled_k = positioning._scaled_intrinsics(480, 384)
+    expected = cv2.undistort(
+        resized,
+        scaled_k,
+        positioning.camera_distortion,
+        None,
+        scaled_k,
+    )
+
+    assert positioning.camera_undistort
+    assert (height, width) == (384, 480)
+    assert not np.array_equal(prepared, resized)
+    # cv2.undistort may build fixed-point maps internally; our cached
+    # CV_32FC1 maps differ only by interpolation rounding.
+    np.testing.assert_allclose(prepared, expected, rtol=0.0, atol=5.0)
+    np.testing.assert_allclose(
+        intrinsics,
+        positioning._intrinsics_matrix_to_vec(scaled_k),
+        rtol=1e-7,
+    )
+    assert len(positioning._undistort_map_cache) == 1
+    cache_key, cached_maps = next(iter(positioning._undistort_map_cache.items()))
+
+    prepared_again, _, _, _ = positioning._prepare_dpvo_input(image)
+    reused_maps = positioning._undistort_map_cache[cache_key]
+    assert reused_maps[0] is cached_maps[0]
+    assert reused_maps[1] is cached_maps[1]
+    np.testing.assert_array_equal(prepared_again, prepared)
+
+
 def test_camera_profile_rejects_mismatched_native_size():
     profile = (
         Path(__file__).resolve().parents[1]

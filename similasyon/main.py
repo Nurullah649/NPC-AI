@@ -270,6 +270,7 @@ def run():
         else:
             logger.warning(f"Referans indirilemedi, atlanıyor: {ref_image_url}")
     logger.info(f"{len(ref_image_paths)} referans görüntüsü indirildi.")
+    detection_model.register_references(all_references, ref_image_paths)
 
     # Ana döngü
     stuck_image_url = None

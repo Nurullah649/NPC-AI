@@ -31,6 +31,7 @@ class ReferenceMatcher:
         self.min_inliers = ref_cfg.get("min_inliers", 8)
         self.min_inlier_ratio = ref_cfg.get("min_inlier_ratio", 0.25)
         self.use_dinov2 = ref_cfg.get("use_dinov2_fallback", False)
+        self.device_preference = str(ref_cfg.get("device", "auto")).strip().lower()
 
         # Feature cache: {ref_url: {'features': ..., 'image': np.ndarray, 'path': str}}
         self.feature_cache = {}
@@ -38,6 +39,7 @@ class ReferenceMatcher:
         # LightGlue matcher
         self._matcher = None
         self._extractor = None
+        self._device = None
         self._init_matcher()
 
         self.logger.info(
@@ -49,21 +51,43 @@ class ReferenceMatcher:
         """LightGlue ve feature extractor'ı başlat."""
         try:
             # LightGlue'ü dene
-            import lightglue
+            import torch
             from lightglue import LightGlue, ALIKED, SuperPoint, DISK
 
-            if self.extractor_type == "aliked":
-                self._extractor = ALIKED(max_num_keypoints=1024).eval()
-            elif self.extractor_type == "superpoint":
-                self._extractor = SuperPoint(max_num_keypoints=1024).eval()
-            elif self.extractor_type == "disk":
-                self._extractor = DISK(max_num_keypoints=1024).eval()
-            else:
-                self._extractor = ALIKED(max_num_keypoints=1024).eval()
+            if self.device_preference not in {"auto", "cpu", "cuda"}:
+                raise ValueError(
+                    "reference.device 'auto', 'cpu' veya 'cuda' olmalı; "
+                    f"gelen={self.device_preference!r}"
+                )
+            if self.device_preference == "cuda" and not torch.cuda.is_available():
+                self.logger.warning(
+                    "ReferenceMatcher için CUDA istendi ancak kullanılamıyor; CPU kullanılacak."
+                )
+            use_cuda = (
+                self.device_preference != "cpu" and torch.cuda.is_available()
+            )
+            self._device = torch.device("cuda" if use_cuda else "cpu")
 
-            self._matcher = LightGlue(features=self.extractor_type).eval()
+            if self.extractor_type == "aliked":
+                extractor = ALIKED(max_num_keypoints=1024)
+            elif self.extractor_type == "superpoint":
+                extractor = SuperPoint(max_num_keypoints=1024)
+            elif self.extractor_type == "disk":
+                extractor = DISK(max_num_keypoints=1024)
+            else:
+                extractor = ALIKED(max_num_keypoints=1024)
+
+            # Extractor, matcher ve giriş tensörleri mutlaka aynı cihazda olmalı.
+            self._extractor = extractor.eval().to(self._device)
+            self._matcher = (
+                LightGlue(features=self.extractor_type).eval().to(self._device)
+            )
             self._lightglue_available = True
-            self.logger.info(f"LightGlue + {self.extractor_type} başarıyla yüklendi.")
+            self.logger.info(
+                "LightGlue + %s başarıyla yüklendi (device=%s).",
+                self.extractor_type,
+                self._device,
+            )
 
         except ImportError:
             self._lightglue_available = False
@@ -81,7 +105,10 @@ class ReferenceMatcher:
             try:
                 import torch
                 self._dinov2 = torch.hub.load('facebookresearch/dinov2', 'dinov2_vits14')
-                self._dinov2.eval()
+                dinov2_device = self._device or torch.device(
+                    "cuda" if torch.cuda.is_available() else "cpu"
+                )
+                self._dinov2.eval().to(dinov2_device)
                 self._dinov2_available = True
                 self.logger.info("DINOv2 fallback hazır.")
             except Exception as e:
@@ -125,6 +152,34 @@ class ReferenceMatcher:
         combined = cv2.addWeighted(enhanced, 0.7, edges, 0.3, 0)
         return combined
 
+    def _to_lightglue_tensor(self, img: np.ndarray):
+        """OpenCV görüntüsünü LightGlue ile aynı cihazdaki RGB tensöre çevir."""
+        import torch
+
+        processed = self._preprocess_for_matching(img)
+        if len(processed.shape) == 2:
+            processed_rgb = cv2.cvtColor(processed, cv2.COLOR_GRAY2RGB)
+        else:
+            processed_rgb = cv2.cvtColor(processed, cv2.COLOR_BGR2RGB)
+        device = self._device or torch.device("cpu")
+        return (
+            torch.from_numpy(processed_rgb)
+            .permute(2, 0, 1)
+            .float()
+            .unsqueeze(0)
+            .to(device)
+            / 255.0
+        )
+
+    @staticmethod
+    def _remove_batch(value):
+        """LightGlue'ün tek-elemanlı batch/list çıktısını örnek düzeyine indir."""
+        if isinstance(value, (list, tuple)):
+            return value[0] if value else None
+        if hasattr(value, "ndim") and value.ndim >= 3 and value.shape[0] == 1:
+            return value[0]
+        return value
+
     def precompute_reference(self, ref_url: str, ref_path: str):
         """Referans görüntü feature'larını çıkar ve cache'e ekle.
 
@@ -144,19 +199,9 @@ class ReferenceMatcher:
         if self._lightglue_available:
             try:
                 import torch
-                from lightglue import viz2d
 
-                processed = self._preprocess_for_matching(img)
-                # LightGlue RGB bekler, 3 kanala çevir
-                if len(processed.shape) == 2:
-                    processed_rgb = cv2.cvtColor(processed, cv2.COLOR_GRAY2RGB)
-                else:
-                    processed_rgb = cv2.cvtColor(processed, cv2.COLOR_BGR2RGB)
-
-                device = 'cuda' if torch.cuda.is_available() else 'cpu'
-                feats = self._extractor.extract(
-                    torch.from_numpy(processed_rgb).permute(2, 0, 1).float().unsqueeze(0).to(device) / 255.0
-                )
+                with torch.inference_mode():
+                    feats = self._extractor.extract(self._to_lightglue_tensor(img))
                 features['lightglue'] = feats
             except Exception as e:
                 self.logger.warning(f"LightGlue feature çıkarma hatası (ref): {e}")
@@ -191,45 +236,60 @@ class ReferenceMatcher:
         try:
             import torch
 
-            device = 'cuda' if torch.cuda.is_available() else 'cpu'
+            with torch.inference_mode():
+                frame_feats = self._extractor.extract(
+                    self._to_lightglue_tensor(frame_img)
+                )
+                match_output = self._matcher({
+                    'image0': ref_feats['lightglue'],
+                    'image1': frame_feats,
+                })
 
-            processed = self._preprocess_for_matching(frame_img)
-            if len(processed.shape) == 2:
-                processed_rgb = cv2.cvtColor(processed, cv2.COLOR_GRAY2RGB)
-            else:
-                processed_rgb = cv2.cvtColor(processed, cv2.COLOR_BGR2RGB)
-
-            frame_tensor = torch.from_numpy(processed_rgb).permute(2, 0, 1).float().unsqueeze(0).to(device) / 255.0
-
-            # Frame feature'larını çıkar
-            frame_feats = self._extractor.extract(frame_tensor)
-
-            # LightGlue ile eşle
-            matches = self._matcher({'image0': ref_feats['lightglue'], 'image1': frame_feats})
-
-            if matches is None or len(matches['matches']) < self.min_matches:
+            if not isinstance(match_output, dict):
                 return None
 
-            matches_data = matches['matches']
-            mkpts0 = matches_data['keypoints0']
-            mkpts1 = matches_data['keypoints1']
+            # Kurulu LightGlue sürümü `matches` değerini batch başına bir
+            # [K, 2] indeks tensörü içeren liste olarak döndürüyor. Eski kod
+            # listenin uzunluğunu eşleşme sayısı sanıyor ve her zaman 1 görüyordu.
+            pairs = self._remove_batch(match_output.get('matches'))
+            if pairs is None or not torch.is_tensor(pairs):
+                return None
+            if pairs.ndim != 2 or pairs.shape[1] != 2:
+                raise ValueError(f"Beklenmeyen LightGlue matches şekli: {pairs.shape}")
+            if pairs.shape[0] < self.min_matches:
+                return None
+
+            ref_keypoints = self._remove_batch(
+                ref_feats['lightglue'].get('keypoints')
+            )
+            frame_keypoints = self._remove_batch(frame_feats.get('keypoints'))
+            if ref_keypoints is None or frame_keypoints is None:
+                return None
+
+            mkpts0 = ref_keypoints[pairs[:, 0]]
+            mkpts1 = frame_keypoints[pairs[:, 1]]
 
             if len(mkpts0) < self.min_inliers:
                 return None
 
             # Homography ile bbox tahmini
-            src_pts = mkpts0.cpu().numpy().reshape(-1, 1, 2).astype(np.float32)
-            dst_pts = mkpts1.cpu().numpy().reshape(-1, 1, 2).astype(np.float32)
+            src_pts = mkpts0.detach().cpu().numpy().reshape(-1, 1, 2).astype(np.float32)
+            dst_pts = mkpts1.detach().cpu().numpy().reshape(-1, 1, 2).astype(np.float32)
 
             H_mat, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.0)
             if H_mat is None:
                 return None
 
-            inlier_count = np.sum(mask) if mask is not None else len(mkpts0)
+            inlier_count = int(np.sum(mask)) if mask is not None else len(mkpts0)
             inlier_ratio = inlier_count / len(mkpts0) if len(mkpts0) > 0 else 0
 
-            if inlier_ratio < self.min_inlier_ratio:
-                self.logger.debug(f"Inlier ratio düşük: {inlier_ratio:.3f}")
+            if inlier_count < self.min_inliers or inlier_ratio < self.min_inlier_ratio:
+                self.logger.debug(
+                    "LightGlue homography reddedildi: inliers=%d/%d ratio=%.3f",
+                    inlier_count,
+                    len(mkpts0),
+                    inlier_ratio,
+                )
                 return None
 
             # Referans görüntünün dört köşesini frame'e dönüştür

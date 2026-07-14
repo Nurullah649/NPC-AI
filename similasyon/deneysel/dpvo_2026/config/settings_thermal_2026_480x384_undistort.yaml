@@ -1,0 +1,15 @@
+# Thermal-camera experiment with the supplied OpenCV radial distortion model
+# applied before DPVO. The output K is intentionally kept unchanged so this is
+# a one-variable comparison against settings_thermal_2026_480x384.yaml.
+camera:
+  profile: config/camera/profiles/thyz_2026_thermal_640x512_v1.yaml
+  undistort: true
+
+dpvo:
+  calibration_width: 640
+  calibration_height: 512
+  input_width: 480
+  input_height: 384
+
+model_paths:
+  camera_calib: config/camera/profiles/thyz_2026_thermal_640x512_v1_K.txt

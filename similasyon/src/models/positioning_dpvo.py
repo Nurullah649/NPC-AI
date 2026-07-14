@@ -62,6 +62,7 @@ class PositioningDPVO:
         self.camera_profile_id = None
         self.camera_distortion = None
         self.camera_undistort = False
+        self._undistort_map_cache = {}
         profile_path = camera_cfg.get("profile")
         if profile_path:
             self.camera_profile_path = self._resolve_path(profile_path)
@@ -83,8 +84,13 @@ class PositioningDPVO:
             self.camera_distortion = np.asarray(
                 distortion_cfg["coefficients"], dtype=np.float64
             )
-            self.camera_undistort = bool(
+            profile_undistort = bool(
                 self.camera_profile.get("runtime", {}).get("undistort", False)
+            )
+            # Keep production behaviour profile-driven, while allowing an
+            # explicit experiment override without duplicating calibration.
+            self.camera_undistort = bool(
+                camera_cfg.get("undistort", profile_undistort)
             )
 
         # DPVO instance (lazy init)
@@ -136,6 +142,7 @@ class PositioningDPVO:
             f"input={self.input_width}x{self.input_height}, "
             f"calibration_native={self.calibration_width}x{self.calibration_height}, "
             f"camera_profile={self.camera_profile_id or 'legacy'}, "
+            f"undistort={self.camera_undistort}, "
             f"delta_window={self.delta_window}, "
             f"direction_guard={'aktif' if self.direction_guard.use_guard else 'pasif'}"
         )
@@ -196,7 +203,8 @@ class PositioningDPVO:
             raise ValueError(f"Camera profile distortion must contain finite [k1,k2,p1,p2]: {path}")
 
         self.logger.info(
-            "Kamera profili yüklendi: id=%s path=%s native=%dx%d undistort=%s",
+            "Kamera profili yüklendi: id=%s path=%s native=%dx%d "
+            "profile_undistort_default=%s",
             profile_id,
             path,
             width,
@@ -336,14 +344,44 @@ class PositioningDPVO:
             prepared = cv2.resize(image, (target_w, target_h), interpolation=cv2.INTER_AREA)
 
         scaled_intrinsics = self._scaled_intrinsics(target_w, target_h)
+        if self.camera_undistort:
+            if self.camera_distortion is None:
+                raise RuntimeError(
+                    "Kamera undistort istendi ancak distortion katsayilari yok."
+                )
+            cache_key = (
+                target_w,
+                target_h,
+                tuple(np.asarray(scaled_intrinsics, dtype=np.float64).ravel()),
+                tuple(np.asarray(self.camera_distortion, dtype=np.float64).ravel()),
+            )
+            maps = self._undistort_map_cache.get(cache_key)
+            if maps is None:
+                maps = cv2.initUndistortRectifyMap(
+                    scaled_intrinsics,
+                    self.camera_distortion,
+                    None,
+                    scaled_intrinsics,
+                    (target_w, target_h),
+                    cv2.CV_32FC1,
+                )
+                self._undistort_map_cache[cache_key] = maps
+            prepared = cv2.remap(
+                prepared,
+                maps[0],
+                maps[1],
+                interpolation=cv2.INTER_LINEAR,
+                borderMode=cv2.BORDER_CONSTANT,
+            )
         if not self._input_geometry_logged:
             self.logger.info(
-                "DPVO giriş geometrisi: source=%dx%d target=%dx%d K=%s",
+                "DPVO giriş geometrisi: source=%dx%d target=%dx%d K=%s undistort=%s",
                 w,
                 h,
                 target_w,
                 target_h,
                 self._intrinsics_matrix_to_vec(scaled_intrinsics).tolist(),
+                self.camera_undistort,
             )
             self._input_geometry_logged = True
         return (

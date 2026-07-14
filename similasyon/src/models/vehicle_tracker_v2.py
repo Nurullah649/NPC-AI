@@ -29,7 +29,7 @@ import cv2
 import numpy as np
 from filterpy.kalman import KalmanFilter
 
-from .camera_motion import CameraTransform, CameraModel
+from .motion_camera_v2 import CameraTransform, CameraModel
 
 logger = logging.getLogger(__name__)
 

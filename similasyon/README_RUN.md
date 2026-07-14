@@ -99,7 +99,8 @@ similasyon/
 │       ├── landing_status.py      # Görev 1 ek: İniş durumu
 │       ├── positioning_dpvo.py    # Görev 2: DPVO pozisyon
 │       ├── dpvo_standalone.py     # DPVO wrapper
-│       └── reference_matcher.py   # Görev 3: Referans eşleme
+│       ├── reference_matcher.py   # Görev 3: LightGlue/ORB eşleme
+│       └── reference_pipeline.py  # Görev 3: ROI, tracker ve sahne hafızası
 ├── scripts/
 │   ├── dry_run_offline.py     # Offline test scripti
 │   ├── validate_payload.py    # Payload validasyonu
@@ -191,7 +192,14 @@ Her frame'de sırasıyla:
 2. **Görev 1 ek - Hareket:** Taşıtlar için hareketli/sabit sınıflandırması
 3. **Görev 1 ek - İniş:** UAP/UAI için iniş durumu (engel var/yok)
 4. **Görev 2 - Pozisyon:** DPVO ile 3B pozisyon kestirimi (health_status=0 iken)
-5. **Görev 3 - Referans:** LightGlue ile referans görüntü eşleme
+5. **Görev 3 - Referans:** Aktif referans için LightGlue/YOLO-ROI doğrulaması,
+   kamera-kompanzasyonlu tracker ve doğrulanmış sabit nesne sahne hafızası
+
+Sunucunun yayınladığı tüm referansların feature'ları başlangıçta cache'e alınır;
+her karede yalnız `frame_start_image_url`–`frame_end_image_url` aralığındaki
+referans aranır. Hiçbir güvenlik kapısı geçmezse `reference_predictions` boş
+kalır. `reference_roi_experiment.scene_aliases` oturuma özeldir: yalnız aynı
+fiziksel sabit nesne olduğu doğrulanan RGB/termal referanslar bağlanmalıdır.
 
 ## 📝 Payload Yapısı
 

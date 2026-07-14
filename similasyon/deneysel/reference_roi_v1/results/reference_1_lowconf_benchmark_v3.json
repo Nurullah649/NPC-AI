@@ -1,0 +1,4378 @@
+{
+  "reference": {
+    "url": "http://havaciliktayapayzeka.teknofest.org/reference/1/",
+    "session": "http://havaciliktayapayzeka.teknofest.org/session/1/",
+    "image_url": "/THYZ_2026_Online_Yarisma_Test_Oturumu/references/reference_1.webp",
+    "frame_start": "http://havaciliktayapayzeka.teknofest.org/frames/165/",
+    "frame_end": "http://havaciliktayapayzeka.teknofest.org/frames/209/",
+    "frame_start_image_url": "/THYZ_2026_Online_Yarisma_Test_Oturumu/frame_000161.webp",
+    "frame_end_image_url": "/THYZ_2026_Online_Yarisma_Test_Oturumu/frame_000205.webp",
+    "order": 1
+  },
+  "positive": {
+    "summary": {
+      "frame_count": 45,
+      "full_match_frames": 0,
+      "full_match_rate": 0.0,
+      "roi_match_frames": 1,
+      "roi_match_rate": 0.022222222222222223,
+      "hybrid_match_frames": 1,
+      "hybrid_match_rate": 0.022222222222222223,
+      "ambiguous_frames": 0,
+      "evaluated_candidates": 98,
+      "accepted_candidates": 1,
+      "reasons": {
+        "too_few_inliers": 77,
+        "low_projection_coverage": 3,
+        "too_few_matches": 3,
+        "low_color_correlation": 11,
+        "accepted": 1,
+        "empty_projection": 1,
+        "projection_too_narrow": 1,
+        "high_color_distance": 1
+      }
+    },
+    "frames": [
+      {
+        "frame": 161,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1122.6009521484375,
+              137.71202087402344,
+              1194.9913330078125,
+              241.942138671875
+            ],
+            "candidate_conf": 0.9751015901565552,
+            "crop_bbox": [
+              1104,
+              111,
+              1214,
+              268
+            ],
+            "scale": 3,
+            "matches": 30,
+            "inliers": 6,
+            "inlier_ratio": 0.2,
+            "reprojection_error": 1.039290189743042,
+            "projected_bbox": [
+              161.0279083251953,
+              188.21519470214844,
+              261.0150146484375,
+              238.1549072265625
+            ],
+            "projection_coverage": 0.03212589169356455,
+            "projection_aspect": 2.0021562253559515,
+            "candidate_iou": 0.07353150218409332,
+            "reference_hull_coverage": 0.07585783933582918,
+            "roi_hull_coverage": 0.046876853470229504,
+            "color_hist_correlation": 0.016394658266817234,
+            "color_hist_bhattacharyya": 0.8593228818178853,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1768.074462890625,
+              927.6959838867188,
+              1894.88818359375,
+              978.9837646484375
+            ],
+            "candidate_conf": 0.950454831123352,
+            "crop_bbox": [
+              1736,
+              914,
+              1920,
+              992
+            ],
+            "scale": 2,
+            "matches": 27,
+            "inliers": 6,
+            "inlier_ratio": 0.2222222222222222,
+            "reprojection_error": 1.5496125221252441,
+            "projected_bbox": [
+              247.6463165283203,
+              0.0,
+              335.84912109375,
+              7.172688007354736
+            ],
+            "projection_coverage": 0.011020261958638363,
+            "projection_aspect": 12.297036267991613,
+            "candidate_iou": 0.0,
+            "reference_hull_coverage": 0.09693364154786736,
+            "roi_hull_coverage": 0.055370274121682765,
+            "color_hist_correlation": -0.00461688695366841,
+            "color_hist_bhattacharyya": 0.8771630685034637,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 162,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1766.94921875,
+              959.0543212890625,
+              1893.880615234375,
+              1011.3531494140625
+            ],
+            "candidate_conf": 0.9761666655540466,
+            "crop_bbox": [
+              1735,
+              945,
+              1920,
+              1025
+            ],
+            "scale": 2,
+            "matches": 24,
+            "inliers": 6,
+            "inlier_ratio": 0.25,
+            "reprojection_error": 0.6109793782234192,
+            "projected_bbox": [
+              66.97183227539062,
+              38.213768005371094,
+              75.50106048583984,
+              62.5466423034668
+            ],
+            "projection_coverage": 0.0035057540186593343,
+            "projection_aspect": 0.35052284025141733,
+            "candidate_iou": 0.007815956617921659,
+            "reference_hull_coverage": 0.20377812363544062,
+            "roi_hull_coverage": 0.08567417607970912,
+            "color_hist_correlation": -0.010023824274012225,
+            "color_hist_bhattacharyya": 0.8784286443600015,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1123.646484375,
+              169.22744750976562,
+              1196.479248046875,
+              273.90643310546875
+            ],
+            "candidate_conf": 0.9760404825210571,
+            "crop_bbox": [
+              1105,
+              143,
+              1215,
+              301
+            ],
+            "scale": 3,
+            "matches": 27,
+            "inliers": 6,
+            "inlier_ratio": 0.2222222222222222,
+            "reprojection_error": 1.4923075437545776,
+            "projected_bbox": [
+              141.6223602294922,
+              0.0,
+              329.0,
+              231.9803924560547
+            ],
+            "projection_coverage": 0.2778924588380747,
+            "projection_aspect": 0.8077305059564626,
+            "candidate_iou": 0.22197362574374435,
+            "reference_hull_coverage": 0.09611250291068016,
+            "roi_hull_coverage": 0.21755659867852248,
+            "color_hist_correlation": 0.009115399294255798,
+            "color_hist_bhattacharyya": 0.8675715345623142,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 163,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1124.623291015625,
+              200.97706604003906,
+              1196.82470703125,
+              305.4368896484375
+            ],
+            "candidate_conf": 0.9780289530754089,
+            "crop_bbox": [
+              1106,
+              174,
+              1215,
+              332
+            ],
+            "scale": 3,
+            "matches": 29,
+            "inliers": 7,
+            "inlier_ratio": 0.2413793103448276,
+            "reprojection_error": 1.8935530185699463,
+            "projected_bbox": [
+              86.6849365234375,
+              223.65354919433594,
+              326.0,
+              346.57818603515625
+            ],
+            "projection_coverage": 0.18979417326929576,
+            "projection_aspect": 1.9468437705165684,
+            "candidate_iou": 0.3067201555308617,
+            "reference_hull_coverage": 0.0876099646713492,
+            "roi_hull_coverage": 0.06450943883514026,
+            "color_hist_correlation": 0.011351256529771824,
+            "color_hist_bhattacharyya": 0.8711949577495055,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1766.89208984375,
+              990.4256591796875,
+              1892.792236328125,
+              1044.341796875
+            ],
+            "candidate_conf": 0.9655498266220093,
+            "crop_bbox": [
+              1735,
+              976,
+              1920,
+              1058
+            ],
+            "scale": 2,
+            "matches": 28,
+            "inliers": 10,
+            "inlier_ratio": 0.35714285714285715,
+            "reprojection_error": 1.3346526622772217,
+            "projected_bbox": [
+              203.52809143066406,
+              74.95137786865234,
+              273.760986328125,
+              148.109375
+            ],
+            "projection_coverage": 0.08467531185620779,
+            "projection_aspect": 0.9600166441320831,
+            "candidate_iou": 0.1550951281096774,
+            "reference_hull_coverage": 0.02922239641105689,
+            "roi_hull_coverage": 0.029906212933732648,
+            "color_hist_correlation": -0.012201078976497134,
+            "color_hist_bhattacharyya": 0.8844727306773218,
+            "accepted": false,
+            "reject_reason": "low_projection_coverage",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 164,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1125.06640625,
+              232.30682373046875,
+              1197.7418212890625,
+              335.816162109375
+            ],
+            "candidate_conf": 0.9728376865386963,
+            "crop_bbox": [
+              1106,
+              206,
+              1216,
+              362
+            ],
+            "scale": 3,
+            "matches": 18,
+            "inliers": 5,
+            "inlier_ratio": 0.2777777777777778,
+            "reprojection_error": 0.1575918048620224,
+            "projected_bbox": [
+              219.28590393066406,
+              0.0,
+              329.0,
+              353.3883056640625
+            ],
+            "projection_coverage": 0.2510468694470785,
+            "projection_aspect": 0.31046329012831625,
+            "candidate_iou": 0.1684963398522951,
+            "reference_hull_coverage": 0.24020804743775057,
+            "roi_hull_coverage": 0.10677826208115401,
+            "color_hist_correlation": 0.009630724777380362,
+            "color_hist_bhattacharyya": 0.8769940685831414,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1765.554443359375,
+              1021.4229125976562,
+              1891.004150390625,
+              1077.4334716796875
+            ],
+            "candidate_conf": 0.9683188199996948,
+            "crop_bbox": [
+              1734,
+              1007,
+              1920,
+              1080
+            ],
+            "scale": 2,
+            "matches": 6,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "reprojection_error": null,
+            "projected_bbox": null,
+            "projection_coverage": 0.0,
+            "projection_aspect": 0.0,
+            "candidate_iou": 0.0,
+            "reference_hull_coverage": 0.0,
+            "roi_hull_coverage": 0.0,
+            "color_hist_correlation": -1.0,
+            "color_hist_bhattacharyya": 1.0,
+            "accepted": false,
+            "reject_reason": "too_few_matches",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 2,
+            "candidate_bbox": [
+              723.1103515625,
+              0.0,
+              769.73779296875,
+              13.199832916259766
+            ],
+            "candidate_conf": 0.8684180378913879,
+            "crop_bbox": [
+              711,
+              0,
+              782,
+              17
+            ],
+            "scale": 4,
+            "matches": 0,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "reprojection_error": null,
+            "projected_bbox": null,
+            "projection_coverage": 0.0,
+            "projection_aspect": 0.0,
+            "candidate_iou": 0.0,
+            "reference_hull_coverage": 0.0,
+            "roi_hull_coverage": 0.0,
+            "color_hist_correlation": -1.0,
+            "color_hist_bhattacharyya": 1.0,
+            "accepted": false,
+            "reject_reason": "too_few_matches",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 165,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1125.5208740234375,
+              263.2777099609375,
+              1197.7022705078125,
+              365.9786376953125
+            ],
+            "candidate_conf": 0.9745829701423645,
+            "crop_bbox": [
+              1107,
+              237,
+              1216,
+              392
+            ],
+            "scale": 3,
+            "matches": 39,
+            "inliers": 7,
+            "inlier_ratio": 0.1794871794871795,
+            "reprojection_error": 1.3144553899765015,
+            "projected_bbox": [
+              38.28113555908203,
+              0.0,
+              193.5118865966797,
+              398.4751281738281
+            ],
+            "projection_coverage": 0.406797497065051,
+            "projection_aspect": 0.3895619577287163,
+            "candidate_iou": 0.4938085709376962,
+            "reference_hull_coverage": 0.18489970640611403,
+            "roi_hull_coverage": 0.004362692546202108,
+            "color_hist_correlation": 0.007622928410585493,
+            "color_hist_bhattacharyya": 0.8833955281960548,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              718.1362915039062,
+              0.0,
+              770.1329956054688,
+              43.0349006652832
+            ],
+            "candidate_conf": 0.9582013487815857,
+            "crop_bbox": [
+              705,
+              0,
+              784,
+              54
+            ],
+            "scale": 4,
+            "matches": 17,
+            "inliers": 7,
+            "inlier_ratio": 0.4117647058823529,
+            "reprojection_error": 1.4602439403533936,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              250.30511474609375,
+              134.3124542236328
+            ],
+            "projection_coverage": 0.49254416119133665,
+            "projection_aspect": 1.86360316467251,
+            "candidate_iou": 0.619726469421899,
+            "reference_hull_coverage": 0.2678963274541513,
+            "roi_hull_coverage": 0.052906836498057636,
+            "color_hist_correlation": 0.04103068520669153,
+            "color_hist_bhattacharyya": 0.8110228455848926,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 2,
+            "candidate_bbox": [
+              1765.7149658203125,
+              1049.679443359375,
+              1888.2894287109375,
+              1079.0
+            ],
+            "candidate_conf": 0.9450381994247437,
+            "crop_bbox": [
+              1735,
+              1042,
+              1919,
+              1080
+            ],
+            "scale": 2,
+            "matches": 19,
+            "inliers": 6,
+            "inlier_ratio": 0.3157894736842105,
+            "reprojection_error": 1.5190880298614502,
+            "projected_bbox": [
+              0.0,
+              22.29930305480957,
+              367.0,
+              75.0
+            ],
+            "projection_coverage": 0.6915459017049802,
+            "projection_aspect": 6.963854773717431,
+            "candidate_iou": 0.6023198419086431,
+            "reference_hull_coverage": 0.07546321587756129,
+            "roi_hull_coverage": 0.1967909218748031,
+            "color_hist_correlation": -0.00663785110067018,
+            "color_hist_bhattacharyya": 0.8771009468899715,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 166,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1125.3702392578125,
+              293.47174072265625,
+              1197.85498046875,
+              395.8607177734375
+            ],
+            "candidate_conf": 0.9727592468261719,
+            "crop_bbox": [
+              1107,
+              267,
+              1216,
+              422
+            ],
+            "scale": 3,
+            "matches": 30,
+            "inliers": 7,
+            "inlier_ratio": 0.23333333333333334,
+            "reprojection_error": 0.9394723773002625,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              326.0,
+              464.0
+            ],
+            "projection_coverage": 0.9947979349577456,
+            "projection_aspect": 0.7025862068965517,
+            "candidate_iou": 0.4415772856688074,
+            "reference_hull_coverage": 0.06619355659931091,
+            "roi_hull_coverage": 0.1034299991283448,
+            "color_hist_correlation": 0.009732635532323048,
+            "color_hist_bhattacharyya": 0.8863657232879378,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              713.2247924804688,
+              0.5461864471435547,
+              771.07421875,
+              74.07703399658203
+            ],
+            "candidate_conf": 0.967208743095398,
+            "crop_bbox": [
+              698,
+              0,
+              786,
+              93
+            ],
+            "scale": 4,
+            "matches": 17,
+            "inliers": 5,
+            "inlier_ratio": 0.29411764705882354,
+            "reprojection_error": 0.014533241279423237,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              351.0,
+              371.0
+            ],
+            "projection_coverage": 0.9944785557184751,
+            "projection_aspect": 0.9460916442048517,
+            "candidate_iou": 0.5226459442145134,
+            "reference_hull_coverage": 0.032166723367693974,
+            "roi_hull_coverage": 0.18321412491989422,
+            "color_hist_correlation": 0.07256971344495786,
+            "color_hist_bhattacharyya": 0.7870650640082477,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 167,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1125.8131103515625,
+              323.63800048828125,
+              1197.612060546875,
+              425.3255310058594
+            ],
+            "candidate_conf": 0.9741432070732117,
+            "crop_bbox": [
+              1107,
+              298,
+              1216,
+              451
+            ],
+            "scale": 3,
+            "matches": 18,
+            "inliers": 5,
+            "inlier_ratio": 0.2777777777777778,
+            "reprojection_error": 0.3203398287296295,
+            "projected_bbox": [
+              73.89498138427734,
+              143.04803466796875,
+              276.17999267578125,
+              300.13818359375
+            ],
+            "projection_coverage": 0.2117152868503907,
+            "projection_aspect": 1.2877001688188316,
+            "candidate_iou": 0.46834955268014183,
+            "reference_hull_coverage": 0.35291536612856683,
+            "roi_hull_coverage": 0.019916834074621474,
+            "color_hist_correlation": 0.007585902691127617,
+            "color_hist_bhattacharyya": 0.8845868161333724,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              712.711181640625,
+              0.01540374755859375,
+              770.944091796875,
+              104.54762268066406
+            ],
+            "candidate_conf": 0.9680482745170593,
+            "crop_bbox": [
+              698,
+              0,
+              786,
+              131
+            ],
+            "scale": 3,
+            "matches": 20,
+            "inliers": 7,
+            "inlier_ratio": 0.35,
+            "reprojection_error": 1.9014923572540283,
+            "projected_bbox": [
+              94.0136947631836,
+              0.0,
+              263.0,
+              26.516117095947266
+            ],
+            "projection_coverage": 0.04318818583999258,
+            "projection_aspect": 6.372965718372256,
+            "candidate_iou": 0.059039065823945795,
+            "reference_hull_coverage": 0.013270328061015066,
+            "roi_hull_coverage": 0.13354284850065573,
+            "color_hist_correlation": 0.05372394959815191,
+            "color_hist_bhattacharyya": 0.7918477836400587,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 168,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1125.18994140625,
+              353.0167541503906,
+              1197.115966796875,
+              454.33270263671875
+            ],
+            "candidate_conf": 0.9737086296081543,
+            "crop_bbox": [
+              1107,
+              327,
+              1216,
+              480
+            ],
+            "scale": 3,
+            "matches": 21,
+            "inliers": 6,
+            "inlier_ratio": 0.2857142857142857,
+            "reprojection_error": 0.9673950672149658,
+            "projected_bbox": [
+              0.0,
+              32.97689437866211,
+              326.0,
+              458.0
+            ],
+            "projection_coverage": 0.9231445332730783,
+            "projection_aspect": 0.7670171237477154,
+            "candidate_iou": 0.4733433123287622,
+            "reference_hull_coverage": 0.04018684074939739,
+            "roi_hull_coverage": 0.04510186225496425,
+            "color_hist_correlation": 0.009749246964700397,
+            "color_hist_bhattacharyya": 0.8749879156068747,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              712.9097290039062,
+              22.190837860107422,
+              771.9402465820312,
+              135.5576629638672
+            ],
+            "candidate_conf": 0.9666154384613037,
+            "crop_bbox": [
+              698,
+              0,
+              787,
+              164
+            ],
+            "scale": 3,
+            "matches": 18,
+            "inliers": 6,
+            "inlier_ratio": 0.3333333333333333,
+            "reprojection_error": 0.8720731735229492,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              258.5740661621094,
+              212.5772247314453
+            ],
+            "projection_coverage": 0.4184324272423673,
+            "projection_aspect": 1.2163770906726867,
+            "candidate_iou": 0.28941453216752305,
+            "reference_hull_coverage": 0.004621259521339326,
+            "roi_hull_coverage": 0.038576168964004474,
+            "color_hist_correlation": 0.06863113254967813,
+            "color_hist_bhattacharyya": 0.7780665719189799,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 169,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              713.5780639648438,
+              52.41217803955078,
+              772.0164794921875,
+              164.7686767578125
+            ],
+            "candidate_conf": 0.9683421850204468,
+            "crop_bbox": [
+              698,
+              24,
+              787,
+              193
+            ],
+            "scale": 3,
+            "matches": 20,
+            "inliers": 5,
+            "inlier_ratio": 0.25,
+            "reprojection_error": 0.19933544099330902,
+            "projected_bbox": [
+              143.33836364746094,
+              324.1607971191406,
+              230.01449584960938,
+              380.2846374511719
+            ],
+            "projection_coverage": 0.03593583024408403,
+            "projection_aspect": 1.5443727957561066,
+            "candidate_iou": 0.07419439539154211,
+            "reference_hull_coverage": 0.005814194488064404,
+            "roi_hull_coverage": 0.14143111462467248,
+            "color_hist_correlation": 0.06309550986611072,
+            "color_hist_bhattacharyya": 0.7867050527587707,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1126.0330810546875,
+              382.288818359375,
+              1197.916015625,
+              483.0828552246094
+            ],
+            "candidate_conf": 0.9449478387832642,
+            "crop_bbox": [
+              1108,
+              357,
+              1216,
+              509
+            ],
+            "scale": 3,
+            "matches": 20,
+            "inliers": 5,
+            "inlier_ratio": 0.25,
+            "reprojection_error": 0.9305962324142456,
+            "projected_bbox": [
+              132.6294403076172,
+              194.25904846191406,
+              137.2428741455078,
+              198.7191925048828
+            ],
+            "projection_coverage": 0.0001392718448782917,
+            "projection_aspect": 1.0343687991789257,
+            "candidate_iou": 0.00031555134388026916,
+            "reference_hull_coverage": 0.14216157844491817,
+            "roi_hull_coverage": 0.1243025735105301,
+            "color_hist_correlation": 0.013695111703523312,
+            "color_hist_bhattacharyya": 0.8720944920527042,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 170,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1126.654296875,
+              410.7812805175781,
+              1198.46630859375,
+              511.4978942871094
+            ],
+            "candidate_conf": 0.9727018475532532,
+            "crop_bbox": [
+              1108,
+              385,
+              1217,
+              537
+            ],
+            "scale": 3,
+            "matches": 23,
+            "inliers": 5,
+            "inlier_ratio": 0.21739130434782608,
+            "reprojection_error": 0.9251752495765686,
+            "projected_bbox": [
+              211.6167449951172,
+              142.99169921875,
+              326.0,
+              455.0
+            ],
+            "projection_coverage": 0.23934039535317006,
+            "projection_aspect": 0.3666032433062647,
+            "candidate_iou": 0.1631806378494537,
+            "reference_hull_coverage": 0.24296049144413473,
+            "roi_hull_coverage": 0.05183682628090442,
+            "color_hist_correlation": 0.01584002220992265,
+            "color_hist_bhattacharyya": 0.8679412657208069,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              715.3059692382812,
+              82.6876220703125,
+              773.6859130859375,
+              195.56373596191406
+            ],
+            "candidate_conf": 0.9689403772354126,
+            "crop_bbox": [
+              700,
+              54,
+              789,
+              224
+            ],
+            "scale": 3,
+            "matches": 27,
+            "inliers": 7,
+            "inlier_ratio": 0.25925925925925924,
+            "reprojection_error": 1.0193930864334106,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              266.0,
+              343.52703857421875
+            ],
+            "projection_coverage": 0.6710596479455253,
+            "projection_aspect": 0.7743204176999037,
+            "candidate_iou": 0.4270369812684161,
+            "reference_hull_coverage": 0.08138836939850731,
+            "roi_hull_coverage": 0.3166662080060759,
+            "color_hist_correlation": 0.06115905561809071,
+            "color_hist_bhattacharyya": 0.7923022887154079,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 171,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              716.6029052734375,
+              112.26332092285156,
+              775.4657592773438,
+              223.84844970703125
+            ],
+            "candidate_conf": 0.9724818468093872,
+            "crop_bbox": [
+              701,
+              84,
+              791,
+              252
+            ],
+            "scale": 3,
+            "matches": 20,
+            "inliers": 6,
+            "inlier_ratio": 0.3,
+            "reprojection_error": 1.968882441520691,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              230.01173400878906,
+              503.0
+            ],
+            "projection_coverage": 0.8502050426691719,
+            "projection_aspect": 0.4572797892818868,
+            "candidate_iou": 0.5109426623961406,
+            "reference_hull_coverage": 0.019181625852618588,
+            "roi_hull_coverage": 0.05065238312023273,
+            "color_hist_correlation": 0.06640195388387525,
+            "color_hist_bhattacharyya": 0.7854425481457555,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1128.156494140625,
+              439.36737060546875,
+              1199.500732421875,
+              539.3031616210938
+            ],
+            "candidate_conf": 0.9707266092300415,
+            "crop_bbox": [
+              1110,
+              414,
+              1218,
+              565
+            ],
+            "scale": 3,
+            "matches": 18,
+            "inliers": 5,
+            "inlier_ratio": 0.2777777777777778,
+            "reprojection_error": 0.509477436542511,
+            "projected_bbox": [
+              246.7261505126953,
+              224.84738159179688,
+              251.62351989746094,
+              228.96044921875
+            ],
+            "projection_coverage": 0.0001372415138698855,
+            "projection_aspect": 1.190685354326035,
+            "candidate_iou": 0.0003139107892906218,
+            "reference_hull_coverage": 0.05976750598418379,
+            "roi_hull_coverage": 0.07809519804927328,
+            "color_hist_correlation": 0.025640467655613817,
+            "color_hist_bhattacharyya": 0.8532404103572283,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 172,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1129.619384765625,
+              466.439208984375,
+              1201.197265625,
+              566.9998779296875
+            ],
+            "candidate_conf": 0.9746613502502441,
+            "crop_bbox": [
+              1111,
+              441,
+              1220,
+              593
+            ],
+            "scale": 3,
+            "matches": 21,
+            "inliers": 5,
+            "inlier_ratio": 0.23809523809523808,
+            "reprojection_error": 0.7639152407646179,
+            "projected_bbox": [
+              175.2763214111328,
+              35.04768371582031,
+              326.0,
+              407.1220397949219
+            ],
+            "projection_coverage": 0.3760959255916776,
+            "projection_aspect": 0.40509020878833135,
+            "candidate_iou": 0.3121917861585101,
+            "reference_hull_coverage": 0.07391438090401459,
+            "roi_hull_coverage": 0.1174159762586849,
+            "color_hist_correlation": 0.017766819907538457,
+            "color_hist_bhattacharyya": 0.866472395838953,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              719.17041015625,
+              142.14877319335938,
+              777.4222412109375,
+              253.85562133789062
+            ],
+            "candidate_conf": 0.9687220454216003,
+            "crop_bbox": [
+              704,
+              114,
+              792,
+              282
+            ],
+            "scale": 3,
+            "matches": 22,
+            "inliers": 6,
+            "inlier_ratio": 0.2727272727272727,
+            "reprojection_error": 0.6773937940597534,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              22.214208602905273,
+              503.0
+            ],
+            "projection_coverage": 0.08397777572797432,
+            "projection_aspect": 0.04416343658629279,
+            "candidate_iou": 0.0,
+            "reference_hull_coverage": 0.06259165176052413,
+            "roi_hull_coverage": 0.22677070567102134,
+            "color_hist_correlation": 0.03390651849759916,
+            "color_hist_bhattacharyya": 0.809924226042863,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 173,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1130.759521484375,
+              493.9812927246094,
+              1202.7415771484375,
+              594.37890625
+            ],
+            "candidate_conf": 0.9746851325035095,
+            "crop_bbox": [
+              1112,
+              468,
+              1221,
+              620
+            ],
+            "scale": 3,
+            "matches": 19,
+            "inliers": 6,
+            "inlier_ratio": 0.3157894736842105,
+            "reprojection_error": 0.86274653673172,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              321.3488464355469,
+              455.0
+            ],
+            "projection_coverage": 0.9805631010795498,
+            "projection_aspect": 0.7062612009572459,
+            "candidate_iou": 0.44483812577031817,
+            "reference_hull_coverage": 0.07424165544719091,
+            "roi_hull_coverage": 0.021339638737862255,
+            "color_hist_correlation": 0.020959443500619877,
+            "color_hist_bhattacharyya": 0.8598451377159786,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              720.9995727539062,
+              170.87860107421875,
+              778.983642578125,
+              281.8428955078125
+            ],
+            "candidate_conf": 0.9714527130126953,
+            "crop_bbox": [
+              706,
+              143,
+              794,
+              310
+            ],
+            "scale": 3,
+            "matches": 42,
+            "inliers": 7,
+            "inlier_ratio": 0.16666666666666666,
+            "reprojection_error": 0.9111179709434509,
+            "projected_bbox": [
+              112.75814819335938,
+              0.0,
+              263.0,
+              458.410888671875
+            ],
+            "projection_coverage": 0.5207199298553671,
+            "projection_aspect": 0.32774494567946866,
+            "candidate_iou": 0.3866472259257219,
+            "reference_hull_coverage": 0.06487211380318349,
+            "roi_hull_coverage": 0.2763230974701386,
+            "color_hist_correlation": 0.0567447917832137,
+            "color_hist_bhattacharyya": 0.7784222754322359,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 174,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1132.109130859375,
+              520.8244018554688,
+              1204.0498046875,
+              620.7404174804688
+            ],
+            "candidate_conf": 0.9749853014945984,
+            "crop_bbox": [
+              1114,
+              495,
+              1223,
+              646
+            ],
+            "scale": 3,
+            "matches": 25,
+            "inliers": 5,
+            "inlier_ratio": 0.2,
+            "reprojection_error": 0.456938236951828,
+            "projected_bbox": [
+              216.48574829101562,
+              0.0,
+              250.97381591796875,
+              136.0111083984375
+            ],
+            "projection_coverage": 0.03166629742904702,
+            "projection_aspect": 0.2535680212672197,
+            "candidate_iou": 0.029969349187263787,
+            "reference_hull_coverage": 0.07865555765458694,
+            "roi_hull_coverage": 0.02906557459274819,
+            "color_hist_correlation": 0.018322991802928044,
+            "color_hist_bhattacharyya": 0.863122295333485,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              722.7741088867188,
+              199.1817169189453,
+              780.5653076171875,
+              310.199951171875
+            ],
+            "candidate_conf": 0.9701588749885559,
+            "crop_bbox": [
+              708,
+              171,
+              796,
+              338
+            ],
+            "scale": 3,
+            "matches": 25,
+            "inliers": 7,
+            "inlier_ratio": 0.28,
+            "reprojection_error": 1.6536132097244263,
+            "projected_bbox": [
+              20.146923065185547,
+              0.0,
+              227.69461059570312,
+              473.662109375
+            ],
+            "projection_coverage": 0.7432670679217953,
+            "projection_aspect": 0.43817667367224705,
+            "candidate_iou": 0.5873703018894789,
+            "reference_hull_coverage": 0.04124127265938638,
+            "roi_hull_coverage": 0.10802255233423681,
+            "color_hist_correlation": 0.047983506984849364,
+            "color_hist_bhattacharyya": 0.7720714059694344,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 175,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1133.58447265625,
+              547.2159423828125,
+              1205.205810546875,
+              646.9656982421875
+            ],
+            "candidate_conf": 0.975375771522522,
+            "crop_bbox": [
+              1115,
+              522,
+              1224,
+              672
+            ],
+            "scale": 3,
+            "matches": 17,
+            "inliers": 6,
+            "inlier_ratio": 0.35294117647058826,
+            "reprojection_error": 0.6917313933372498,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              326.0,
+              449.0
+            ],
+            "projection_coverage": 0.9947264695888549,
+            "projection_aspect": 0.7260579064587973,
+            "candidate_iou": 0.4392713099334911,
+            "reference_hull_coverage": 0.12489026824515415,
+            "roi_hull_coverage": 0.1218221063755393,
+            "color_hist_correlation": 0.016804173063778245,
+            "color_hist_bhattacharyya": 0.8653539284890277,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              724.8184814453125,
+              227.28887939453125,
+              781.8762817382812,
+              337.52105712890625
+            ],
+            "candidate_conf": 0.9671145081520081,
+            "crop_bbox": [
+              710,
+              199,
+              797,
+              366
+            ],
+            "scale": 3,
+            "matches": 23,
+            "inliers": 6,
+            "inlier_ratio": 0.2608695652173913,
+            "reprojection_error": 0.6570615768432617,
+            "projected_bbox": [
+              174.525390625,
+              0.0,
+              212.68360900878906,
+              500.0
+            ],
+            "projection_coverage": 0.14590825392811718,
+            "projection_aspect": 0.07631643676757813,
+            "candidate_iou": 0.20008620627850313,
+            "reference_hull_coverage": 0.17977796689970973,
+            "roi_hull_coverage": 0.0672633063225554,
+            "color_hist_correlation": 0.056405065036161585,
+            "color_hist_bhattacharyya": 0.7682185349468689,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 176,
+        "full_bbox": null,
+        "roi_bbox": [
+          210.67552185058594,
+          64.2684097290039,
+          358.422119140625,
+          152.6466522216797
+        ],
+        "hybrid_bbox": [
+          210.67552185058594,
+          64.2684097290039,
+          358.422119140625,
+          152.6466522216797
+        ],
+        "hybrid_source": "roi",
+        "accepted_count": 1,
+        "accepted": [
+          {
+            "candidate_index": 3,
+            "candidate_bbox": [
+              210.67552185058594,
+              64.2684097290039,
+              358.422119140625,
+              152.6466522216797
+            ],
+            "candidate_conf": 0.2834872305393219,
+            "crop_bbox": [
+              173,
+              42,
+              396,
+              175
+            ],
+            "scale": 2,
+            "matches": 50,
+            "inliers": 9,
+            "inlier_ratio": 0.18,
+            "reprojection_error": 1.576562762260437,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              445.0,
+              265.0
+            ],
+            "projection_coverage": 0.9940068781820021,
+            "projection_aspect": 1.679245283018868,
+            "candidate_iou": 0.4429114980798571,
+            "reference_hull_coverage": 0.14721512887321636,
+            "roi_hull_coverage": 0.10558862214481184,
+            "color_hist_correlation": 0.3144052380154531,
+            "color_hist_bhattacharyya": 0.5051828044479656,
+            "accepted": true,
+            "reject_reason": "accepted",
+            "score": 16.560774282019967
+          }
+        ],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              726.908935546875,
+              253.9369354248047,
+              784.2551879882812,
+              364.35595703125
+            ],
+            "candidate_conf": 0.9685738682746887,
+            "crop_bbox": [
+              712,
+              226,
+              799,
+              392
+            ],
+            "scale": 3,
+            "matches": 46,
+            "inliers": 8,
+            "inlier_ratio": 0.17391304347826086,
+            "reprojection_error": 1.9295411109924316,
+            "projected_bbox": [
+              0.0,
+              115.55298614501953,
+              260.0,
+              287.7106018066406
+            ],
+            "projection_coverage": 0.3443735099172282,
+            "projection_aspect": 1.5102439645251284,
+            "candidate_iou": 0.4106038783895983,
+            "reference_hull_coverage": 0.21913838407070732,
+            "roi_hull_coverage": 0.08441410760580192,
+            "color_hist_correlation": 0.07235183548571815,
+            "color_hist_bhattacharyya": 0.7596959618571685,
+            "accepted": false,
+            "reject_reason": "low_color_correlation",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1135.1597900390625,
+              573.0692138671875,
+              1206.420654296875,
+              672.593017578125
+            ],
+            "candidate_conf": 0.964379072189331,
+            "crop_bbox": [
+              1117,
+              548,
+              1225,
+              698
+            ],
+            "scale": 3,
+            "matches": 20,
+            "inliers": 5,
+            "inlier_ratio": 0.25,
+            "reprojection_error": 0.08627694845199585,
+            "projected_bbox": [
+              88.51730346679688,
+              393.8755187988281,
+              323.0,
+              449.0
+            ],
+            "projection_coverage": 0.08865388886861897,
+            "projection_aspect": 4.253694391743651,
+            "candidate_iou": 0.0,
+            "reference_hull_coverage": 0.10612779541948296,
+            "roi_hull_coverage": 0.18892904524814985,
+            "color_hist_correlation": 0.01835497473510614,
+            "color_hist_bhattacharyya": 0.8630472365962087,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 3,
+            "candidate_bbox": [
+              210.67552185058594,
+              64.2684097290039,
+              358.422119140625,
+              152.6466522216797
+            ],
+            "candidate_conf": 0.2834872305393219,
+            "crop_bbox": [
+              173,
+              42,
+              396,
+              175
+            ],
+            "scale": 2,
+            "matches": 50,
+            "inliers": 9,
+            "inlier_ratio": 0.18,
+            "reprojection_error": 1.576562762260437,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              445.0,
+              265.0
+            ],
+            "projection_coverage": 0.9940068781820021,
+            "projection_aspect": 1.679245283018868,
+            "candidate_iou": 0.4429114980798571,
+            "reference_hull_coverage": 0.14721512887321636,
+            "roi_hull_coverage": 0.10558862214481184,
+            "color_hist_correlation": 0.3144052380154531,
+            "color_hist_bhattacharyya": 0.5051828044479656,
+            "accepted": true,
+            "reject_reason": "accepted",
+            "score": 16.560774282019967
+          }
+        ]
+      },
+      {
+        "frame": 177,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1136.6212158203125,
+              597.3681030273438,
+              1208.3165283203125,
+              697.4205932617188
+            ],
+            "candidate_conf": 0.9754195213317871,
+            "crop_bbox": [
+              1118,
+              572,
+              1227,
+              723
+            ],
+            "scale": 3,
+            "matches": 24,
+            "inliers": 6,
+            "inlier_ratio": 0.25,
+            "reprojection_error": 0.5890262126922607,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              326.0,
+              452.0
+            ],
+            "projection_coverage": 0.994741141287104,
+            "projection_aspect": 0.7212389380530974,
+            "candidate_iou": 0.4381321664029699,
+            "reference_hull_coverage": 0.1117581035235897,
+            "roi_hull_coverage": 0.32469708395919,
+            "color_hist_correlation": 0.019639319906344644,
+            "color_hist_bhattacharyya": 0.8653475306804279,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              727.9681396484375,
+              281.27490234375,
+              783.9347534179688,
+              389.94036865234375
+            ],
+            "candidate_conf": 0.9703400135040283,
+            "crop_bbox": [
+              713,
+              254,
+              798,
+              418
+            ],
+            "scale": 3,
+            "matches": 25,
+            "inliers": 8,
+            "inlier_ratio": 0.32,
+            "reprojection_error": 1.7188959121704102,
+            "projected_bbox": [
+              0.0,
+              9.183662414550781,
+              254.0,
+              491.0
+            ],
+            "projection_coverage": 0.9754611011215056,
+            "projection_aspect": 0.5271718291515044,
+            "candidate_iou": 0.447247425854492,
+            "reference_hull_coverage": 0.025420354591706565,
+            "roi_hull_coverage": 0.14149365348218615,
+            "color_hist_correlation": 0.059154551469964886,
+            "color_hist_bhattacharyya": 0.7789592490311713,
+            "accepted": false,
+            "reject_reason": "low_color_correlation",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 178,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1138.26416015625,
+              620.8123168945312,
+              1209.497802734375,
+              720.80078125
+            ],
+            "candidate_conf": 0.9702903032302856,
+            "crop_bbox": [
+              1120,
+              595,
+              1228,
+              746
+            ],
+            "scale": 3,
+            "matches": 32,
+            "inliers": 9,
+            "inlier_ratio": 0.28125,
+            "reprojection_error": 2.4051353931427,
+            "projected_bbox": [
+              0.0,
+              71.5249252319336,
+              153.68141174316406,
+              452.0
+            ],
+            "projection_coverage": 0.39838624958058994,
+            "projection_aspect": 0.403919788535022,
+            "candidate_iou": 0.31926332118621015,
+            "reference_hull_coverage": 0.1355903872967919,
+            "roi_hull_coverage": 0.12584767472252326,
+            "color_hist_correlation": 0.015080646050950917,
+            "color_hist_bhattacharyya": 0.864936946482227,
+            "accepted": false,
+            "reject_reason": "low_color_correlation",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              727.6104736328125,
+              308.7422790527344,
+              784.2518920898438,
+              417.1802978515625
+            ],
+            "candidate_conf": 0.9669861793518066,
+            "crop_bbox": [
+              713,
+              281,
+              799,
+              445
+            ],
+            "scale": 3,
+            "matches": 24,
+            "inliers": 7,
+            "inlier_ratio": 0.2916666666666667,
+            "reprojection_error": 1.4101388454437256,
+            "projected_bbox": null,
+            "projection_coverage": 0.0,
+            "projection_aspect": 0.0,
+            "candidate_iou": 0.0,
+            "reference_hull_coverage": 0.01562585375133428,
+            "roi_hull_coverage": 0.05658134439060333,
+            "color_hist_correlation": -1.0,
+            "color_hist_bhattacharyya": 1.0,
+            "accepted": false,
+            "reject_reason": "empty_projection",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 179,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1141.72412109375,
+              642.690185546875,
+              1211.3387451171875,
+              742.9374389648438
+            ],
+            "candidate_conf": 0.9713296890258789,
+            "crop_bbox": [
+              1124,
+              617,
+              1229,
+              768
+            ],
+            "scale": 3,
+            "matches": 25,
+            "inliers": 6,
+            "inlier_ratio": 0.24,
+            "reprojection_error": 0.857663631439209,
+            "projected_bbox": [
+              146.7863311767578,
+              185.32794189453125,
+              260.0470275878906,
+              232.35289001464844
+            ],
+            "projection_coverage": 0.03732491238503005,
+            "projection_aspect": 2.4085235803307583,
+            "candidate_iou": 0.08479926319386662,
+            "reference_hull_coverage": 0.08323816474860392,
+            "roi_hull_coverage": 0.11467290404316342,
+            "color_hist_correlation": 0.02110045980592714,
+            "color_hist_bhattacharyya": 0.8601152498661735,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              726.427978515625,
+              336.53515625,
+              784.462646484375,
+              444.3621826171875
+            ],
+            "candidate_conf": 0.9679532647132874,
+            "crop_bbox": [
+              711,
+              309,
+              799,
+              472
+            ],
+            "scale": 3,
+            "matches": 28,
+            "inliers": 7,
+            "inlier_ratio": 0.25,
+            "reprojection_error": 1.4231767654418945,
+            "projected_bbox": [
+              66.0503158569336,
+              0.0,
+              263.0,
+              488.0
+            ],
+            "projection_coverage": 0.7444959244424026,
+            "projection_aspect": 0.40358541832595574,
+            "candidate_iou": 0.4870499926977265,
+            "reference_hull_coverage": 0.029197286437727052,
+            "roi_hull_coverage": 0.14961717606475516,
+            "color_hist_correlation": 0.08317504490408063,
+            "color_hist_bhattacharyya": 0.7580758536010728,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 180,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1144.4989013671875,
+              662.4940795898438,
+              1214.0498046875,
+              763.224609375
+            ],
+            "candidate_conf": 0.9748315811157227,
+            "crop_bbox": [
+              1127,
+              637,
+              1232,
+              789
+            ],
+            "scale": 3,
+            "matches": 19,
+            "inliers": 5,
+            "inlier_ratio": 0.2631578947368421,
+            "reprojection_error": 0.10834585130214691,
+            "projected_bbox": [
+              0.0,
+              131.9164276123047,
+              311.82696533203125,
+              455.0
+            ],
+            "projection_coverage": 0.7013796291164486,
+            "projection_aspect": 0.9651588380911045,
+            "candidate_iou": 0.4584220393796938,
+            "reference_hull_coverage": 0.17285234354490053,
+            "roi_hull_coverage": 0.15191010693843954,
+            "color_hist_correlation": 0.014062863773986805,
+            "color_hist_bhattacharyya": 0.8672494799697718,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              724.4720458984375,
+              363.8689270019531,
+              782.54638671875,
+              471.50897216796875
+            ],
+            "candidate_conf": 0.9669862985610962,
+            "crop_bbox": [
+              709,
+              336,
+              798,
+              499
+            ],
+            "scale": 3,
+            "matches": 32,
+            "inliers": 7,
+            "inlier_ratio": 0.21875,
+            "reprojection_error": 0.6185475587844849,
+            "projected_bbox": [
+              34.03978729248047,
+              187.28404235839844,
+              241.62631225585938,
+              363.6773376464844
+            ],
+            "projection_coverage": 0.2804536598859778,
+            "projection_aspect": 1.1768390891748357,
+            "candidate_iou": 0.4945154746173362,
+            "reference_hull_coverage": 0.005303082475132276,
+            "roi_hull_coverage": 0.05966383134561838,
+            "color_hist_correlation": 0.06205947639688029,
+            "color_hist_bhattacharyya": 0.7735623977034999,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 181,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1148.9117431640625,
+              682.04052734375,
+              1216.8326416015625,
+              782.5526123046875
+            ],
+            "candidate_conf": 0.9757277965545654,
+            "crop_bbox": [
+              1131,
+              656,
+              1234,
+              808
+            ],
+            "scale": 3,
+            "matches": 31,
+            "inliers": 6,
+            "inlier_ratio": 0.1935483870967742,
+            "reprojection_error": 1.2234609127044678,
+            "projected_bbox": [
+              182.6774139404297,
+              148.0191650390625,
+              308.0,
+              455.0
+            ],
+            "projection_coverage": 0.2730343503948138,
+            "projection_aspect": 0.4082423779827079,
+            "candidate_iou": 0.20986767851546123,
+            "reference_hull_coverage": 0.12499028795313685,
+            "roi_hull_coverage": 0.12658090070158132,
+            "color_hist_correlation": 0.01424932215870881,
+            "color_hist_bhattacharyya": 0.8683898331880284,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              722.06298828125,
+              391.7186279296875,
+              781.2523193359375,
+              499.07342529296875
+            ],
+            "candidate_conf": 0.9593012928962708,
+            "crop_bbox": [
+              707,
+              364,
+              797,
+              526
+            ],
+            "scale": 3,
+            "matches": 25,
+            "inliers": 8,
+            "inlier_ratio": 0.32,
+            "reprojection_error": 1.5525169372558594,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              269.0,
+              485.0
+            ],
+            "projection_coverage": 0.9942463039170858,
+            "projection_aspect": 0.554639175257732,
+            "candidate_iou": 0.4383422969608502,
+            "reference_hull_coverage": 0.008866745477517285,
+            "roi_hull_coverage": 0.07132213200220379,
+            "color_hist_correlation": 0.09213528268979312,
+            "color_hist_bhattacharyya": 0.7743736181623859,
+            "accepted": false,
+            "reject_reason": "low_color_correlation",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 182,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              720.4302368164062,
+              418.4178771972656,
+              779.569580078125,
+              524.714111328125
+            ],
+            "candidate_conf": 0.9738112688064575,
+            "crop_bbox": [
+              705,
+              391,
+              795,
+              552
+            ],
+            "scale": 3,
+            "matches": 24,
+            "inliers": 8,
+            "inlier_ratio": 0.3333333333333333,
+            "reprojection_error": 1.1906490325927734,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              44.437137603759766,
+              482.0
+            ],
+            "projection_coverage": 0.16424124166100917,
+            "projection_aspect": 0.09219323154307005,
+            "candidate_iou": 0.0,
+            "reference_hull_coverage": 0.010774487904113951,
+            "roi_hull_coverage": 0.045082916876665886,
+            "color_hist_correlation": 0.06627235511455384,
+            "color_hist_bhattacharyya": 0.767202691693905,
+            "accepted": false,
+            "reject_reason": "low_projection_coverage",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1154.035888671875,
+              699.0792236328125,
+              1220.4171142578125,
+              800.394775390625
+            ],
+            "candidate_conf": 0.9714321494102478,
+            "crop_bbox": [
+              1137,
+              673,
+              1238,
+              826
+            ],
+            "scale": 3,
+            "matches": 30,
+            "inliers": 7,
+            "inlier_ratio": 0.23333333333333334,
+            "reprojection_error": 1.291466236114502,
+            "projected_bbox": [
+              0.0,
+              419.68023681640625,
+              73.3119125366211,
+              458.0
+            ],
+            "projection_coverage": 0.020199566620934147,
+            "projection_aspect": 1.913161941669016,
+            "candidate_iou": 0.0,
+            "reference_hull_coverage": 0.10449784958148492,
+            "roi_hull_coverage": 0.19829076767780685,
+            "color_hist_correlation": 0.01831021219839532,
+            "color_hist_bhattacharyya": 0.8705368249248063,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 183,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              718.4158325195312,
+              444.8138427734375,
+              779.81884765625,
+              550.9384765625
+            ],
+            "candidate_conf": 0.9728698134422302,
+            "crop_bbox": [
+              703,
+              418,
+              796,
+              578
+            ],
+            "scale": 3,
+            "matches": 26,
+            "inliers": 6,
+            "inlier_ratio": 0.23076923076923078,
+            "reprojection_error": 1.7102231979370117,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              194.07814025878906,
+              428.9932861328125
+            ],
+            "projection_coverage": 0.6217011585734977,
+            "projection_aspect": 0.4524036774755123,
+            "candidate_iou": 0.4962604645147515,
+            "reference_hull_coverage": 0.07438697723773716,
+            "roi_hull_coverage": 0.10973054566166086,
+            "color_hist_correlation": 0.09026105133629389,
+            "color_hist_bhattacharyya": 0.7666026802455185,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1159.70458984375,
+              714.8104248046875,
+              1224.837890625,
+              817.1510009765625
+            ],
+            "candidate_conf": 0.9727157354354858,
+            "crop_bbox": [
+              1143,
+              689,
+              1242,
+              843
+            ],
+            "scale": 3,
+            "matches": 20,
+            "inliers": 6,
+            "inlier_ratio": 0.3,
+            "reprojection_error": 1.3934130668640137,
+            "projected_bbox": [
+              0.0,
+              124.4836196899414,
+              296.0,
+              461.0
+            ],
+            "projection_coverage": 0.7259379405292269,
+            "projection_aspect": 0.8796005701929644,
+            "candidate_iou": 0.4668809843881613,
+            "reference_hull_coverage": 0.06465162451646721,
+            "roi_hull_coverage": 0.10960999408718732,
+            "color_hist_correlation": 0.014392246708229734,
+            "color_hist_bhattacharyya": 0.8722391092325742,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 184,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              717.4036254882812,
+              471.1771545410156,
+              780.4297485351562,
+              576.518310546875
+            ],
+            "candidate_conf": 0.9726666808128357,
+            "crop_bbox": [
+              701,
+              444,
+              797,
+              603
+            ],
+            "scale": 3,
+            "matches": 44,
+            "inliers": 8,
+            "inlier_ratio": 0.18181818181818182,
+            "reprojection_error": 1.151975393295288,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              131.93484497070312,
+              375.9792175292969
+            ],
+            "projection_coverage": 0.3610875245816886,
+            "projection_aspect": 0.3509099408145413,
+            "candidate_iou": 0.2865631203386516,
+            "reference_hull_coverage": 0.011402870794987887,
+            "roi_hull_coverage": 0.03467788404215099,
+            "color_hist_correlation": 0.08871907106321092,
+            "color_hist_bhattacharyya": 0.7540659631304848,
+            "accepted": false,
+            "reject_reason": "projection_too_narrow",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1165.9761962890625,
+              730.950439453125,
+              1229.591796875,
+              832.774658203125
+            ],
+            "candidate_conf": 0.9724494814872742,
+            "crop_bbox": [
+              1150,
+              705,
+              1246,
+              859
+            ],
+            "scale": 3,
+            "matches": 26,
+            "inliers": 6,
+            "inlier_ratio": 0.23076923076923078,
+            "reprojection_error": 0.7646311521530151,
+            "projected_bbox": [
+              0.0,
+              314.9965515136719,
+              187.4072723388672,
+              461.0
+            ],
+            "projection_coverage": 0.2056435488282457,
+            "projection_aspect": 1.2835811364853902,
+            "candidate_iou": 0.12518288310098916,
+            "reference_hull_coverage": 0.08030809007188293,
+            "roi_hull_coverage": 0.08156305628915053,
+            "color_hist_correlation": 0.014370640376620194,
+            "color_hist_bhattacharyya": 0.8713925548425878,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 185,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1172.0482177734375,
+              745.297607421875,
+              1234.947509765625,
+              847.9627075195312
+            ],
+            "candidate_conf": 0.9730121493339539,
+            "crop_bbox": [
+              1156,
+              719,
+              1251,
+              874
+            ],
+            "scale": 3,
+            "matches": 23,
+            "inliers": 5,
+            "inlier_ratio": 0.21739130434782608,
+            "reprojection_error": 0.4138760268688202,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              284.0,
+              464.0
+            ],
+            "projection_coverage": 0.9943482361818525,
+            "projection_aspect": 0.6120689655172413,
+            "candidate_iou": 0.44103675157879085,
+            "reference_hull_coverage": 0.013793331602542466,
+            "roi_hull_coverage": 0.1604328188825247,
+            "color_hist_correlation": 0.013716351599483258,
+            "color_hist_bhattacharyya": 0.8786936046410282,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              716.209716796875,
+              497.1759338378906,
+              780.6954345703125,
+              601.0689697265625
+            ],
+            "candidate_conf": 0.9728230237960815,
+            "crop_bbox": [
+              700,
+              471,
+              797,
+              628
+            ],
+            "scale": 3,
+            "matches": 33,
+            "inliers": 8,
+            "inlier_ratio": 0.24242424242424243,
+            "reprojection_error": 1.6179062128067017,
+            "projected_bbox": [
+              0.0,
+              33.45197296142578,
+              268.9453430175781,
+              470.0
+            ],
+            "projection_coverage": 0.8566080714100752,
+            "projection_aspect": 0.6160727488382707,
+            "candidate_iou": 0.5135661919553486,
+            "reference_hull_coverage": 0.14041255589936658,
+            "roi_hull_coverage": 0.11980656770542912,
+            "color_hist_correlation": 0.09480896083636345,
+            "color_hist_bhattacharyya": 0.7495408545787193,
+            "accepted": false,
+            "reject_reason": "low_color_correlation",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 186,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              715.04296875,
+              521.9727172851562,
+              781.1787109375,
+              626.557861328125
+            ],
+            "candidate_conf": 0.9730716943740845,
+            "crop_bbox": [
+              698,
+              495,
+              798,
+              653
+            ],
+            "scale": 3,
+            "matches": 37,
+            "inliers": 5,
+            "inlier_ratio": 0.13513513513513514,
+            "reprojection_error": 2.335386037826538,
+            "projected_bbox": [
+              171.54571533203125,
+              0.0,
+              183.32028198242188,
+              94.12977600097656
+            ],
+            "projection_coverage": 0.0077942146364967544,
+            "projection_aspect": 0.12508865048471451,
+            "candidate_iou": 0.0024612500879867853,
+            "reference_hull_coverage": 0.19337276161366893,
+            "roi_hull_coverage": 0.04181113949237518,
+            "color_hist_correlation": 0.13041597319402198,
+            "color_hist_bhattacharyya": 0.7336853607662769,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1178.48193359375,
+              760.1370849609375,
+              1239.6646728515625,
+              861.728759765625
+            ],
+            "candidate_conf": 0.9708357453346252,
+            "crop_bbox": [
+              1163,
+              734,
+              1255,
+              888
+            ],
+            "scale": 3,
+            "matches": 34,
+            "inliers": 7,
+            "inlier_ratio": 0.20588235294117646,
+            "reprojection_error": 1.0091831684112549,
+            "projected_bbox": [
+              184.3057098388672,
+              0.0,
+              275.0,
+              461.0
+            ],
+            "projection_coverage": 0.32789123976004003,
+            "projection_aspect": 0.19673381813694754,
+            "candidate_iou": 0.16611315620417455,
+            "reference_hull_coverage": 0.07398690303418187,
+            "roi_hull_coverage": 0.09564410906381866,
+            "color_hist_correlation": 0.011830258460721941,
+            "color_hist_bhattacharyya": 0.8845519428546039,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 187,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              714.8504028320312,
+              546.287353515625,
+              782.9177856445312,
+              650.6080322265625
+            ],
+            "candidate_conf": 0.973818302154541,
+            "crop_bbox": [
+              697,
+              520,
+              800,
+              677
+            ],
+            "scale": 3,
+            "matches": 39,
+            "inliers": 8,
+            "inlier_ratio": 0.20512820512820512,
+            "reprojection_error": 2.257769823074341,
+            "projected_bbox": [
+              0.0,
+              13.742814064025879,
+              214.21681213378906,
+              379.91705322265625
+            ],
+            "projection_coverage": 0.5389667250570463,
+            "projection_aspect": 0.58501333306789,
+            "candidate_iou": 0.5146806602906011,
+            "reference_hull_coverage": 0.1027347160081662,
+            "roi_hull_coverage": 0.01143438787855877,
+            "color_hist_correlation": 0.13847030431187465,
+            "color_hist_bhattacharyya": 0.7330323247690672,
+            "accepted": false,
+            "reject_reason": "low_color_correlation",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1185.595947265625,
+              772.7902221679688,
+              1244.9361572265625,
+              876.5169067382812
+            ],
+            "candidate_conf": 0.9699515104293823,
+            "crop_bbox": [
+              1170,
+              746,
+              1260,
+              903
+            ],
+            "scale": 3,
+            "matches": 30,
+            "inliers": 7,
+            "inlier_ratio": 0.23333333333333334,
+            "reprojection_error": 1.0077351331710815,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              269.0,
+              470.0
+            ],
+            "projection_coverage": 0.9941810175355823,
+            "projection_aspect": 0.5723404255319149,
+            "candidate_iou": 0.4381592119638418,
+            "reference_hull_coverage": 0.058855726789943386,
+            "roi_hull_coverage": 0.1751151074959262,
+            "color_hist_correlation": 0.012599240541662914,
+            "color_hist_bhattacharyya": 0.8845576991205751,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 188,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              715.335205078125,
+              570.5433349609375,
+              784.6305541992188,
+              674.652587890625
+            ],
+            "candidate_conf": 0.9764969944953918,
+            "crop_bbox": [
+              698,
+              544,
+              802,
+              701
+            ],
+            "scale": 3,
+            "matches": 37,
+            "inliers": 6,
+            "inlier_ratio": 0.16216216216216217,
+            "reprojection_error": 1.9133479595184326,
+            "projected_bbox": [
+              125.08551788330078,
+              0.0,
+              311.0,
+              470.0
+            ],
+            "projection_coverage": 0.5946146128997811,
+            "projection_aspect": 0.39556272790787067,
+            "candidate_iou": 0.3820499972136864,
+            "reference_hull_coverage": 0.17987409619432976,
+            "roi_hull_coverage": 0.0868532224421071,
+            "color_hist_correlation": 0.13850380320566183,
+            "color_hist_bhattacharyya": 0.7365374829483139,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1193.225830078125,
+              785.0743408203125,
+              1250.88818359375,
+              888.8612060546875
+            ],
+            "candidate_conf": 0.9674255847930908,
+            "crop_bbox": [
+              1178,
+              759,
+              1266,
+              915
+            ],
+            "scale": 3,
+            "matches": 22,
+            "inliers": 6,
+            "inlier_ratio": 0.2727272727272727,
+            "reprojection_error": 1.6490273475646973,
+            "projected_bbox": [
+              64.4405746459961,
+              0.0,
+              107.8012466430664,
+              141.2825927734375
+            ],
+            "projection_coverage": 0.049583237536783537,
+            "projection_aspect": 0.306907391391125,
+            "candidate_iou": 0.04775815843079518,
+            "reference_hull_coverage": 0.19324895676515833,
+            "roi_hull_coverage": 0.14931233997727217,
+            "color_hist_correlation": 0.004739691346260032,
+            "color_hist_bhattacharyya": 0.8883637375987418,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 189,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              716.5816040039062,
+              593.7454833984375,
+              787.3319091796875,
+              696.3466796875
+            ],
+            "candidate_conf": 0.9765551686286926,
+            "crop_bbox": [
+              698,
+              568,
+              806,
+              722
+            ],
+            "scale": 3,
+            "matches": 27,
+            "inliers": 6,
+            "inlier_ratio": 0.2222222222222222,
+            "reprojection_error": 1.009316325187683,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              323.0,
+              461.0
+            ],
+            "projection_coverage": 0.9947557586446475,
+            "projection_aspect": 0.7006507592190889,
+            "candidate_iou": 0.4387527016894398,
+            "reference_hull_coverage": 0.11743196053542723,
+            "roi_hull_coverage": 0.1565324179864671,
+            "color_hist_correlation": 0.14086719918661944,
+            "color_hist_bhattacharyya": 0.725360085785053,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1201.3690185546875,
+              796.1998291015625,
+              1257.65283203125,
+              901.2105102539062
+            ],
+            "candidate_conf": 0.9679386019706726,
+            "crop_bbox": [
+              1187,
+              769,
+              1272,
+              928
+            ],
+            "scale": 3,
+            "matches": 28,
+            "inliers": 6,
+            "inlier_ratio": 0.21428571428571427,
+            "reprojection_error": 1.2640788555145264,
+            "projected_bbox": [
+              83.68128967285156,
+              146.76890563964844,
+              174.55531311035156,
+              299.1880187988281
+            ],
+            "projection_coverage": 0.1138729647021849,
+            "projection_aspect": 0.596211469506421,
+            "candidate_iou": 0.2603872332950993,
+            "reference_hull_coverage": 0.17997244750052604,
+            "roi_hull_coverage": 0.09628306457341299,
+            "color_hist_correlation": 0.008734822663733759,
+            "color_hist_bhattacharyya": 0.8876750051295454,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 190,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              718.1240234375,
+              615.902587890625,
+              790.6785888671875,
+              718.2818603515625
+            ],
+            "candidate_conf": 0.9723825454711914,
+            "crop_bbox": [
+              699,
+              590,
+              809,
+              744
+            ],
+            "scale": 3,
+            "matches": 32,
+            "inliers": 7,
+            "inlier_ratio": 0.21875,
+            "reprojection_error": 1.1313440799713135,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              329.0,
+              461.0
+            ],
+            "projection_coverage": 0.994811753902663,
+            "projection_aspect": 0.7136659436008677,
+            "candidate_iou": 0.4407805985514379,
+            "reference_hull_coverage": 0.010884591140939433,
+            "roi_hull_coverage": 0.05191683973832703,
+            "color_hist_correlation": 0.16075850723570276,
+            "color_hist_bhattacharyya": 0.7314050506086862,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1209.88671875,
+              806.8888549804688,
+              1264.4390869140625,
+              911.39599609375
+            ],
+            "candidate_conf": 0.9685492515563965,
+            "crop_bbox": [
+              1196,
+              780,
+              1279,
+              938
+            ],
+            "scale": 3,
+            "matches": 42,
+            "inliers": 10,
+            "inlier_ratio": 0.23809523809523808,
+            "reprojection_error": 1.6924629211425781,
+            "projected_bbox": [
+              0.0,
+              113.24717712402344,
+              248.0,
+              473.0
+            ],
+            "projection_coverage": 0.7559241190351463,
+            "projection_aspect": 0.689362207132693,
+            "candidate_iou": 0.4862781131548434,
+            "reference_hull_coverage": 0.11329102865373725,
+            "roi_hull_coverage": 0.10883500996880531,
+            "color_hist_correlation": 0.008016923269680095,
+            "color_hist_bhattacharyya": 0.8904898745358939,
+            "accepted": false,
+            "reject_reason": "low_color_correlation",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 191,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              720.9203491210938,
+              636.7025146484375,
+              793.2093505859375,
+              739.4050903320312
+            ],
+            "candidate_conf": 0.9732468128204346,
+            "crop_bbox": [
+              702,
+              611,
+              812,
+              766
+            ],
+            "scale": 3,
+            "matches": 28,
+            "inliers": 5,
+            "inlier_ratio": 0.17857142857142858,
+            "reprojection_error": 0.3812714219093323,
+            "projected_bbox": [
+              163.5543670654297,
+              0.0,
+              329.0,
+              126.98599243164062
+            ],
+            "projection_coverage": 0.13691285690242644,
+            "projection_aspect": 1.3028652197495985,
+            "candidate_iou": 0.06668058994956871,
+            "reference_hull_coverage": 0.0055360411308471805,
+            "roi_hull_coverage": 0.029508517522305072,
+            "color_hist_correlation": 0.18007389361141574,
+            "color_hist_bhattacharyya": 0.7195989284820773,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1218.21533203125,
+              815.8677978515625,
+              1271.6038818359375,
+              920.4150390625
+            ],
+            "candidate_conf": 0.8730035424232483,
+            "crop_bbox": [
+              1204,
+              789,
+              1285,
+              947
+            ],
+            "scale": 3,
+            "matches": 21,
+            "inliers": 5,
+            "inlier_ratio": 0.23809523809523808,
+            "reprojection_error": 1.6084752082824707,
+            "projected_bbox": [
+              0.0,
+              48.62838363647461,
+              242.0,
+              247.35792541503906
+            ],
+            "projection_coverage": 0.4175352842493844,
+            "projection_aspect": 1.217735409814661,
+            "candidate_iou": 0.3729235356426873,
+            "reference_hull_coverage": 0.04075662296263359,
+            "roi_hull_coverage": 0.005548024555608618,
+            "color_hist_correlation": 0.006339994565170805,
+            "color_hist_bhattacharyya": 0.8895723182637567,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 192,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              723.4947509765625,
+              658.4757080078125,
+              797.9086303710938,
+              761.225830078125
+            ],
+            "candidate_conf": 0.9773567318916321,
+            "crop_bbox": [
+              704,
+              632,
+              817,
+              787
+            ],
+            "scale": 3,
+            "matches": 27,
+            "inliers": 6,
+            "inlier_ratio": 0.2222222222222222,
+            "reprojection_error": 1.8845219612121582,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              111.44837951660156,
+              464.0
+            ],
+            "projection_coverage": 0.32804927900341374,
+            "projection_aspect": 0.24019047309612407,
+            "candidate_iou": 0.15668126085512593,
+            "reference_hull_coverage": 0.06558579708156179,
+            "roi_hull_coverage": 0.058961006799760685,
+            "color_hist_correlation": 0.1882108098281066,
+            "color_hist_bhattacharyya": 0.718083263742726,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1226.78662109375,
+              824.9719848632812,
+              1279.4986572265625,
+              930.3543701171875
+            ],
+            "candidate_conf": 0.969109296798706,
+            "crop_bbox": [
+              1213,
+              798,
+              1293,
+              957
+            ],
+            "scale": 3,
+            "matches": 21,
+            "inliers": 8,
+            "inlier_ratio": 0.38095238095238093,
+            "reprojection_error": 2.209684371948242,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              239.0,
+              404.92138671875
+            ],
+            "projection_coverage": 0.845354746905846,
+            "projection_aspect": 0.5902380260443107,
+            "candidate_iou": 0.5165967974653981,
+            "reference_hull_coverage": 0.14319442567016205,
+            "roi_hull_coverage": 0.2267877552537348,
+            "color_hist_correlation": 0.007429021977417981,
+            "color_hist_bhattacharyya": 0.8872979385948873,
+            "accepted": false,
+            "reject_reason": "low_color_correlation",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 193,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1236.30126953125,
+              835.3712158203125,
+              1287.20703125,
+              939.9368896484375
+            ],
+            "candidate_conf": 0.9682950377464294,
+            "crop_bbox": [
+              1223,
+              809,
+              1300,
+              967
+            ],
+            "scale": 3,
+            "matches": 28,
+            "inliers": 6,
+            "inlier_ratio": 0.21428571428571427,
+            "reprojection_error": 0.7671387195587158,
+            "projected_bbox": [
+              21.155712127685547,
+              351.11517333984375,
+              94.32701110839844,
+              366.3038024902344
+            ],
+            "projection_coverage": 0.010150069635508829,
+            "projection_aspect": 4.817505138627409,
+            "candidate_iou": 0.01715261293094173,
+            "reference_hull_coverage": 0.1507822520423288,
+            "roi_hull_coverage": 0.12613563955913917,
+            "color_hist_correlation": 0.00584313980309658,
+            "color_hist_bhattacharyya": 0.8866788517005191,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              726.30419921875,
+              680.2783203125,
+              803.1165771484375,
+              782.2760009765625
+            ],
+            "candidate_conf": 0.5640590786933899,
+            "crop_bbox": [
+              707,
+              654,
+              823,
+              808
+            ],
+            "scale": 3,
+            "matches": 35,
+            "inliers": 8,
+            "inlier_ratio": 0.22857142857142856,
+            "reprojection_error": 1.8929740190505981,
+            "projected_bbox": [
+              0.0,
+              20.351884841918945,
+              283.97100830078125,
+              386.4661865234375
+            ],
+            "projection_coverage": 0.6466502923436162,
+            "projection_aspect": 0.7756348413501928,
+            "candidate_iou": 0.6568713436912994,
+            "reference_hull_coverage": 0.06026063307701031,
+            "roi_hull_coverage": 0.0443807204030857,
+            "color_hist_correlation": 0.18339869802672412,
+            "color_hist_bhattacharyya": 0.7271541794758003,
+            "accepted": false,
+            "reject_reason": "low_color_correlation",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 194,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              729.8057861328125,
+              702.4832153320312,
+              807.87060546875,
+              804.36669921875
+            ],
+            "candidate_conf": 0.9730614423751831,
+            "crop_bbox": [
+              710,
+              677,
+              828,
+              830
+            ],
+            "scale": 3,
+            "matches": 31,
+            "inliers": 7,
+            "inlier_ratio": 0.22580645161290322,
+            "reprojection_error": 2.279796600341797,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              216.9330596923828,
+              458.0
+            ],
+            "projection_coverage": 0.6114701656703428,
+            "projection_aspect": 0.47365296876066115,
+            "candidate_iou": 0.39208296911387647,
+            "reference_hull_coverage": 0.07146599093898384,
+            "roi_hull_coverage": 0.261256585924167,
+            "color_hist_correlation": 0.2363509472945118,
+            "color_hist_bhattacharyya": 0.7090673386884252,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1245.2073974609375,
+              844.25146484375,
+              1295.0218505859375,
+              949.495849609375
+            ],
+            "candidate_conf": 0.962164044380188,
+            "crop_bbox": [
+              1232,
+              817,
+              1308,
+              976
+            ],
+            "scale": 3,
+            "matches": 14,
+            "inliers": 6,
+            "inlier_ratio": 0.42857142857142855,
+            "reprojection_error": 1.291445255279541,
+            "projected_bbox": [
+              123.57624053955078,
+              0.0,
+              227.0,
+              476.0
+            ],
+            "projection_coverage": 0.45266200948153507,
+            "projection_aspect": 0.21727680558917903,
+            "candidate_iou": 0.27301325962055184,
+            "reference_hull_coverage": 0.007954884125349289,
+            "roi_hull_coverage": 0.062006268444282246,
+            "color_hist_correlation": 0.004326805799086751,
+            "color_hist_bhattacharyya": 0.8961691994443638,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 195,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              733.8528442382812,
+              724.617919921875,
+              813.7503662109375,
+              826.068359375
+            ],
+            "candidate_conf": 0.9746679067611694,
+            "crop_bbox": [
+              713,
+              699,
+              834,
+              852
+            ],
+            "scale": 3,
+            "matches": 37,
+            "inliers": 8,
+            "inlier_ratio": 0.21621621621621623,
+            "reprojection_error": 1.4219965934753418,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              248.43380737304688,
+              458.0
+            ],
+            "projection_coverage": 0.6828996067439425,
+            "projection_aspect": 0.5424318938276133,
+            "candidate_iou": 0.43462273417195146,
+            "reference_hull_coverage": 0.23197138532322548,
+            "roi_hull_coverage": 0.097626570035564,
+            "color_hist_correlation": 0.2692546526774301,
+            "color_hist_bhattacharyya": 0.6961940261961576,
+            "accepted": false,
+            "reject_reason": "high_color_distance",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1254.102294921875,
+              853.229736328125,
+              1303.3779296875,
+              958.29638671875
+            ],
+            "candidate_conf": 0.969271183013916,
+            "crop_bbox": [
+              1241,
+              826,
+              1316,
+              985
+            ],
+            "scale": 3,
+            "matches": 14,
+            "inliers": 6,
+            "inlier_ratio": 0.42857142857142855,
+            "reprojection_error": 1.954451084136963,
+            "projected_bbox": [
+              55.834903717041016,
+              0.0,
+              94.78358459472656,
+              476.0
+            ],
+            "projection_coverage": 0.17274234426068782,
+            "projection_aspect": 0.08182495982707047,
+            "candidate_iou": 0.23225673133548233,
+            "reference_hull_coverage": 0.13956353303609853,
+            "roi_hull_coverage": 0.024487019947636395,
+            "color_hist_correlation": 0.003536819739469326,
+            "color_hist_bhattacharyya": 0.888052381241693,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 196,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              738.826904296875,
+              747.5872802734375,
+              819.8807373046875,
+              848.9306640625
+            ],
+            "candidate_conf": 0.9734622836112976,
+            "crop_bbox": [
+              718,
+              722,
+              841,
+              875
+            ],
+            "scale": 3,
+            "matches": 37,
+            "inliers": 7,
+            "inlier_ratio": 0.1891891891891892,
+            "reprojection_error": 1.1148573160171509,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              5.518981456756592,
+              328.3869934082031
+            ],
+            "projection_coverage": 0.01070054334720774,
+            "projection_aspect": 0.016806333891233607,
+            "candidate_iou": 0.0,
+            "reference_hull_coverage": 0.029803008253242676,
+            "roi_hull_coverage": 0.09951472327010437,
+            "color_hist_correlation": 0.25676587222040453,
+            "color_hist_bhattacharyya": 0.6907801823906237,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1263.15478515625,
+              861.8287353515625,
+              1313.11572265625,
+              967.5972290039062
+            ],
+            "candidate_conf": 0.9691739678382874,
+            "crop_bbox": [
+              1250,
+              835,
+              1326,
+              995
+            ],
+            "scale": 3,
+            "matches": 20,
+            "inliers": 5,
+            "inlier_ratio": 0.25,
+            "reprojection_error": 0.3392917215824127,
+            "projected_bbox": [
+              65.87311553955078,
+              216.9976043701172,
+              112.7786636352539,
+              336.59503173828125
+            ],
+            "projection_coverage": 0.05125898100822168,
+            "projection_aspect": 0.3921952932257557,
+            "candidate_iou": 0.11795507879031421,
+            "reference_hull_coverage": 0.08737505078781198,
+            "roi_hull_coverage": 0.11303989376943553,
+            "color_hist_correlation": 0.00026863656925241576,
+            "color_hist_bhattacharyya": 0.8920832742025838,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 197,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              745.504150390625,
+              772.68212890625,
+              828.010009765625,
+              872.9188232421875
+            ],
+            "candidate_conf": 0.9744862914085388,
+            "crop_bbox": [
+              724,
+              747,
+              849,
+              898
+            ],
+            "scale": 3,
+            "matches": 26,
+            "inliers": 5,
+            "inlier_ratio": 0.19230769230769232,
+            "reprojection_error": 0.09646378457546234,
+            "projected_bbox": [
+              223.34982299804688,
+              338.2179260253906,
+              289.6078186035156,
+              390.7105407714844
+            ],
+            "projection_coverage": 0.02047420419229577,
+            "projection_aspect": 1.2622346195928325,
+            "candidate_iou": 0.034795690553799476,
+            "reference_hull_coverage": 0.16716651123514947,
+            "roi_hull_coverage": 0.08722856236721689,
+            "color_hist_correlation": 0.26740286903907956,
+            "color_hist_bhattacharyya": 0.6883349533633216,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1273.8828125,
+              870.3718872070312,
+              1324.73095703125,
+              975.531005859375
+            ],
+            "candidate_conf": 0.9678099751472473,
+            "crop_bbox": [
+              1261,
+              844,
+              1338,
+              1002
+            ],
+            "scale": 3,
+            "matches": 20,
+            "inliers": 6,
+            "inlier_ratio": 0.3,
+            "reprojection_error": 1.4492316246032715,
+            "projected_bbox": [
+              26.191946029663086,
+              39.10258865356445,
+              109.90166473388672,
+              142.44009399414062
+            ],
+            "projection_coverage": 0.07900299106486053,
+            "projection_aspect": 0.8100613463459955,
+            "candidate_iou": 0.08633459394930204,
+            "reference_hull_coverage": 0.09913561801288724,
+            "roi_hull_coverage": 0.10181594623724256,
+            "color_hist_correlation": 0.004565447409374869,
+            "color_hist_bhattacharyya": 0.8876280542728713,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 198,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              752.948974609375,
+              798.178955078125,
+              837.9303588867188,
+              898.35205078125
+            ],
+            "candidate_conf": 0.9737498760223389,
+            "crop_bbox": [
+              731,
+              773,
+              860,
+              924
+            ],
+            "scale": 3,
+            "matches": 29,
+            "inliers": 6,
+            "inlier_ratio": 0.20689655172413793,
+            "reprojection_error": 1.6800029277801514,
+            "projected_bbox": [
+              274.2997741699219,
+              119.4719467163086,
+              386.0,
+              452.0
+            ],
+            "projection_coverage": 0.21187180865219285,
+            "projection_aspect": 0.33591218763964775,
+            "candidate_iou": 0.11714539133199108,
+            "reference_hull_coverage": 0.07942675114331954,
+            "roi_hull_coverage": 0.18521932099446625,
+            "color_hist_correlation": 0.2516874750608363,
+            "color_hist_bhattacharyya": 0.6957124860471353,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1284.1064453125,
+              878.3251953125,
+              1337.3035888671875,
+              984.268310546875
+            ],
+            "candidate_conf": 0.9715506434440613,
+            "crop_bbox": [
+              1270,
+              851,
+              1351,
+              1011
+            ],
+            "scale": 3,
+            "matches": 30,
+            "inliers": 6,
+            "inlier_ratio": 0.2,
+            "reprojection_error": 1.0331610441207886,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              242.0,
+              479.0
+            ],
+            "projection_coverage": 0.9938100137174212,
+            "projection_aspect": 0.5052192066805845,
+            "candidate_iou": 0.43757518235118464,
+            "reference_hull_coverage": 0.11882542592820138,
+            "roi_hull_coverage": 0.0768964097842407,
+            "color_hist_correlation": 0.010420982234089651,
+            "color_hist_bhattacharyya": 0.8819665266557208,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 199,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1295.38134765625,
+              886.3729248046875,
+              1350.75244140625,
+              992.230224609375
+            ],
+            "candidate_conf": 0.9733298420906067,
+            "crop_bbox": [
+              1281,
+              859,
+              1365,
+              1019
+            ],
+            "scale": 3,
+            "matches": 31,
+            "inliers": 7,
+            "inlier_ratio": 0.22580645161290322,
+            "reprojection_error": 1.1559942960739136,
+            "projected_bbox": [
+              134.80438232421875,
+              0.0,
+              251.0,
+              44.361656188964844
+            ],
+            "projection_coverage": 0.04261433566466116,
+            "projection_aspect": 2.619280424987501,
+            "candidate_iou": 0.0,
+            "reference_hull_coverage": 0.06504541408982464,
+            "roi_hull_coverage": 0.25110468588141815,
+            "color_hist_correlation": 0.013635433296225118,
+            "color_hist_bhattacharyya": 0.8677981795641891,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              761.182373046875,
+              825.07080078125,
+              847.6036376953125,
+              923.73681640625
+            ],
+            "candidate_conf": 0.8616084456443787,
+            "crop_bbox": [
+              739,
+              800,
+              870,
+              949
+            ],
+            "scale": 3,
+            "matches": 43,
+            "inliers": 9,
+            "inlier_ratio": 0.20930232558139536,
+            "reprojection_error": 1.823559284210205,
+            "projected_bbox": [
+              345.43890380859375,
+              127.75517272949219,
+              392.0,
+              446.0
+            ],
+            "projection_coverage": 0.0843498813973825,
+            "projection_aspect": 0.1463059009968742,
+            "candidate_iou": 0.0,
+            "reference_hull_coverage": 0.06482130931263912,
+            "roi_hull_coverage": 0.09331045611260332,
+            "color_hist_correlation": 0.26811218070852844,
+            "color_hist_bhattacharyya": 0.6974355229073125,
+            "accepted": false,
+            "reject_reason": "low_projection_coverage",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 200,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              770.475341796875,
+              850.8568725585938,
+              859.403564453125,
+              949.8707885742188
+            ],
+            "candidate_conf": 0.9807447791099548,
+            "crop_bbox": [
+              748,
+              826,
+              882,
+              975
+            ],
+            "scale": 3,
+            "matches": 34,
+            "inliers": 6,
+            "inlier_ratio": 0.17647058823529413,
+            "reprojection_error": 0.9350502490997314,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              401.0,
+              446.0
+            ],
+            "projection_coverage": 0.9952808663617038,
+            "projection_aspect": 0.899103139013453,
+            "candidate_iou": 0.44309732465664675,
+            "reference_hull_coverage": 0.050602953327764835,
+            "roi_hull_coverage": 0.20761186906680418,
+            "color_hist_correlation": 0.28939737373985047,
+            "color_hist_bhattacharyya": 0.6965077394920531,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1306.5064697265625,
+              894.48388671875,
+              1364.255615234375,
+              1000.2767333984375
+            ],
+            "candidate_conf": 0.971807599067688,
+            "crop_bbox": [
+              1292,
+              868,
+              1379,
+              1027
+            ],
+            "scale": 3,
+            "matches": 29,
+            "inliers": 6,
+            "inlier_ratio": 0.20689655172413793,
+            "reprojection_error": 1.4949688911437988,
+            "projected_bbox": [
+              0.0,
+              32.07498550415039,
+              260.0,
+              476.0
+            ],
+            "projection_coverage": 0.9270946590594223,
+            "projection_aspect": 0.5856844996564861,
+            "candidate_iou": 0.47638865430185795,
+            "reference_hull_coverage": 0.19759028247378124,
+            "roi_hull_coverage": 0.27638971127223133,
+            "color_hist_correlation": 0.014485214726365258,
+            "color_hist_bhattacharyya": 0.8587536187110751,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 201,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              780.682861328125,
+              877.2973022460938,
+              872.0504150390625,
+              975.4141845703125
+            ],
+            "candidate_conf": 0.9810810685157776,
+            "crop_bbox": [
+              757,
+              852,
+              895,
+              1000
+            ],
+            "scale": 3,
+            "matches": 20,
+            "inliers": 5,
+            "inlier_ratio": 0.25,
+            "reprojection_error": 0.34655526280403137,
+            "projected_bbox": [
+              118.7291259765625,
+              25.51697540283203,
+              245.65977478027344,
+              226.07728576660156
+            ],
+            "projection_coverage": 0.13849311441194945,
+            "projection_aspect": 0.6328801973505546,
+            "candidate_iou": 0.2189241124072626,
+            "reference_hull_coverage": 0.2512436049598016,
+            "roi_hull_coverage": 0.054277296384116804,
+            "color_hist_correlation": 0.27254275310573967,
+            "color_hist_bhattacharyya": 0.6973230870788979,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1318.1361083984375,
+              901.9091796875,
+              1378.227783203125,
+              1008.07861328125
+            ],
+            "candidate_conf": 0.9729097485542297,
+            "crop_bbox": [
+              1303,
+              875,
+              1394,
+              1035
+            ],
+            "scale": 3,
+            "matches": 33,
+            "inliers": 6,
+            "inlier_ratio": 0.18181818181818182,
+            "reprojection_error": 0.3266211748123169,
+            "projected_bbox": [
+              193.92282104492188,
+              0.0,
+              272.0,
+              464.4759521484375
+            ],
+            "projection_coverage": 0.2767473445987779,
+            "projection_aspect": 0.168097354866127,
+            "candidate_iou": 0.12105092020263808,
+            "reference_hull_coverage": 0.05511796059857997,
+            "roi_hull_coverage": 0.1637630739052754,
+            "color_hist_correlation": 0.013038948765143207,
+            "color_hist_bhattacharyya": 0.8587880384760528,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 2,
+            "candidate_bbox": [
+              0.0,
+              0.5851850509643555,
+              100.01521301269531,
+              95.61174774169922
+            ],
+            "candidate_conf": 0.9082891345024109,
+            "crop_bbox": [
+              0,
+              0,
+              126,
+              120
+            ],
+            "scale": 3,
+            "matches": 20,
+            "inliers": 6,
+            "inlier_ratio": 0.3,
+            "reprojection_error": 0.7130067944526672,
+            "projected_bbox": [
+              0.0,
+              319.27142333984375,
+              377.0,
+              359.0
+            ],
+            "projection_coverage": 0.11006520723749931,
+            "projection_aspect": 9.489391055333048,
+            "candidate_iou": 0.0,
+            "reference_hull_coverage": 0.03731610237731342,
+            "roi_hull_coverage": 0.03319749690980237,
+            "color_hist_correlation": 0.03610421236609623,
+            "color_hist_bhattacharyya": 0.8123986632937765,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 202,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              792.394287109375,
+              903.5950927734375,
+              885.312744140625,
+              1000.919921875
+            ],
+            "candidate_conf": 0.9812453985214233,
+            "crop_bbox": [
+              769,
+              879,
+              909,
+              1026
+            ],
+            "scale": 3,
+            "matches": 34,
+            "inliers": 6,
+            "inlier_ratio": 0.17647058823529413,
+            "reprojection_error": 0.8300948739051819,
+            "projected_bbox": [
+              221.13067626953125,
+              132.32449340820312,
+              419.0,
+              440.0
+            ],
+            "projection_coverage": 0.32868774655948724,
+            "projection_aspect": 0.6431104182530475,
+            "candidate_iou": 0.26535332834809655,
+            "reference_hull_coverage": 0.00568247887085291,
+            "roi_hull_coverage": 0.027163226060734298,
+            "color_hist_correlation": 0.26961443102841215,
+            "color_hist_bhattacharyya": 0.6927890261065148,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1330.26806640625,
+              909.2281494140625,
+              1393.202880859375,
+              1015.8743896484375
+            ],
+            "candidate_conf": 0.9757148623466492,
+            "crop_bbox": [
+              1314,
+              882,
+              1409,
+              1043
+            ],
+            "scale": 3,
+            "matches": 38,
+            "inliers": 7,
+            "inlier_ratio": 0.18421052631578946,
+            "reprojection_error": 0.9618250727653503,
+            "projected_bbox": [
+              0.0,
+              156.9716033935547,
+              239.4775848388672,
+              365.3456115722656
+            ],
+            "projection_coverage": 0.36250702278763614,
+            "projection_aspect": 1.1492680249903358,
+            "candidate_iou": 0.5543865244393815,
+            "reference_hull_coverage": 0.031644612584512295,
+            "roi_hull_coverage": 0.05968797064796174,
+            "color_hist_correlation": 0.013069569441620467,
+            "color_hist_bhattacharyya": 0.8576195707918958,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 2,
+            "candidate_bbox": [
+              0.0,
+              12.168903350830078,
+              82.38810729980469,
+              149.35760498046875
+            ],
+            "candidate_conf": 0.9317901134490967,
+            "crop_bbox": [
+              0,
+              0,
+              103,
+              184
+            ],
+            "scale": 2,
+            "matches": 10,
+            "inliers": 5,
+            "inlier_ratio": 0.5,
+            "reprojection_error": 0.7440038323402405,
+            "projected_bbox": [
+              85.47750854492188,
+              255.43885803222656,
+              97.67866516113281,
+              276.34002685546875
+            ],
+            "projection_coverage": 0.0033640042511904177,
+            "projection_aspect": 0.5837547516789204,
+            "candidate_iou": 0.0056406442730913805,
+            "reference_hull_coverage": 0.10518280395455176,
+            "roi_hull_coverage": 0.008056941882274933,
+            "color_hist_correlation": 0.011643173485516191,
+            "color_hist_bhattacharyya": 0.8314011194391504,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 203,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              1342.791015625,
+              916.7130126953125,
+              1407.8934326171875,
+              1022.801025390625
+            ],
+            "candidate_conf": 0.9711100459098816,
+            "crop_bbox": [
+              1326,
+              890,
+              1425,
+              1050
+            ],
+            "scale": 3,
+            "matches": 26,
+            "inliers": 6,
+            "inlier_ratio": 0.23076923076923078,
+            "reprojection_error": 1.5429747104644775,
+            "projected_bbox": [
+              36.54570770263672,
+              0.0,
+              296.0,
+              479.0
+            ],
+            "projection_coverage": 0.8717635101742215,
+            "projection_aspect": 0.5416582302658941,
+            "candidate_iou": 0.5001606982785457,
+            "reference_hull_coverage": 0.01335433286913709,
+            "roi_hull_coverage": 0.030092185867530454,
+            "color_hist_correlation": 0.0025150888989721645,
+            "color_hist_bhattacharyya": 0.8622133200588306,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              0.0,
+              76.36617279052734,
+              66.25523376464844,
+              203.53729248046875
+            ],
+            "candidate_conf": 0.9015894532203674,
+            "crop_bbox": [
+              0,
+              44,
+              83,
+              236
+            ],
+            "scale": 2,
+            "matches": 8,
+            "inliers": 0,
+            "inlier_ratio": 0.0,
+            "reprojection_error": null,
+            "projected_bbox": null,
+            "projection_coverage": 0.0,
+            "projection_aspect": 0.0,
+            "candidate_iou": 0.0,
+            "reference_hull_coverage": 0.0,
+            "roi_hull_coverage": 0.0,
+            "color_hist_correlation": -1.0,
+            "color_hist_bhattacharyya": 1.0,
+            "accepted": false,
+            "reject_reason": "too_few_matches",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 2,
+            "candidate_bbox": [
+              804.31640625,
+              930.520263671875,
+              898.506591796875,
+              1026.5648193359375
+            ],
+            "candidate_conf": 0.8663830757141113,
+            "crop_bbox": [
+              780,
+              906,
+              923,
+              1051
+            ],
+            "scale": 3,
+            "matches": 25,
+            "inliers": 5,
+            "inlier_ratio": 0.2,
+            "reprojection_error": 0.5151666402816772,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              428.0,
+              434.0
+            ],
+            "projection_coverage": 0.9953755057203333,
+            "projection_aspect": 0.9861751152073732,
+            "candidate_iou": 0.4383160917184574,
+            "reference_hull_coverage": 0.06368659585041364,
+            "roi_hull_coverage": 0.10342008635807122,
+            "color_hist_correlation": 0.2502680808952682,
+            "color_hist_bhattacharyya": 0.718287278652599,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 204,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              817.92822265625,
+              957.685546875,
+              914.039306640625,
+              1051.6796875
+            ],
+            "candidate_conf": 0.9796665906906128,
+            "crop_bbox": [
+              793,
+              934,
+              939,
+              1076
+            ],
+            "scale": 3,
+            "matches": 28,
+            "inliers": 5,
+            "inlier_ratio": 0.17857142857142858,
+            "reprojection_error": 0.20371466875076294,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              437.0,
+              425.0
+            ],
+            "projection_coverage": 0.9953748365382554,
+            "projection_aspect": 1.0282352941176471,
+            "candidate_iou": 0.43777040620722446,
+            "reference_hull_coverage": 0.13110210022660873,
+            "roi_hull_coverage": 0.22180613204328714,
+            "color_hist_correlation": 0.2520486938190165,
+            "color_hist_bhattacharyya": 0.7146763935860937,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1355.0924072265625,
+              924.6905517578125,
+              1422.6649169921875,
+              1030.5523681640625
+            ],
+            "candidate_conf": 0.9724133014678955,
+            "crop_bbox": [
+              1338,
+              898,
+              1440,
+              1058
+            ],
+            "scale": 3,
+            "matches": 19,
+            "inliers": 7,
+            "inlier_ratio": 0.3684210526315789,
+            "reprojection_error": 0.8699979782104492,
+            "projected_bbox": [
+              165.36412048339844,
+              213.48880004882812,
+              197.08180236816406,
+              237.42446899414062
+            ],
+            "projection_coverage": 0.00516873592937422,
+            "projection_aspect": 1.3251220159015917,
+            "candidate_iou": 0.011792207372241294,
+            "reference_hull_coverage": 0.00401761640825045,
+            "roi_hull_coverage": 0.040546456882767534,
+            "color_hist_correlation": 0.006469770542026861,
+            "color_hist_bhattacharyya": 0.8549140880508949,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 2,
+            "candidate_bbox": [
+              0.1518087387084961,
+              145.3654022216797,
+              52.876670837402344,
+              259.766357421875
+            ],
+            "candidate_conf": 0.9254543781280518,
+            "crop_bbox": [
+              0,
+              116,
+              67,
+              289
+            ],
+            "scale": 3,
+            "matches": 15,
+            "inliers": 8,
+            "inlier_ratio": 0.5333333333333333,
+            "reprojection_error": 1.1418858766555786,
+            "projected_bbox": [
+              13.01620864868164,
+              3.604830741882324,
+              200.0,
+              399.098876953125
+            ],
+            "projection_coverage": 0.708892687022035,
+            "projection_aspect": 0.4727853507343216,
+            "candidate_iou": 0.5459423558348593,
+            "reference_hull_coverage": 0.01654477917080217,
+            "roi_hull_coverage": 0.010102271703329634,
+            "color_hist_correlation": -0.0011118385792876452,
+            "color_hist_bhattacharyya": 0.8709640504151176,
+            "accepted": false,
+            "reject_reason": "low_color_correlation",
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "frame": 205,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              831.3261108398438,
+              983.6480712890625,
+              928.960205078125,
+              1076.7236328125
+            ],
+            "candidate_conf": 0.9778438806533813,
+            "crop_bbox": [
+              806,
+              960,
+              954,
+              1080
+            ],
+            "scale": 3,
+            "matches": 22,
+            "inliers": 6,
+            "inlier_ratio": 0.2727272727272727,
+            "reprojection_error": 1.0229251384735107,
+            "projected_bbox": [
+              136.1151123046875,
+              0.0,
+              443.0,
+              359.0
+            ],
+            "projection_coverage": 0.6892622289953527,
+            "projection_aspect": 0.8548325562543524,
+            "candidate_iou": 0.5119137065488164,
+            "reference_hull_coverage": 0.15674168428999954,
+            "roi_hull_coverage": 0.041912968480548964,
+            "color_hist_correlation": 0.2476887185751345,
+            "color_hist_bhattacharyya": 0.716700098821937,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1367.775634765625,
+              932.2974243164062,
+              1436.9453125,
+              1037.44677734375
+            ],
+            "candidate_conf": 0.9739701151847839,
+            "crop_bbox": [
+              1350,
+              906,
+              1455,
+              1064
+            ],
+            "scale": 3,
+            "matches": 25,
+            "inliers": 8,
+            "inlier_ratio": 0.32,
+            "reprojection_error": 1.8558804988861084,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              314.0,
+              473.0
+            ],
+            "projection_coverage": 0.9947223896590985,
+            "projection_aspect": 0.6638477801268499,
+            "candidate_iou": 0.44073148601496454,
+            "reference_hull_coverage": 0.0614462416052821,
+            "roi_hull_coverage": 0.23407214649682498,
+            "color_hist_correlation": 0.010272193207225007,
+            "color_hist_bhattacharyya": 0.8423603121196921,
+            "accepted": false,
+            "reject_reason": "low_color_correlation",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 2,
+            "candidate_bbox": [
+              0.0,
+              207.39129638671875,
+              40.90037536621094,
+              316.6490478515625
+            ],
+            "candidate_conf": 0.9165900945663452,
+            "crop_bbox": [
+              0,
+              180,
+              52,
+              344
+            ],
+            "scale": 3,
+            "matches": 14,
+            "inliers": 7,
+            "inlier_ratio": 0.5,
+            "reprojection_error": 1.4684381484985352,
+            "projected_bbox": [
+              45.686607360839844,
+              261.9661560058594,
+              75.25198364257812,
+              275.81317138671875
+            ],
+            "projection_coverage": 0.005333961592064376,
+            "projection_aspect": 2.1351443230579696,
+            "candidate_iou": 0.010179290852130403,
+            "reference_hull_coverage": 0.028141491893785446,
+            "roi_hull_coverage": 0.019354777776526326,
+            "color_hist_correlation": 0.00024106197902435279,
+            "color_hist_bhattacharyya": 0.8729625058095467,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          }
+        ]
+      }
+    ]
+  },
+  "negative": {
+    "summary": {
+      "frame_count": 1,
+      "full_match_frames": 0,
+      "full_match_rate": 0.0,
+      "roi_match_frames": 1,
+      "roi_match_rate": 1.0,
+      "hybrid_match_frames": 1,
+      "hybrid_match_rate": 1.0,
+      "ambiguous_frames": 0,
+      "evaluated_candidates": 3,
+      "accepted_candidates": 1,
+      "reasons": {
+        "low_color_correlation": 1,
+        "too_few_inliers": 1,
+        "accepted": 1
+      }
+    },
+    "frames": [
+      {
+        "frame": 176,
+        "full_bbox": null,
+        "roi_bbox": [
+          210.67552185058594,
+          64.2684097290039,
+          358.422119140625,
+          152.6466522216797
+        ],
+        "hybrid_bbox": [
+          210.67552185058594,
+          64.2684097290039,
+          358.422119140625,
+          152.6466522216797
+        ],
+        "hybrid_source": "roi",
+        "accepted_count": 1,
+        "accepted": [
+          {
+            "candidate_index": 3,
+            "candidate_bbox": [
+              210.67552185058594,
+              64.2684097290039,
+              358.422119140625,
+              152.6466522216797
+            ],
+            "candidate_conf": 0.2834872305393219,
+            "crop_bbox": [
+              173,
+              42,
+              396,
+              175
+            ],
+            "scale": 2,
+            "matches": 50,
+            "inliers": 9,
+            "inlier_ratio": 0.18,
+            "reprojection_error": 1.576562762260437,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              445.0,
+              265.0
+            ],
+            "projection_coverage": 0.9940068781820021,
+            "projection_aspect": 1.679245283018868,
+            "candidate_iou": 0.4429114980798571,
+            "reference_hull_coverage": 0.14721512887321636,
+            "roi_hull_coverage": 0.10558862214481184,
+            "color_hist_correlation": 0.3144052380154531,
+            "color_hist_bhattacharyya": 0.5051828044479656,
+            "accepted": true,
+            "reject_reason": "accepted",
+            "score": 16.560774282019967
+          }
+        ],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              726.908935546875,
+              253.9369354248047,
+              784.2551879882812,
+              364.35595703125
+            ],
+            "candidate_conf": 0.9685738682746887,
+            "crop_bbox": [
+              712,
+              226,
+              799,
+              392
+            ],
+            "scale": 3,
+            "matches": 46,
+            "inliers": 8,
+            "inlier_ratio": 0.17391304347826086,
+            "reprojection_error": 1.9295411109924316,
+            "projected_bbox": [
+              0.0,
+              115.55298614501953,
+              260.0,
+              287.7106018066406
+            ],
+            "projection_coverage": 0.3443735099172282,
+            "projection_aspect": 1.5102439645251284,
+            "candidate_iou": 0.4106038783895983,
+            "reference_hull_coverage": 0.21913838407070732,
+            "roi_hull_coverage": 0.08441410760580192,
+            "color_hist_correlation": 0.07235183548571815,
+            "color_hist_bhattacharyya": 0.7596959618571685,
+            "accepted": false,
+            "reject_reason": "low_color_correlation",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1135.1597900390625,
+              573.0692138671875,
+              1206.420654296875,
+              672.593017578125
+            ],
+            "candidate_conf": 0.964379072189331,
+            "crop_bbox": [
+              1117,
+              548,
+              1225,
+              698
+            ],
+            "scale": 3,
+            "matches": 20,
+            "inliers": 5,
+            "inlier_ratio": 0.25,
+            "reprojection_error": 0.08627694845199585,
+            "projected_bbox": [
+              88.51730346679688,
+              393.8755187988281,
+              323.0,
+              449.0
+            ],
+            "projection_coverage": 0.08865388886861897,
+            "projection_aspect": 4.253694391743651,
+            "candidate_iou": 0.0,
+            "reference_hull_coverage": 0.10612779541948296,
+            "roi_hull_coverage": 0.18892904524814985,
+            "color_hist_correlation": 0.01835497473510614,
+            "color_hist_bhattacharyya": 0.8630472365962087,
+            "accepted": false,
+            "reject_reason": "too_few_inliers",
+            "score": 0.0
+          },
+          {
+            "candidate_index": 3,
+            "candidate_bbox": [
+              210.67552185058594,
+              64.2684097290039,
+              358.422119140625,
+              152.6466522216797
+            ],
+            "candidate_conf": 0.2834872305393219,
+            "crop_bbox": [
+              173,
+              42,
+              396,
+              175
+            ],
+            "scale": 2,
+            "matches": 50,
+            "inliers": 9,
+            "inlier_ratio": 0.18,
+            "reprojection_error": 1.576562762260437,
+            "projected_bbox": [
+              0.0,
+              0.0,
+              445.0,
+              265.0
+            ],
+            "projection_coverage": 0.9940068781820021,
+            "projection_aspect": 1.679245283018868,
+            "candidate_iou": 0.4429114980798571,
+            "reference_hull_coverage": 0.14721512887321636,
+            "roi_hull_coverage": 0.10558862214481184,
+            "color_hist_correlation": 0.3144052380154531,
+            "color_hist_bhattacharyya": 0.5051828044479656,
+            "accepted": true,
+            "reject_reason": "accepted",
+            "score": 16.560774282019967
+          }
+        ]
+      }
+    ]
+  }
+}

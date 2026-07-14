@@ -1,0 +1,13 @@
+# RGB one-variable lens-model experiment. Production remains undistort=false.
+camera:
+  profile: config/camera/profiles/thyz_2026_rgb_1920x1080_v1.yaml
+  undistort: true
+
+dpvo:
+  calibration_width: 1920
+  calibration_height: 1080
+  input_width: 640
+  input_height: 360
+
+model_paths:
+  camera_calib: config/camera/profiles/thyz_2026_rgb_1920x1080_v1_K.txt

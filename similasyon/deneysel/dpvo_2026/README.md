@@ -3,10 +3,12 @@
 Bu klasör, canlı hattın kullandığı resmî 2026 RGB 1080p kamera profiliyle
 DPVO iyileştirmelerini üretimden izole biçimde ölçmek içindir.
 
-Tam fiziksel 7.5 FPS koşusunun güncel karar ve metrik raporu:
-[`FULL_7P5FPS_REPORT.md`](FULL_7P5FPS_REPORT.md). Bu rapor, baseline'ın
-`E=23.797 m` olduğunu; delta hizalamanın aday, periyodik normalizasyon ve
-GT-kapılı Kalman'ın ise henüz canlıya uygun olmadığını belgelemektedir.
+2026 geliştirme deneylerinin güncel karar ve metrik özeti:
+[`EXPERIMENTS_2026_REPORT.md`](EXPERIMENTS_2026_REPORT.md). İlk fiziksel 7.5
+FPS baseline'ın ayrıntılı raporu ayrıca
+[`FULL_7P5FPS_REPORT.md`](FULL_7P5FPS_REPORT.md) içinde tutulur. Güncel özet;
+RGB/termal A/B'leri, sızıntısız hizalamayı, RPG-esinli relative drift'i ve
+tam rota proximity-loop sonucunu birlikte değerlendirir.
 
 ## Fiziksel 7.5 FPS veri seti
 
@@ -25,6 +27,47 @@ conda run -n hyz python deneysel/dpvo_2026/prepare_7p5fps_dataset.py \
 
 Bu dosyalarla evaluator `--target-fps=7.5` ve **`--limit` olmadan** çalışır;
 dolayısıyla üretilen 7.5 FPS MP4'nin tamamı değerlendirilir.
+
+## Health=1-only alignment sweep
+
+Cache'lenmiş bir `predictions.csv` içindeki ham `raw_x/y/z` trajesi için
+centered affine, proper Sim3 ve signed/handedness-aware Sim2+Z adayları şu
+komutla karşılaştırılır:
+
+```bash
+cd /home/nurullah/NPC-AI
+python similasyon/deneysel/dpvo_2026/alignment_sweep.py \
+  similasyon/deneysel/dpvo_2026/results/ornek_veri_1_7p5fps_full/dpvo_full_liveprofile/predictions.csv \
+  --output similasyon/deneysel/dpvo_2026/results/ornek_veri_1_7p5fps_full/alignment_sweep_health1_cv.json
+```
+
+Araç, başlangıçtaki tekrarlı DPVO warm-up pozlarını fit dışında bırakır.
+Yöntem, eksen düzlemi, handedness ve Z fit seçimi yalnız ilk kesintisiz
+`health=1` bölümündeki expanding/rolling kronolojik holdout'larla yapılır.
+Winner bütün kullanılabilir `health=1` örneklerine yeniden fit edilip
+dondurulduktan sonra `health=0` GT yalnız tek seferlik offline metriğe açılır.
+JSON; kaynak CSV SHA-256 değerini, CV yapılandırmasını, bütün adayların
+health=1 metrik/parametrelerini, winner parametrelerini ve sızıntı denetim
+bayraklarını saklar. Deney kodu donmuş modeli yeniden fit etmeden uygulamak
+için `load_frozen_model(...).predict(raw_xyz)` API'sini kullanabilir.
+
+Aynı one-shot `health=0` değerlendirmesinde varsayılan olarak `10, 50, 100,
+250 m` GT yol alt-segmentleri için RPG-benzeri, yalnız konuma dayalı relative
+translation drift de raporlanır. Her başlangıç karesinde, kümülatif GT yol
+mesafesinin istenen uzunluğu geçtiği ilk eşleşmiş kare endpoint seçilir:
+
+```text
+translation error = ||(pred_j - pred_i) - (gt_j - gt_i)||
+drift percent = 100 * translation error / actual sampled GT path length
+```
+
+Uzunluklar gerekirse
+`--relative-segment-lengths-m=10,50,100,250` ile değiştirilebilir. Sonuçlar
+JSON'da `final_offline_evaluation.relative_translation_drift` alanındadır.
+Bu, [RPG trajectory evaluation](https://github.com/uzh-rpg/rpg_trajectory_evaluation)
+yaklaşımından esinlenen translational bir diagnostiktir; CSV'de quaternion
+bulunmadığı için full RPG RPE ile eşdeğer değildir ve rotational RPE
+hesaplanmaz/uydurulmaz. Bu sınırlama JSON metadata'sında da açıkça kayıtlıdır.
 
 ## Canlı ve deneysel sınır
 

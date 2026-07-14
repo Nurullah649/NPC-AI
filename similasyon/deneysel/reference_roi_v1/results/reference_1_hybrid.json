@@ -1,0 +1,2000 @@
+{
+  "positive": {
+    "summary": {
+      "frame_count": 45,
+      "output_frames": 27,
+      "first_output_frame": 176,
+      "last_output_frame": 202,
+      "sources": {
+        "none": 18,
+        "roi_seed": 1,
+        "tracker": 26
+      },
+      "elapsed_seconds": 8.840551326000423,
+      "fps": 5.090180277292567
+    },
+    "frames": [
+      {
+        "frame": 161,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 162,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 163,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 164,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 165,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 166,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 167,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 168,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 169,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 170,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 171,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 172,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 173,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 174,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 175,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 176,
+        "active": true,
+        "bbox": [
+          210.67552185058594,
+          64.2684097290039,
+          358.422119140625,
+          152.6466522216797
+        ],
+        "source": "roi_seed",
+        "reason": "verified_seed",
+        "full_bbox": null,
+        "roi_bbox": [
+          210.67552185058594,
+          64.2684097290039,
+          358.422119140625,
+          152.6466522216797
+        ],
+        "roi_accepted_count": 1
+      },
+      {
+        "frame": 177,
+        "active": true,
+        "bbox": [
+          210.66209411621094,
+          92.93762969970703,
+          358.437744140625,
+          181.12095642089844
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            210.66209411621094,
+            92.93762969970703,
+            358.437744140625,
+            181.12095642089844
+          ],
+          "polygon": [
+            [
+              210.66209411621094,
+              93.21749114990234
+            ],
+            [
+              358.25048828125,
+              92.93762969970703
+            ],
+            [
+              358.437744140625,
+              180.8303680419922
+            ],
+            [
+              210.7854461669922,
+              181.12095642089844
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9768073481321335,
+          "matches": 160,
+          "inliers": 159,
+          "inlier_ratio": 0.99375,
+          "reprojection_error": 0.7730883955955505,
+          "area_ratio": 0.9937207300454263,
+          "visible_ratio": 1.0000000207579092,
+          "color_correlation": 0.9864702144570175,
+          "color_distance": 0.15383078849310788
+        }
+      },
+      {
+        "frame": 178,
+        "active": true,
+        "bbox": [
+          208.47711181640625,
+          123.08056640625,
+          356.9291076660156,
+          211.75949096679688
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            208.47711181640625,
+            123.08056640625,
+            356.9291076660156,
+            211.75949096679688
+          ],
+          "polygon": [
+            [
+              208.47711181640625,
+              124.11981964111328
+            ],
+            [
+              356.2618103027344,
+              123.08056640625
+            ],
+            [
+              356.9291076660156,
+              210.6859893798828
+            ],
+            [
+              209.05130004882812,
+              211.75949096679688
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9794653654098511,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.6844878196716309,
+          "area_ratio": 0.9983364285912804,
+          "visible_ratio": 1.000000012084846,
+          "color_correlation": 0.9902610998180956,
+          "color_distance": 0.14118880872596118
+        }
+      },
+      {
+        "frame": 179,
+        "active": true,
+        "bbox": [
+          204.71316528320312,
+          155.36273193359375,
+          354.1598205566406,
+          245.0819854736328
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            204.71316528320312,
+            155.36273193359375,
+            354.1598205566406,
+            245.0819854736328
+          ],
+          "polygon": [
+            [
+              204.71316528320312,
+              157.74122619628906
+            ],
+            [
+              352.7059020996094,
+              155.36273193359375
+            ],
+            [
+              354.1598205566406,
+              242.64645385742188
+            ],
+            [
+              206.0443878173828,
+              245.0819854736328
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9788840234279632,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.7038658857345581,
+          "area_ratio": 0.9981688389736264,
+          "visible_ratio": 1.0000000251803296,
+          "color_correlation": 0.9871786116105135,
+          "color_distance": 0.14677318269521594
+        }
+      },
+      {
+        "frame": 180,
+        "active": true,
+        "bbox": [
+          200.11325073242188,
+          189.55215454101562,
+          350.61279296875,
+          281.0406494140625
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            200.11325073242188,
+            189.55215454101562,
+            350.61279296875,
+            281.0406494140625
+          ],
+          "polygon": [
+            [
+              200.11325073242188,
+              194.0371551513672
+            ],
+            [
+              347.92767333984375,
+              189.55215454101562
+            ],
+            [
+              350.61279296875,
+              276.489501953125
+            ],
+            [
+              202.64329528808594,
+              281.0406494140625
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9783268785476684,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.7224373817443848,
+          "area_ratio": 0.995647540439556,
+          "visible_ratio": 0.9999999669718054,
+          "color_correlation": 0.9745454711654236,
+          "color_distance": 0.1815301897644218
+        }
+      },
+      {
+        "frame": 181,
+        "active": true,
+        "bbox": [
+          194.56735229492188,
+          224.89732360839844,
+          346.37469482421875,
+          318.62847900390625
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            194.56735229492188,
+            224.89732360839844,
+            346.37469482421875,
+            318.62847900390625
+          ],
+          "polygon": [
+            [
+              194.56735229492188,
+              231.9688262939453
+            ],
+            [
+              342.1856994628906,
+              224.89732360839844
+            ],
+            [
+              346.37469482421875,
+              311.48333740234375
+            ],
+            [
+              198.57186889648438,
+              318.62847900390625
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9788160759210587,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.7061308026313782,
+          "area_ratio": 0.9961335510544124,
+          "visible_ratio": 0.9999999921560686,
+          "color_correlation": 0.9793400381304553,
+          "color_distance": 0.17373601901062594
+        }
+      },
+      {
+        "frame": 182,
+        "active": true,
+        "bbox": [
+          189.17344665527344,
+          260.89398193359375,
+          342.4521179199219,
+          357.193603515625
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            189.17344665527344,
+            260.89398193359375,
+            342.4521179199219,
+            357.193603515625
+          ],
+          "polygon": [
+            [
+              189.17344665527344,
+              270.8981018066406
+            ],
+            [
+              336.6048583984375,
+              260.89398193359375
+            ],
+            [
+              342.4521179199219,
+              347.1026916503906
+            ],
+            [
+              194.8068084716797,
+              357.193603515625
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9792236733436586,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.6925442218780518,
+          "area_ratio": 0.9967982147721708,
+          "visible_ratio": 0.9999999831440726,
+          "color_correlation": 0.9718689197696931,
+          "color_distance": 0.18506018698211504
+        }
+      },
+      {
+        "frame": 183,
+        "active": true,
+        "bbox": [
+          184.15968322753906,
+          297.4336242675781,
+          338.7850341796875,
+          396.25
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            184.15968322753906,
+            297.4336242675781,
+            338.7850341796875,
+            396.25
+          ],
+          "polygon": [
+            [
+              184.15968322753906,
+              310.5120544433594
+            ],
+            [
+              331.3396911621094,
+              297.4336242675781
+            ],
+            [
+              338.7850341796875,
+              383.06903076171875
+            ],
+            [
+              191.33726501464844,
+              396.25
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9758412075042724,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.805293083190918,
+          "area_ratio": 0.99496718038747,
+          "visible_ratio": 1.0000000167442904,
+          "color_correlation": 0.9757723865784272,
+          "color_distance": 0.1788303836087513
+        }
+      },
+      {
+        "frame": 184,
+        "active": true,
+        "bbox": [
+          179.8782958984375,
+          333.7047119140625,
+          336.0064697265625,
+          435.0478820800781
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            179.8782958984375,
+            333.7047119140625,
+            336.0064697265625,
+            435.0478820800781
+          ],
+          "polygon": [
+            [
+              179.8782958984375,
+              349.835693359375
+            ],
+            [
+              326.77618408203125,
+              333.7047119140625
+            ],
+            [
+              336.0064697265625,
+              418.7909851074219
+            ],
+            [
+              188.8118133544922,
+              435.0478820800781
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9757847452163697,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.8071751594543457,
+          "area_ratio": 0.995999162830957,
+          "visible_ratio": 1.0000000361216297,
+          "color_correlation": 0.9705700459553819,
+          "color_distance": 0.1907748655088138
+        }
+      },
+      {
+        "frame": 185,
+        "active": true,
+        "bbox": [
+          175.73667907714844,
+          369.43988037109375,
+          333.3095397949219,
+          473.4269104003906
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            175.73667907714844,
+            369.43988037109375,
+            333.3095397949219,
+            473.4269104003906
+          ],
+          "polygon": [
+            [
+              175.73667907714844,
+              388.72943115234375
+            ],
+            [
+              322.2584533691406,
+              369.43988037109375
+            ],
+            [
+              333.3095397949219,
+              453.9950866699219
+            ],
+            [
+              186.46640014648438,
+              473.4269104003906
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9775700503587723,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.7476649880409241,
+          "area_ratio": 0.9965343104449771,
+          "visible_ratio": 1.000000024950764,
+          "color_correlation": 0.9631365532553346,
+          "color_distance": 0.20495811719275384
+        }
+      },
+      {
+        "frame": 186,
+        "active": true,
+        "bbox": [
+          172.4217071533203,
+          404.2391662597656,
+          331.37060546875,
+          511.2998046875
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            172.4217071533203,
+            404.2391662597656,
+            331.37060546875,
+            511.2998046875
+          ],
+          "polygon": [
+            [
+              172.4217071533203,
+              426.8653869628906
+            ],
+            [
+              318.3858337402344,
+              404.2391662597656
+            ],
+            [
+              331.37060546875,
+              488.52960205078125
+            ],
+            [
+              185.09056091308594,
+              511.2998046875
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9777812850475311,
+          "matches": 160,
+          "inliers": 158,
+          "inlier_ratio": 0.9875,
+          "reprojection_error": 0.7406238317489624,
+          "area_ratio": 0.9995495793328146,
+          "visible_ratio": 0.9999999938642071,
+          "color_correlation": 0.9551372446389552,
+          "color_distance": 0.22243950351489802
+        }
+      },
+      {
+        "frame": 187,
+        "active": true,
+        "bbox": [
+          169.91610717773438,
+          439.25543212890625,
+          330.1431579589844,
+          548.9906616210938
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            169.91610717773438,
+            439.25543212890625,
+            330.1431579589844,
+            548.9906616210938
+          ],
+          "polygon": [
+            [
+              169.91610717773438,
+              465.13330078125
+            ],
+            [
+              315.3650817871094,
+              439.25543212890625
+            ],
+            [
+              330.1431579589844,
+              522.9483032226562
+            ],
+            [
+              184.34986877441406,
+              548.9906616210938
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.978824823498726,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.705839216709137,
+          "area_ratio": 0.9968489621562961,
+          "visible_ratio": 1.0000000086296503,
+          "color_correlation": 0.9445341622442979,
+          "color_distance": 0.22628180158309677
+        }
+      },
+      {
+        "frame": 188,
+        "active": true,
+        "bbox": [
+          168.61611938476562,
+          474.1528015136719,
+          329.91461181640625,
+          586.6729125976562
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            168.61611938476562,
+            474.1528015136719,
+            329.91461181640625,
+            586.6729125976562
+          ],
+          "polygon": [
+            [
+              168.61611938476562,
+              503.4075927734375
+            ],
+            [
+              313.2799987792969,
+              474.1528015136719
+            ],
+            [
+              329.91461181640625,
+              557.2418212890625
+            ],
+            [
+              184.88177490234375,
+              586.6729125976562
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9802063238620757,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.6597892045974731,
+          "area_ratio": 0.996197770480432,
+          "visible_ratio": 0.9999999743619268,
+          "color_correlation": 0.9395294651563951,
+          "color_distance": 0.24029753550788058
+        }
+      },
+      {
+        "frame": 189,
+        "active": true,
+        "bbox": [
+          168.05340576171875,
+          508.24981689453125,
+          330.3995666503906,
+          623.5719604492188
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            168.05340576171875,
+            508.24981689453125,
+            330.3995666503906,
+            623.5719604492188
+          ],
+          "polygon": [
+            [
+              168.05340576171875,
+              540.8817138671875
+            ],
+            [
+              312.03173828125,
+              508.24981689453125
+            ],
+            [
+              330.3995666503906,
+              590.730224609375
+            ],
+            [
+              186.003173828125,
+              623.5719604492188
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9799121356010436,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.66959547996521,
+          "area_ratio": 0.9977216051953757,
+          "visible_ratio": 0.9999999935553502,
+          "color_correlation": 0.9260974062990619,
+          "color_distance": 0.2488883541283344
+        }
+      },
+      {
+        "frame": 190,
+        "active": true,
+        "bbox": [
+          168.59803771972656,
+          541.563720703125,
+          331.9826354980469,
+          659.5283813476562
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            168.59803771972656,
+            541.563720703125,
+            331.9826354980469,
+            659.5283813476562
+          ],
+          "polygon": [
+            [
+              168.59803771972656,
+              577.5172119140625
+            ],
+            [
+              311.7709655761719,
+              541.563720703125
+            ],
+            [
+              331.9826354980469,
+              623.3456420898438
+            ],
+            [
+              188.37437438964844,
+              659.5283813476562
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9765616005659103,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.781279981136322,
+          "area_ratio": 0.9969700255127092,
+          "visible_ratio": 1.0000000379499103,
+          "color_correlation": 0.9209166046589282,
+          "color_distance": 0.2707773107469302
+        }
+      },
+      {
+        "frame": 191,
+        "active": true,
+        "bbox": [
+          170.09779357910156,
+          574.3297729492188,
+          334.1984558105469,
+          694.7738037109375
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            170.09779357910156,
+            574.3297729492188,
+            334.1984558105469,
+            694.7738037109375
+          ],
+          "polygon": [
+            [
+              170.09779357910156,
+              613.5860595703125
+            ],
+            [
+              312.2978210449219,
+              574.3297729492188
+            ],
+            [
+              334.1984558105469,
+              655.2677001953125
+            ],
+            [
+              191.52401733398438,
+              694.7738037109375
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9760758578777313,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.7974714040756226,
+          "area_ratio": 0.9947977511061877,
+          "visible_ratio": 1.000000024224118,
+          "color_correlation": 0.9095682356769136,
+          "color_distance": 0.27984195336978573
+        }
+      },
+      {
+        "frame": 192,
+        "active": true,
+        "bbox": [
+          172.48744201660156,
+          606.8138427734375,
+          337.2284851074219,
+          729.7963256835938
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            172.48744201660156,
+            606.8138427734375,
+            337.2284851074219,
+            729.7963256835938
+          ],
+          "polygon": [
+            [
+              172.48744201660156,
+              649.3602294921875
+            ],
+            [
+              313.646240234375,
+              606.8138427734375
+            ],
+            [
+              337.2284851074219,
+              686.9689331054688
+            ],
+            [
+              195.54916381835938,
+              729.7963256835938
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.977129157781601,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.7623614072799683,
+          "area_ratio": 0.9960782672830232,
+          "visible_ratio": 0.9999999908238012,
+          "color_correlation": 0.9013851973938454,
+          "color_distance": 0.28536678955437556
+        }
+      },
+      {
+        "frame": 193,
+        "active": true,
+        "bbox": [
+          175.24510192871094,
+          639.8807373046875,
+          340.78271484375,
+          765.6273193359375
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            175.24510192871094,
+            639.8807373046875,
+            340.78271484375,
+            765.6273193359375
+          ],
+          "polygon": [
+            [
+              175.24510192871094,
+              685.8272705078125
+            ],
+            [
+              315.284423828125,
+              639.8807373046875
+            ],
+            [
+              340.78271484375,
+              719.38037109375
+            ],
+            [
+              200.21336364746094,
+              765.6273193359375
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9788680124282838,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.704399585723877,
+          "area_ratio": 0.9989895212998497,
+          "visible_ratio": 0.9999999764322752,
+          "color_correlation": 0.8786018857277712,
+          "color_distance": 0.30378821086683133
+        }
+      },
+      {
+        "frame": 194,
+        "active": true,
+        "bbox": [
+          179.06048583984375,
+          673.2667236328125,
+          345.1882019042969,
+          801.5026245117188
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            179.06048583984375,
+            673.2667236328125,
+            345.1882019042969,
+            801.5026245117188
+          ],
+          "polygon": [
+            [
+              179.06048583984375,
+              722.5316772460938
+            ],
+            [
+              317.8501892089844,
+              673.2667236328125
+            ],
+            [
+              345.1882019042969,
+              751.9249877929688
+            ],
+            [
+              205.86082458496094,
+              801.5026245117188
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9776483798027038,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.7450540065765381,
+          "area_ratio": 0.9966971227189856,
+          "visible_ratio": 0.9999999954382934,
+          "color_correlation": 0.8883039682977065,
+          "color_distance": 0.29286144200035974
+        }
+      },
+      {
+        "frame": 195,
+        "active": true,
+        "bbox": [
+          183.81088256835938,
+          707.167724609375,
+          350.526123046875,
+          837.9094848632812
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            183.81088256835938,
+            707.167724609375,
+            350.526123046875,
+            837.9094848632812
+          ],
+          "polygon": [
+            [
+              183.81088256835938,
+              759.8084716796875
+            ],
+            [
+              321.1812438964844,
+              707.167724609375
+            ],
+            [
+              350.526123046875,
+              784.9503784179688
+            ],
+            [
+              212.6244659423828,
+              837.9094848632812
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9779829514026641,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.7339016199111938,
+          "area_ratio": 0.9971820964408902,
+          "visible_ratio": 1.000000014741732,
+          "color_correlation": 0.8746713955348229,
+          "color_distance": 0.3058416830380591
+        }
+      },
+      {
+        "frame": 196,
+        "active": true,
+        "bbox": [
+          190.0758514404297,
+          742.3070068359375,
+          357.3132019042969,
+          875.6234130859375
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            190.0758514404297,
+            742.3070068359375,
+            357.3132019042969,
+            875.6234130859375
+          ],
+          "polygon": [
+            [
+              190.0758514404297,
+              798.5315551757812
+            ],
+            [
+              325.88055419921875,
+              742.3070068359375
+            ],
+            [
+              357.3132019042969,
+              819.0760498046875
+            ],
+            [
+              220.9895477294922,
+              875.6234130859375
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9794967150688172,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.6834428310394287,
+          "area_ratio": 0.9969194645611658,
+          "visible_ratio": 1.0000000303460117,
+          "color_correlation": 0.8609171941923022,
+          "color_distance": 0.30759889238937166
+        }
+      },
+      {
+        "frame": 197,
+        "active": true,
+        "bbox": [
+          198.39181518554688,
+          781.6548461914062,
+          366.0361022949219,
+          917.9315795898438
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            198.39181518554688,
+            781.6548461914062,
+            366.0361022949219,
+            917.9315795898438
+          ],
+          "polygon": [
+            [
+              198.39181518554688,
+              842.0143432617188
+            ],
+            [
+              332.3166809082031,
+              781.6548461914062
+            ],
+            [
+              366.0361022949219,
+              857.2136840820312
+            ],
+            [
+              231.57379150390625,
+              917.9315795898438
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9725070232152939,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.9164325594902039,
+          "area_ratio": 0.9970072515587538,
+          "visible_ratio": 1.0000000351165919,
+          "color_correlation": 0.8500989603613892,
+          "color_distance": 0.31571344933232925
+        }
+      },
+      {
+        "frame": 198,
+        "active": true,
+        "bbox": [
+          207.9022674560547,
+          822.4943237304688,
+          375.9034423828125,
+          961.78271484375
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            207.9022674560547,
+            822.4943237304688,
+            375.9034423828125,
+            961.78271484375
+          ],
+          "polygon": [
+            [
+              207.9022674560547,
+              887.157470703125
+            ],
+            [
+              339.7008972167969,
+              822.4943237304688
+            ],
+            [
+              375.9034423828125,
+              896.7474975585938
+            ],
+            [
+              243.5807342529297,
+              961.78271484375
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9762830835580827,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.7905638813972473,
+          "area_ratio": 0.9977506467674391,
+          "visible_ratio": 0.9999999958170449,
+          "color_correlation": 0.8394628576804155,
+          "color_distance": 0.34493822541339747
+        }
+      },
+      {
+        "frame": 199,
+        "active": true,
+        "bbox": [
+          219.318115234375,
+          863.8978271484375,
+          387.4531555175781,
+          1005.9908447265625
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            219.318115234375,
+            863.8978271484375,
+            387.4531555175781,
+            1005.9908447265625
+          ],
+          "polygon": [
+            [
+              219.318115234375,
+              932.8250122070312
+            ],
+            [
+              348.7643127441406,
+              863.8978271484375
+            ],
+            [
+              387.4531555175781,
+              936.6820068359375
+            ],
+            [
+              257.4953918457031,
+              1005.9908447265625
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9781447851657867,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.7285071611404419,
+          "area_ratio": 0.9967285586313693,
+          "visible_ratio": 1.0000000359528323,
+          "color_correlation": 0.8321867663116319,
+          "color_distance": 0.33614034927578
+        }
+      },
+      {
+        "frame": 200,
+        "active": true,
+        "bbox": [
+          232.36968994140625,
+          905.0935668945312,
+          400.50396728515625,
+          1049.884033203125
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            232.36968994140625,
+            905.0935668945312,
+            400.50396728515625,
+            1049.884033203125
+          ],
+          "polygon": [
+            [
+              232.36968994140625,
+              978.19482421875
+            ],
+            [
+              359.39166259765625,
+              905.0935668945312
+            ],
+            [
+              400.50396728515625,
+              976.3845825195312
+            ],
+            [
+              272.9808044433594,
+              1049.884033203125
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9732850676774978,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.8904977440834045,
+          "area_ratio": 0.9977303362922684,
+          "visible_ratio": 1.0000000217417808,
+          "color_correlation": 0.8445993316068151,
+          "color_distance": 0.33208432188316833
+        }
+      },
+      {
+        "frame": 201,
+        "active": true,
+        "bbox": [
+          247.08389282226562,
+          946.3297119140625,
+          415.07720947265625,
+          1079.0
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            247.08389282226562,
+            946.3297119140625,
+            415.07720947265625,
+            1079.0
+          ],
+          "polygon": [
+            [
+              247.08389282226562,
+              1023.5526123046875
+            ],
+            [
+              371.5694580078125,
+              946.3297119140625
+            ],
+            [
+              415.07720947265625,
+              1016.0320434570312
+            ],
+            [
+              290.1037902832031,
+              1093.6734619140625
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.975451296567917,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.818290114402771,
+          "area_ratio": 0.9980271557697872,
+          "visible_ratio": 0.9801714346102046,
+          "color_correlation": 0.8662659689723057,
+          "color_distance": 0.3173471817992178
+        }
+      },
+      {
+        "frame": 202,
+        "active": true,
+        "bbox": [
+          263.070556640625,
+          988.057373046875,
+          430.7867736816406,
+          1079.0
+        ],
+        "source": "tracker",
+        "reason": "tracked",
+        "tracker": {
+          "active": true,
+          "bbox": [
+            263.070556640625,
+            988.057373046875,
+            430.7867736816406,
+            1079.0
+          ],
+          "polygon": [
+            [
+              263.070556640625,
+              1069.4232177734375
+            ],
+            [
+              384.9080810546875,
+              988.057373046875
+            ],
+            [
+              430.7867736816406,
+              1056.093994140625
+            ],
+            [
+              308.4756774902344,
+              1137.8984375
+            ]
+          ],
+          "reason": "tracked",
+          "model": "homography",
+          "transform_confidence": 0.9734619843959809,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 0.8846005201339722,
+          "area_ratio": 0.9988357461990349,
+          "visible_ratio": 0.6894891599485887,
+          "color_correlation": 0.8891132446774138,
+          "color_distance": 0.3216909111021692
+        }
+      },
+      {
+        "frame": 203,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "tracker": {
+          "active": false,
+          "bbox": null,
+          "polygon": null,
+          "reason": "left_frame",
+          "model": "homography",
+          "transform_confidence": 0.968683536052704,
+          "matches": 160,
+          "inliers": 160,
+          "inlier_ratio": 1.0,
+          "reprojection_error": 1.043882131576538,
+          "area_ratio": 0.9957704146930284,
+          "visible_ratio": 0.21044042282942974,
+          "color_correlation": -1.0,
+          "color_distance": 1.0
+        },
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 204,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 205,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      }
+    ]
+  },
+  "negative": {
+    "summary": {
+      "frame_count": 45,
+      "output_frames": 0,
+      "first_output_frame": null,
+      "last_output_frame": null,
+      "sources": {
+        "none": 45
+      },
+      "elapsed_seconds": 33.82644662799794,
+      "fps": 1.3303200449897028
+    },
+    "frames": [
+      {
+        "frame": 300,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 301,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 302,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 303,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 304,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 305,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 306,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 307,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 308,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 309,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 310,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 311,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 312,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 313,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 314,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 315,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 316,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 317,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 318,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 319,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 320,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 321,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 322,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 323,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 324,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 325,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 326,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 327,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 328,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 329,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 330,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 331,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 332,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 333,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 334,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 335,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 336,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 337,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 338,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 339,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 340,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 341,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 342,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 343,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      },
+      {
+        "frame": 344,
+        "active": false,
+        "bbox": null,
+        "source": "none",
+        "reason": "no_verified_match",
+        "full_bbox": null,
+        "roi_bbox": null,
+        "roi_accepted_count": 0
+      }
+    ]
+  }
+}

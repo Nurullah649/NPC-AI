@@ -1,0 +1,16 @@
+### DPVO thermal one-variable patch-selection experiment ###
+
+# Baseline values are intentionally unchanged.  Only the centroid selection
+# strategy differs, so this run can be compared directly with npc.yaml.
+PATCHES_PER_FRAME: 128
+REMOVAL_WINDOW: 30
+OPTIMIZATION_WINDOW: 25
+PATCH_LIFETIME: 26
+
+KEYFRAME_THRESH: 15.0
+
+MOTION_MODEL: 'CONSTANT_VELOCITY'
+MOTION_DAMPING: 0.5
+
+MIXED_PRECISION: False
+CENTROID_SEL_STRAT: 'GRADIENT_BIAS'

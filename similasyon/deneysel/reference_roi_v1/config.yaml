@@ -1,0 +1,78 @@
+reference_roi_experiment:
+  expand_ratio: 0.25
+  target_long_side: 360
+  max_scale: 4
+  candidate_min_conf: 0.25
+  duplicate_iou: 0.85
+  min_matches: 10
+  min_inliers: 8
+  # ROI'deki çok büyük ölçek farkında renk + yayılım doğrulamasıyla birlikte.
+  min_inlier_ratio: 0.15
+  max_reprojection_error: 5.0
+  min_projection_coverage: 0.30
+  max_projection_coverage: 1.00
+  min_projection_aspect: 0.40
+  max_projection_aspect: 4.00
+  min_candidate_iou: 0.20
+  min_reference_hull_coverage: 0.002
+  min_roi_hull_coverage: 0.01
+  min_color_hist_correlation: 0.25
+  max_color_hist_bhattacharyya: 0.60
+  discovery_window_sizes:
+    - [240, 160]
+    - [320, 220]
+    - [420, 280]
+  discovery_stride_ratio: 0.50
+  discovery_top_k: 8
+  discovery_nms_iou: 0.45
+  discovery_min_color_correlation: 0.55
+  discovery_max_color_bhattacharyya: 0.55
+  crossmodal:
+    window_sizes:
+      - [640, 540]
+      - [800, 640]
+    stride_ratio: 0.50
+    min_inliers: 10
+    min_inlier_ratio: 0.18
+    min_projection_coverage: 0.01
+    max_projection_coverage: 0.85
+    min_reference_hull_coverage: 0.01
+    min_roi_hull_coverage: 0.002
+  scene_relocalizer:
+    max_features: 2000
+    min_confidence: 0.75
+    min_inliers: 30
+    min_inlier_ratio: 0.30
+    max_reprojection_error: 4.0
+    ransac_threshold: 4.0
+    min_visible_ratio: 0.25
+    min_area_ratio: 0.20
+    max_area_ratio: 5.00
+    min_color_correlation: 0.65
+    # Ref-5'in resmi 1956-2066 araliginda en kotu olculen deger 0.326.
+    # 2069'da nesne kadrajdan cikinca sahne homografisinin cimene tasidigi
+    # kutu 0.440 veriyor; arada emniyet payi birak.
+    max_color_distance: 0.38
+    output_expand_left_ratio: 0.20
+    output_expand_right_ratio: 0.05
+    output_expand_top_ratio: 0.15
+    output_expand_bottom_ratio: 0.05
+  tracker:
+    max_features: 1600
+    min_inlier_ratio: 0.30
+    max_reprojection_error: 4.0
+    affine_min_matches: 16
+    ransac_threshold: 4.0
+    min_transform_confidence: 0.12
+    min_step_area_ratio: 0.55
+    max_step_area_ratio: 1.80
+    min_visible_ratio: 0.30
+    min_color_correlation: 0.05
+    max_color_distance: 0.85
+    max_unreliable_frames: 2
+    # YOLO biçerdöverin yalnızca ana gövdesini kutuladığı için doğrulanmış
+    # seed'i tüm nesneyi kapsayacak şekilde genişlet.
+    seed_expand_left_ratio: 0.25
+    seed_expand_right_ratio: 0.55
+    seed_expand_top_ratio: 0.25
+    seed_expand_bottom_ratio: 0.25

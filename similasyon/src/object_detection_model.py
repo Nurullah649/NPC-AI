@@ -43,7 +43,7 @@ class ObjectDetectionModel:
         from .models.motion_classifier import MotionClassifier
         from .models.landing_status import LandingStatusResolver
         from .models.positioning_dpvo import PositioningDPVO
-        from .models.reference_matcher import ReferenceMatcher
+        from .models.reference_pipeline import ReferenceDetectionPipeline
 
         # DetectorYOLO
         try:
@@ -77,10 +77,10 @@ class ObjectDetectionModel:
             else:
                 raise
 
-        # ReferenceMatcher
+        # ReferenceMatcher + ROI/tracker/sahne-hafizasi pipeline'i
         try:
-            self.reference_matcher = ReferenceMatcher(self.settings)
-            self.logger.info("✅ ReferenceMatcher başlatıldı.")
+            self.reference_matcher = ReferenceDetectionPipeline(self.settings)
+            self.logger.info("✅ ReferenceDetectionPipeline başlatıldı.")
         except Exception as e:
             if self.allow_dummy:
                 self.logger.warning(f"⚠️ ReferenceMatcher yüklenemedi: {e}")
@@ -95,6 +95,21 @@ class ObjectDetectionModel:
         self.logger.info("✅ ImagePreprocessor başlatıldı.")
 
         self.logger.info("✅ Tüm modüller başlatıldı.")
+
+    def register_references(self, references, ref_image_paths):
+        """Sunucunun yayinladigi tum referanslari bir kez feature cache'e al."""
+        register = getattr(self.reference_matcher, "register_references", None)
+        if callable(register):
+            register(references or [], ref_image_paths or {})
+
+    @staticmethod
+    def _frame_sequence(image_url, fallback):
+        """frame_001956.webp benzeri URL'den gercek sira numarasini al."""
+        try:
+            stem = Path(str(image_url).split("/")[-1]).stem
+            return int(stem.rsplit("_", 1)[-1])
+        except (TypeError, ValueError):
+            return int(fallback)
 
     def _resize_for_detector(self, image):
         """Detector/SAHI girişini opsiyonel olarak küçült.
@@ -371,12 +386,34 @@ class ObjectDetectionModel:
                         self.logger.debug(f"Referans yolu yok: {ref_url} -> {ref_path}")
                         continue
 
-                    bbox = self.reference_matcher.match(ref_url, ref_path, image)
+                    match_reference = getattr(
+                        self.reference_matcher, 'match_reference', None
+                    )
+                    if callable(match_reference):
+                        ref_result = match_reference(
+                            reference=ref,
+                            ref_path=ref_path,
+                            frame=image,
+                            detections=detections,
+                            frame_idx=self._frame_sequence(
+                                prediction.image_url, self.frame_idx
+                            ),
+                        )
+                        bbox = ref_result.bbox
+                        match_source = ref_result.source
+                    else:
+                        bbox = self.reference_matcher.match(ref_url, ref_path, image)
+                        match_source = 'legacy'
                     if bbox is not None:
                         prediction.add_reference_prediction(
                             ReferencePrediction(ref_url, prediction.frame_url, *bbox)
                         )
-                        self.logger.debug(f"Referans eşleşti: {ref_url} bbox={bbox}")
+                        self.logger.debug(
+                            "Referans eşleşti: %s source=%s bbox=%s",
+                            ref_url,
+                            match_source,
+                            bbox,
+                        )
                 except Exception as e:
                     self.logger.warning(f"ReferenceMatcher hatası ({ref}): {e}")
                     continue

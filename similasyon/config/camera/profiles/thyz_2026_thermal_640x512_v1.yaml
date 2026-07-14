@@ -1,0 +1,32 @@
+# Canonical camera profile for the THYZ 2026 thermal 640x512 stream.
+# Source: THYZ_2026_Ornek_Veri_Seti/Kamera_Kalibrasyon_Parametreleri_2026.txt
+#        "Termal Camera Intrinsics"
+schema_version: 1
+profile_id: thyz_2026_thermal_640x512_v1
+year: 2026
+modality: thermal
+
+native_size:
+  width: 640
+  height: 512
+
+intrinsics:
+  model: pinhole
+  matrix:
+    - [731.7965, 0.0, 319.2367]
+    - [0.0, 732.0172, 251.2424]
+    - [0.0, 0.0, 1.0]
+
+distortion:
+  model: opencv_radial_tangential
+  coefficient_order: [k1, k2, p1, p2]
+  coefficients: [-0.3507, 0.1137, 0.0, 0.0]
+
+source:
+  document: Kamera_Kalibrasyon_Parametreleri_2026.txt
+  section: Termal Camera Intrinsics
+
+# Kept disabled for the baseline. A real remap + matching new K is tested as
+# a separate experiment; merely toggling this flag must never change geometry.
+runtime:
+  undistort: false

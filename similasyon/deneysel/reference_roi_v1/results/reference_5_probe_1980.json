@@ -1,0 +1,160 @@
+{
+  "reference": {
+    "url": "http://havaciliktayapayzeka.teknofest.org/reference/5/",
+    "session": "http://havaciliktayapayzeka.teknofest.org/session/1/",
+    "image_url": "/THYZ_2026_Online_Yarisma_Test_Oturumu/references/reference_5.webp",
+    "frame_start": "http://havaciliktayapayzeka.teknofest.org/frames/1960/",
+    "frame_end": "http://havaciliktayapayzeka.teknofest.org/frames/2070/",
+    "frame_start_image_url": "/THYZ_2026_Online_Yarisma_Test_Oturumu/frame_001956.webp",
+    "frame_end_image_url": "/THYZ_2026_Online_Yarisma_Test_Oturumu/frame_002066.webp",
+    "order": 5
+  },
+  "positive": {
+    "summary": {
+      "frame_count": 1,
+      "full_match_frames": 0,
+      "full_match_rate": 0.0,
+      "roi_match_frames": 0,
+      "roi_match_rate": 0.0,
+      "discovery_match_frames": 0,
+      "discovery_match_rate": 0.0,
+      "hybrid_match_frames": 0,
+      "hybrid_match_rate": 0.0,
+      "ambiguous_frames": 0,
+      "evaluated_candidates": 0,
+      "accepted_candidates": 0,
+      "reasons": {}
+    },
+    "frames": [
+      {
+        "frame": 1980,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "discovery_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [],
+        "discovery_accepted": [],
+        "discovery_candidates": [],
+        "discovery_proposal_count": 0
+      }
+    ]
+  },
+  "negative": {
+    "summary": {
+      "frame_count": 1,
+      "full_match_frames": 0,
+      "full_match_rate": 0.0,
+      "roi_match_frames": 0,
+      "roi_match_rate": 0.0,
+      "discovery_match_frames": 0,
+      "discovery_match_rate": 0.0,
+      "hybrid_match_frames": 0,
+      "hybrid_match_rate": 0.0,
+      "ambiguous_frames": 0,
+      "evaluated_candidates": 2,
+      "accepted_candidates": 0,
+      "reasons": {
+        "low_projection_coverage": 1,
+        "high_color_distance": 1
+      }
+    },
+    "frames": [
+      {
+        "frame": 2070,
+        "full_bbox": null,
+        "roi_bbox": null,
+        "discovery_bbox": null,
+        "hybrid_bbox": null,
+        "hybrid_source": "none",
+        "accepted_count": 0,
+        "accepted": [],
+        "candidates": [
+          {
+            "candidate_index": 0,
+            "candidate_bbox": [
+              795.0355224609375,
+              746.0272216796875,
+              898.2135009765625,
+              812.5738525390625
+            ],
+            "candidate_conf": 0.9704190492630005,
+            "crop_bbox": [
+              769,
+              729,
+              925,
+              830
+            ],
+            "scale": 3,
+            "matches": 39,
+            "inliers": 14,
+            "inlier_ratio": 0.358974358974359,
+            "reprojection_error": 1.8549699783325195,
+            "projected_bbox": [
+              239.16412353515625,
+              37.140350341796875,
+              467.0,
+              120.72846984863281
+            ],
+            "projection_coverage": 0.13430067184203598,
+            "projection_aspect": 2.7256968790428533,
+            "candidate_iou": 0.1466820296577557,
+            "reference_hull_coverage": 0.2815793281832841,
+            "roi_hull_coverage": 0.03469164806482522,
+            "color_hist_correlation": 0.19045738595280676,
+            "color_hist_bhattacharyya": 0.9070890281183923,
+            "accepted": false,
+            "reject_reason": "low_projection_coverage",
+            "score": 0.0,
+            "candidate_source": "yolo",
+            "output_bbox": null
+          },
+          {
+            "candidate_index": 1,
+            "candidate_bbox": [
+              1027.630859375,
+              297.91357421875,
+              1127.774169921875,
+              357.28955078125
+            ],
+            "candidate_conf": 0.9700830578804016,
+            "crop_bbox": [
+              1002,
+              283,
+              1153,
+              373
+            ],
+            "scale": 3,
+            "matches": 30,
+            "inliers": 11,
+            "inlier_ratio": 0.36666666666666664,
+            "reprojection_error": 1.678310513496399,
+            "projected_bbox": [
+              111.17044830322266,
+              0.0,
+              303.4867248535156,
+              222.70216369628906
+            ],
+            "projection_coverage": 0.35016965825986546,
+            "projection_aspect": 0.8635581862265381,
+            "candidate_iou": 0.5509538045172175,
+            "reference_hull_coverage": 0.14820720501305995,
+            "roi_hull_coverage": 0.03959067968031399,
+            "color_hist_correlation": 0.3478312319882755,
+            "color_hist_bhattacharyya": 0.8520418721086191,
+            "accepted": false,
+            "reject_reason": "high_color_distance",
+            "score": 0.0,
+            "candidate_source": "yolo",
+            "output_bbox": null
+          }
+        ],
+        "discovery_accepted": [],
+        "discovery_candidates": [],
+        "discovery_proposal_count": 0
+      }
+    ]
+  }
+}

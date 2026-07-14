@@ -92,6 +92,15 @@ motion:
   # Normalizasyon
   normalize_by_bbox_diagonal: true
   use_local_optical_flow: true
+  local_flow_weight: 0.50
+  # Bbox-merkez residuali ile kutu ici optical-flow residualini piksel
+  # cinsinden birlestir; yerel homography/paralaks hatasini bastirir.
+  local_flow_score_weight: 0.50
+  local_flow_min_points: 4
+  local_flow_max_error: 20.0
+  local_flow_max_mad: 20.0
+  local_flow_max_residual: 250.0
+  local_flow_max_track_age: 2
   min_diagonal: 20.0
   # Karar penceresi
   decision_window: 5
@@ -103,6 +112,12 @@ motion:
   kalman_enabled: true
   kalman_process_noise: 1.0
   kalman_measurement_noise: 10.0
+  # Kamera transformundan sonra yalniz aracın residual hizini ilerlet.
+  # Ham Kalman image velocity + homography birlikte kullanildiginda kamera
+  # hareketi iki kez sayilip track kopabiliyor.
+  camera_relative_velocity_enabled: true
+  relative_velocity_alpha: 0.65
+  missed_velocity_decay: 0.92
   min_track_len: 4
   max_track_age: 15
   track_match_distance: 90.0        # M2'de dynamic gate ile degistirilecek
@@ -115,3 +130,9 @@ motion:
   # Gate: bbox diagonal/uncertainty based (M2)
   dynamic_gating: true
   gate_diagonal_ratio: 1.5
+  # Buyuk/yakin araclarda bbox jitter'i Kalman kovaryansindan daha buyuk
+  # olabilir; Mahalanobis reddini piksel/diyagonal kapisiyla birlikte uygula.
+  maha_gate_min_distance: 60.0
+  maha_gate_diagonal_ratio: 0.25
+  deduplicate_vehicle_detections: true
+  duplicate_iou_threshold: 0.85
