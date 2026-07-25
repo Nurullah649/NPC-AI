@@ -91,6 +91,24 @@ class ReferenceDetectionPipeline:
             }
             for order, values in (cfg.get("roi_seed_expansion_by_order", {}) or {}).items()
         }
+        self.seed_confirmation_frames = max(
+            1, int(cfg.get("seed_confirmation_frames", 2))
+        )
+        self.seed_confirmation_max_gap = max(
+            1, int(cfg.get("seed_confirmation_max_gap", 5))
+        )
+        self.seed_confirmation_min_iou = float(
+            cfg.get("seed_confirmation_min_iou", 0.20)
+        )
+        self.tracker_revalidate_every = max(
+            0, int(cfg.get("tracker_revalidate_every", 10))
+        )
+        self.tracker_revalidate_min_iou = float(
+            cfg.get("tracker_revalidate_min_iou", 0.15)
+        )
+        self.tracker_max_validation_failures = max(
+            1, int(cfg.get("tracker_max_validation_failures", 2))
+        )
 
         self.base = ReferenceMatcher(config)
         self.roi = RoiReferenceMatcher(config, base=self.base)
@@ -103,6 +121,10 @@ class ReferenceDetectionPipeline:
         self._memory_track_counts: dict[int, int] = defaultdict(int)
         self._last_processed_frame: dict[str, int] = {}
         self._last_results: dict[str, tuple[int, ReferencePipelineResult]] = {}
+        self._pending_seeds: dict[str, dict] = {}
+        self._last_tile_attempt: dict[str, int] = {}
+        self._last_tracker_validation: dict[str, int] = {}
+        self._tracker_validation_failures: dict[str, int] = defaultdict(int)
         self.last_diagnostics: dict[str, dict] = {}
 
         self.logger.info(
@@ -289,6 +311,104 @@ class ReferenceDetectionPipeline:
         )
         return self.full_min_frame_coverage <= coverage <= max_coverage, float(coverage)
 
+    @staticmethod
+    def _bbox_iou(box_a, box_b) -> float:
+        x1 = max(float(box_a[0]), float(box_b[0]))
+        y1 = max(float(box_a[1]), float(box_b[1]))
+        x2 = min(float(box_a[2]), float(box_b[2]))
+        y2 = min(float(box_a[3]), float(box_b[3]))
+        if x1 >= x2 or y1 >= y2:
+            return 0.0
+        intersection = (x2 - x1) * (y2 - y1)
+        area_a = max(
+            1e-6, (float(box_a[2]) - float(box_a[0]))
+            * (float(box_a[3]) - float(box_a[1]))
+        )
+        area_b = max(
+            1e-6, (float(box_b[2]) - float(box_b[0]))
+            * (float(box_b[3]) - float(box_b[1]))
+        )
+        return float(intersection / (area_a + area_b - intersection))
+
+    def _expire_pending_seed(self, ref_url: str, frame_idx: int) -> None:
+        pending = self._pending_seeds.get(ref_url)
+        if pending is None:
+            return
+        if frame_idx - int(pending["frame_idx"]) > self.seed_confirmation_max_gap:
+            self._pending_seeds.pop(ref_url, None)
+
+    def _confirm_and_seed(
+        self,
+        ref_url: str,
+        frame_idx: int,
+        frame: np.ndarray,
+        tracker: CameraCompensatedReferenceTracker,
+        bbox,
+        source: str,
+        order: Optional[int],
+        details: dict,
+    ) -> ReferencePipelineResult:
+        """Tek karelik sahte homografinin tracker'ı başlatmasını engelle."""
+        candidate = tuple(float(value) for value in bbox)
+        if self.seed_confirmation_frames <= 1:
+            seeded = tracker.seed(frame, candidate, expand=False)
+            self._last_tracker_validation[ref_url] = frame_idx
+            self._tracker_validation_failures[ref_url] = 0
+            return self._finish(
+                ref_url, frame_idx, seeded, f"{source}_seed", "verified_seed",
+                order, details,
+            )
+
+        pending = self._pending_seeds.get(ref_url)
+        confirmation_iou = 0.0
+        hits = 1
+        if pending is not None:
+            gap = frame_idx - int(pending["frame_idx"])
+            confirmation_iou = self._bbox_iou(pending["bbox"], candidate)
+            if (
+                1 <= gap <= self.seed_confirmation_max_gap
+                and confirmation_iou >= self.seed_confirmation_min_iou
+            ):
+                hits = int(pending.get("hits", 1)) + 1
+
+        details["seed_confirmation"] = {
+            "hits": hits,
+            "required": self.seed_confirmation_frames,
+            "iou": confirmation_iou,
+        }
+        if hits >= self.seed_confirmation_frames:
+            self._pending_seeds.pop(ref_url, None)
+            seeded = tracker.seed(frame, candidate, expand=False)
+            self._last_tracker_validation[ref_url] = frame_idx
+            self._tracker_validation_failures[ref_url] = 0
+            return self._finish(
+                ref_url, frame_idx, seeded, f"{source}_seed", "verified_seed",
+                order, details,
+            )
+
+        self._pending_seeds[ref_url] = {
+            "frame_idx": frame_idx,
+            "bbox": candidate,
+            "hits": hits,
+            "source": source,
+        }
+        details["candidate_bbox"] = [float(value) for value in candidate]
+        return self._finish(
+            ref_url,
+            frame_idx,
+            None,
+            "none",
+            "awaiting_seed_confirmation",
+            order,
+            details,
+        )
+
+    def _tracker_validation_due(self, ref_url: str, frame_idx: int) -> bool:
+        if self.tracker_revalidate_every <= 0:
+            return False
+        last = self._last_tracker_validation.get(ref_url, frame_idx)
+        return frame_idx - last >= self.tracker_revalidate_every
+
     def _remember_tracked_polygon(
         self,
         order: Optional[int],
@@ -406,17 +526,77 @@ class ReferenceDetectionPipeline:
             and frame_idx != previous_frame + 1
         ):
             tracker.reset()
+            self._pending_seeds.pop(ref_url, None)
+            self._tracker_validation_failures[ref_url] = 0
+
+        self._expire_pending_seed(ref_url, frame_idx)
 
         if tracker.active:
             tracked = tracker.update(frame)
             tracked_dict = tracked.to_dict()
             if tracked.active:
+                if self._tracker_validation_due(ref_url, frame_idx):
+                    validation = self.roi.validate_bbox(
+                        ref_url, ref_path, frame, tracked.bbox
+                    )
+                    validation_iou = (
+                        self._bbox_iou(tracked.bbox, validation["bbox"])
+                        if validation.get("bbox") is not None else 0.0
+                    )
+                    self._last_tracker_validation[ref_url] = frame_idx
+                    if (
+                        validation.get("accepted")
+                        and validation_iou >= self.tracker_revalidate_min_iou
+                    ):
+                        self._tracker_validation_failures[ref_url] = 0
+                        corrected = tracker.seed(
+                            frame, validation["bbox"], expand=False
+                        )
+                        self._remember_tracked_polygon(
+                            order, frame_idx, frame, tracker.polygon
+                        )
+                        return self._finish(
+                            ref_url,
+                            frame_idx,
+                            corrected,
+                            "tracker_revalidated",
+                            "reference_revalidated",
+                            order,
+                            {
+                                "tracker": tracked_dict,
+                                "validation": validation,
+                                "validation_iou": validation_iou,
+                            },
+                        )
+
+                    failures = self._tracker_validation_failures[ref_url] + 1
+                    self._tracker_validation_failures[ref_url] = failures
+                    if failures >= self.tracker_max_validation_failures:
+                        tracker.reset()
+                        self._pending_seeds.pop(ref_url, None)
+                        return self._finish(
+                            ref_url,
+                            frame_idx,
+                            None,
+                            "none",
+                            "tracker_reference_validation_failed",
+                            order,
+                            {
+                                "tracker": tracked_dict,
+                                "validation": validation,
+                                "validation_iou": validation_iou,
+                                "validation_failures": failures,
+                            },
+                        )
                 self._remember_tracked_polygon(
                     order, frame_idx, frame, tracked.polygon
                 )
                 return self._finish(
                     ref_url, frame_idx, tracked.bbox, "tracker", tracked.reason,
-                    order, {"tracker": tracked_dict},
+                    order, {
+                        "tracker": tracked_dict,
+                        "validation_failures": self._tracker_validation_failures[ref_url],
+                    },
                 )
             # Tracker iki gecici guvensiz kare boyunca aktif kalabilir. Bu
             # karelerde sonuc eklemeyiz ve zayif bir seed ile ustune yazmayiz.
@@ -425,6 +605,7 @@ class ReferenceDetectionPipeline:
                     ref_url, frame_idx, None, "none", tracked.reason,
                     order, {"tracker": tracked_dict},
                 )
+            self._tracker_validation_failures[ref_url] = 0
 
         details: dict = {}
         source_order = self.scene_aliases.get(order) if order is not None else None
@@ -465,13 +646,25 @@ class ReferenceDetectionPipeline:
         details["full_bbox"] = (
             None if full_bbox is None else [float(value) for value in full_bbox]
         )
+        details["full_match"] = dict(
+            getattr(self.base, "last_match_diagnostics", {}) or {}
+        )
+        details["full_match_attempts"] = list(
+            getattr(self.base, "last_match_attempts", []) or []
+        )
         if full_bbox is not None:
             sane, coverage = self._full_bbox_is_sane(full_bbox, frame, order)
             details["full_frame_coverage"] = coverage
             if sane:
-                bbox = tracker.seed(frame, full_bbox, expand=False)
-                return self._finish(
-                    ref_url, frame_idx, bbox, "full_seed", "verified_seed", order, details
+                return self._confirm_and_seed(
+                    ref_url,
+                    frame_idx,
+                    frame,
+                    tracker,
+                    full_bbox,
+                    "full",
+                    order,
+                    details,
                 )
             details["full_reject_reason"] = "implausible_frame_coverage"
 
@@ -483,11 +676,49 @@ class ReferenceDetectionPipeline:
         roi_bbox = roi_result.get("bbox")
         if roi_bbox is not None:
             expanded = self._expand_roi_seed(roi_bbox, frame, order)
-            bbox = tracker.seed(frame, expanded, expand=False)
             details["roi_bbox"] = [float(value) for value in roi_bbox]
-            return self._finish(
-                ref_url, frame_idx, bbox, "roi_seed", "verified_seed", order, details
+            return self._confirm_and_seed(
+                ref_url,
+                frame_idx,
+                frame,
+                tracker,
+                expanded,
+                "roi",
+                order,
+                details,
             )
+
+        last_tile_frame = self._last_tile_attempt.get(ref_url)
+        tile_due = (
+            last_tile_frame is None
+            or frame_idx - last_tile_frame >= self.roi.tile_frame_step
+        )
+        if tile_due:
+            self._last_tile_attempt[ref_url] = frame_idx
+            tile_result = self.roi.match_tiles(
+                ref_url, ref_path, frame
+            )
+            details["tile_accepted_count"] = len(
+                tile_result.get("accepted", [])
+            )
+            details["tile_candidate_count"] = len(
+                tile_result.get("candidates", [])
+            )
+            tile_bbox = tile_result.get("bbox")
+            if tile_bbox is not None:
+                details["tile_best"] = tile_result["accepted"][0]
+                return self._confirm_and_seed(
+                    ref_url,
+                    frame_idx,
+                    frame,
+                    tracker,
+                    tile_bbox,
+                    "tile",
+                    order,
+                    details,
+                )
+        else:
+            details["tile_skipped"] = "frame_step"
 
         if scene_ready:
             accepted_scene = self._accept_scene_result(

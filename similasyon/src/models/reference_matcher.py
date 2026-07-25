@@ -29,9 +29,38 @@ class ReferenceMatcher:
         self.extractor_type = ref_cfg.get("extractor", "aliked")
         self.min_matches = ref_cfg.get("min_matches", 10)
         self.min_inliers = ref_cfg.get("min_inliers", 8)
-        self.min_inlier_ratio = ref_cfg.get("min_inlier_ratio", 0.25)
+        self.min_inlier_ratio = ref_cfg.get("min_inlier_ratio", 0.20)
+        self.max_num_keypoints = int(ref_cfg.get("max_num_keypoints", 2048))
+        self.input_mode = str(ref_cfg.get("input_mode", "grayscale")).strip().lower()
+        self.ransac_threshold = float(ref_cfg.get("ransac_threshold", 4.0))
+        self.max_reprojection_error = float(
+            ref_cfg.get("max_reprojection_error", 4.0)
+        )
+        self.min_reference_hull_coverage = float(
+            ref_cfg.get("min_reference_hull_coverage", 0.01)
+        )
+        self.min_frame_hull_coverage = float(
+            ref_cfg.get("min_frame_hull_coverage", 0.001)
+        )
+        self.min_projected_area_ratio = float(
+            ref_cfg.get("min_projected_area_ratio", 0.0001)
+        )
+        self.max_projected_area_ratio = float(
+            ref_cfg.get("max_projected_area_ratio", 0.65)
+        )
+        self.min_projected_visible_ratio = float(
+            ref_cfg.get("min_projected_visible_ratio", 0.35)
+        )
+        self.max_corner_margin_ratio = float(
+            ref_cfg.get("max_corner_margin_ratio", 0.75)
+        )
+        self.max_bbox_aspect_ratio = float(
+            ref_cfg.get("max_bbox_aspect_ratio", 12.0)
+        )
         self.use_dinov2 = ref_cfg.get("use_dinov2_fallback", False)
         self.device_preference = str(ref_cfg.get("device", "auto")).strip().lower()
+        self.last_match_diagnostics = {}
+        self.last_match_attempts = []
 
         # Feature cache: {ref_url: {'features': ..., 'image': np.ndarray, 'path': str}}
         self.feature_cache = {}
@@ -69,13 +98,13 @@ class ReferenceMatcher:
             self._device = torch.device("cuda" if use_cuda else "cpu")
 
             if self.extractor_type == "aliked":
-                extractor = ALIKED(max_num_keypoints=1024)
+                extractor = ALIKED(max_num_keypoints=self.max_num_keypoints)
             elif self.extractor_type == "superpoint":
-                extractor = SuperPoint(max_num_keypoints=1024)
+                extractor = SuperPoint(max_num_keypoints=self.max_num_keypoints)
             elif self.extractor_type == "disk":
-                extractor = DISK(max_num_keypoints=1024)
+                extractor = DISK(max_num_keypoints=self.max_num_keypoints)
             else:
-                extractor = ALIKED(max_num_keypoints=1024)
+                extractor = ALIKED(max_num_keypoints=self.max_num_keypoints)
 
             # Extractor, matcher ve giriş tensörleri mutlaka aynı cihazda olmalı.
             self._extractor = extractor.eval().to(self._device)
@@ -127,28 +156,39 @@ class ReferenceMatcher:
         return img
 
     def _preprocess_for_matching(self, img: np.ndarray) -> np.ndarray:
-        """Termal/RGB farkı için ön işleme.
+        """LightGlue girişini seçilen moda göre hazırla.
 
-        1. Grayscale
-        2. CLAHE
-        3. Edge enhancement (Sobel)
+        ALIKED/LightGlue doğal görüntülerle eğitildiği için üretim varsayılanı
+        yalnız gri-seviyedir. Eski CLAHE+Sobel yolu, simetrik yapılarda sahte
+        kenar eşleşmelerini güçlendirdiğinden sadece açıkça ``edge`` seçilirse
+        kullanılır.
         """
+        input_mode = getattr(self, "input_mode", "grayscale")
+        if input_mode == "raw":
+            return img.copy()
+
         if len(img.shape) == 3:
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         else:
             gray = img.copy()
 
-        # CLAHE
+        if input_mode in {"grayscale", "gray", "grey"}:
+            return gray
+        if input_mode != "edge":
+            self.logger.warning(
+                "Bilinmeyen reference.input_mode=%r; grayscale kullanılacak.",
+                input_mode,
+            )
+            return gray
+
         clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
         enhanced = clahe.apply(gray)
 
-        # Edge enhancement
         sobel_x = cv2.Sobel(enhanced, cv2.CV_64F, 1, 0, ksize=3)
         sobel_y = cv2.Sobel(enhanced, cv2.CV_64F, 0, 1, ksize=3)
         edges = cv2.magnitude(sobel_x, sobel_y)
         edges = cv2.normalize(edges, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
 
-        # Combine
         combined = cv2.addWeighted(enhanced, 0.7, edges, 0.3, 0)
         return combined
 
@@ -224,6 +264,169 @@ class ReferenceMatcher:
         }
         self.logger.debug(f"Referans cache'e eklendi: {ref_url} ({len(self.feature_cache)} cached)")
 
+    @staticmethod
+    def _hull_coverage(points: np.ndarray, width: int, height: int) -> float:
+        if len(points) < 3:
+            return 0.0
+        hull = cv2.convexHull(points.astype(np.float32).reshape(-1, 1, 2))
+        return float(cv2.contourArea(hull) / max(1.0, float(width * height)))
+
+    @staticmethod
+    def _projected_visible_ratio(points: np.ndarray, width: int, height: int) -> float:
+        polygon = cv2.convexHull(points.astype(np.float32).reshape(-1, 1, 2))
+        polygon_area = float(cv2.contourArea(polygon))
+        if polygon_area <= 1.0:
+            return 0.0
+        frame_polygon = np.array(
+            [[0, 0], [width - 1, 0], [width - 1, height - 1], [0, height - 1]],
+            dtype=np.float32,
+        ).reshape(-1, 1, 2)
+        try:
+            intersection, _ = cv2.intersectConvexConvex(polygon, frame_polygon)
+        except cv2.error:
+            return 0.0
+        return float(intersection / polygon_area)
+
+    def _validate_homography_projection(
+        self,
+        source: np.ndarray,
+        destination: np.ndarray,
+        homography: np.ndarray,
+        inlier_mask: np.ndarray,
+        ref_shape: tuple[int, int],
+        frame_shape: tuple[int, int],
+        method: str,
+    ) -> tuple[tuple[float, float, float, float] | None, dict]:
+        """Homografiyi kırpmadan önce geometrik olarak doğrula.
+
+        Yalnız inlier sayısı yeterli değildir: destek noktalarının dışına taşan
+        neredeyse-tekil bir homografi, referans köşesini on binlerce piksele
+        fırlatıp kırpıldıktan sonra makul görünen dev bir kutu üretebilir.
+        """
+        source = np.asarray(source, dtype=np.float32).reshape(-1, 2)
+        destination = np.asarray(destination, dtype=np.float32).reshape(-1, 2)
+        mask = np.asarray(inlier_mask).reshape(-1).astype(bool)
+        match_count = int(len(source))
+        inlier_count = int(mask.sum())
+        inlier_ratio = inlier_count / max(1, match_count)
+        diagnostics = {
+            "method": method,
+            "matches": match_count,
+            "inliers": inlier_count,
+            "inlier_ratio": float(inlier_ratio),
+            "accepted": False,
+            "reason": "not_evaluated",
+        }
+
+        def reject(reason: str):
+            diagnostics["reason"] = reason
+            return None, diagnostics
+
+        if match_count < int(getattr(self, "min_matches", 10)):
+            return reject("too_few_matches")
+        if inlier_count < int(getattr(self, "min_inliers", 8)):
+            return reject("too_few_inliers")
+        if inlier_ratio < float(getattr(self, "min_inlier_ratio", 0.20)):
+            return reject("low_inlier_ratio")
+        if homography is None or not np.isfinite(homography).all():
+            return reject("invalid_homography")
+
+        projected_inliers = cv2.perspectiveTransform(
+            source[mask].reshape(-1, 1, 2), homography
+        ).reshape(-1, 2)
+        errors = np.linalg.norm(projected_inliers - destination[mask], axis=1)
+        reprojection_error = float(np.median(errors)) if len(errors) else float("inf")
+        diagnostics["reprojection_error"] = reprojection_error
+        if reprojection_error > float(getattr(self, "max_reprojection_error", 4.0)):
+            return reject("high_reprojection_error")
+
+        ref_height, ref_width = ref_shape
+        frame_height, frame_width = frame_shape
+        reference_hull_coverage = self._hull_coverage(
+            source[mask], ref_width, ref_height
+        )
+        frame_hull_coverage = self._hull_coverage(
+            destination[mask], frame_width, frame_height
+        )
+        diagnostics["reference_hull_coverage"] = reference_hull_coverage
+        diagnostics["frame_hull_coverage"] = frame_hull_coverage
+        if reference_hull_coverage < float(
+            getattr(self, "min_reference_hull_coverage", 0.01)
+        ):
+            return reject("low_reference_hull_coverage")
+        if frame_hull_coverage < float(
+            getattr(self, "min_frame_hull_coverage", 0.001)
+        ):
+            return reject("low_frame_hull_coverage")
+
+        corners = np.array(
+            [
+                [0, 0],
+                [ref_width - 1, 0],
+                [ref_width - 1, ref_height - 1],
+                [0, ref_height - 1],
+            ],
+            dtype=np.float32,
+        ).reshape(-1, 1, 2)
+        projected = cv2.perspectiveTransform(corners, homography).reshape(-1, 2)
+        diagnostics["projected_corners"] = projected.astype(float).tolist()
+        if not np.isfinite(projected).all():
+            return reject("non_finite_projection")
+        if not cv2.isContourConvex(projected.astype(np.float32).reshape(-1, 1, 2)):
+            return reject("non_convex_projection")
+
+        projected_area_ratio = float(
+            abs(cv2.contourArea(projected.astype(np.float32)))
+            / max(1.0, float(frame_width * frame_height))
+        )
+        diagnostics["projected_area_ratio"] = projected_area_ratio
+        if projected_area_ratio < float(
+            getattr(self, "min_projected_area_ratio", 0.0001)
+        ):
+            return reject("projection_too_small")
+        if projected_area_ratio > float(
+            getattr(self, "max_projected_area_ratio", 0.65)
+        ):
+            return reject("projection_too_large")
+
+        margin_ratio = float(getattr(self, "max_corner_margin_ratio", 0.75))
+        if (
+            projected[:, 0].min() < -frame_width * margin_ratio
+            or projected[:, 0].max() > frame_width * (1.0 + margin_ratio)
+            or projected[:, 1].min() < -frame_height * margin_ratio
+            or projected[:, 1].max() > frame_height * (1.0 + margin_ratio)
+        ):
+            return reject("projection_outside_margin")
+
+        visible_ratio = self._projected_visible_ratio(
+            projected, frame_width, frame_height
+        )
+        diagnostics["projected_visible_ratio"] = visible_ratio
+        if visible_ratio < float(
+            getattr(self, "min_projected_visible_ratio", 0.35)
+        ):
+            return reject("low_projected_visible_ratio")
+
+        x1 = float(np.clip(projected[:, 0].min(), 0, frame_width - 1))
+        y1 = float(np.clip(projected[:, 1].min(), 0, frame_height - 1))
+        x2 = float(np.clip(projected[:, 0].max(), 0, frame_width - 1))
+        y2 = float(np.clip(projected[:, 1].max(), 0, frame_height - 1))
+        if x1 >= x2 or y1 >= y2:
+            return reject("empty_projection")
+        aspect_ratio = max(
+            (x2 - x1) / max(1e-6, y2 - y1),
+            (y2 - y1) / max(1e-6, x2 - x1),
+        )
+        diagnostics["bbox_aspect_ratio"] = float(aspect_ratio)
+        if aspect_ratio > float(getattr(self, "max_bbox_aspect_ratio", 12.0)):
+            return reject("implausible_bbox_aspect")
+
+        bbox = (x1, y1, x2, y2)
+        diagnostics["bbox"] = list(bbox)
+        diagnostics["accepted"] = True
+        diagnostics["reason"] = "accepted"
+        return bbox, diagnostics
+
     def _match_lightglue(self, ref_feats: dict, frame_img: np.ndarray) -> tuple | None:
         """LightGlue ile referans eşleme yap.
 
@@ -231,6 +434,11 @@ class ReferenceMatcher:
             (x1, y1, x2, y2) bbox veya None
         """
         if not self._lightglue_available or 'lightglue' not in ref_feats:
+            self.last_match_diagnostics = {
+                "method": "lightglue",
+                "accepted": False,
+                "reason": "lightglue_unavailable",
+            }
             return None
 
         try:
@@ -246,6 +454,11 @@ class ReferenceMatcher:
                 })
 
             if not isinstance(match_output, dict):
+                self.last_match_diagnostics = {
+                    "method": "lightglue",
+                    "accepted": False,
+                    "reason": "invalid_match_output",
+                }
                 return None
 
             # Kurulu LightGlue sürümü `matches` değerini batch başına bir
@@ -253,10 +466,21 @@ class ReferenceMatcher:
             # listenin uzunluğunu eşleşme sayısı sanıyor ve her zaman 1 görüyordu.
             pairs = self._remove_batch(match_output.get('matches'))
             if pairs is None or not torch.is_tensor(pairs):
+                self.last_match_diagnostics = {
+                    "method": "lightglue",
+                    "accepted": False,
+                    "reason": "invalid_match_pairs",
+                }
                 return None
             if pairs.ndim != 2 or pairs.shape[1] != 2:
                 raise ValueError(f"Beklenmeyen LightGlue matches şekli: {pairs.shape}")
             if pairs.shape[0] < self.min_matches:
+                self.last_match_diagnostics = {
+                    "method": "lightglue",
+                    "matches": int(pairs.shape[0]),
+                    "accepted": False,
+                    "reason": "too_few_matches",
+                }
                 return None
 
             ref_keypoints = self._remove_batch(
@@ -264,69 +488,81 @@ class ReferenceMatcher:
             )
             frame_keypoints = self._remove_batch(frame_feats.get('keypoints'))
             if ref_keypoints is None or frame_keypoints is None:
+                self.last_match_diagnostics = {
+                    "method": "lightglue",
+                    "accepted": False,
+                    "reason": "missing_keypoints",
+                }
                 return None
 
             mkpts0 = ref_keypoints[pairs[:, 0]]
             mkpts1 = frame_keypoints[pairs[:, 1]]
 
             if len(mkpts0) < self.min_inliers:
+                self.last_match_diagnostics = {
+                    "method": "lightglue",
+                    "matches": int(len(mkpts0)),
+                    "accepted": False,
+                    "reason": "too_few_inliers",
+                }
                 return None
 
             # Homography ile bbox tahmini
             src_pts = mkpts0.detach().cpu().numpy().reshape(-1, 1, 2).astype(np.float32)
             dst_pts = mkpts1.detach().cpu().numpy().reshape(-1, 1, 2).astype(np.float32)
 
-            H_mat, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.0)
-            if H_mat is None:
+            H_mat, mask = cv2.findHomography(
+                src_pts,
+                dst_pts,
+                cv2.RANSAC,
+                float(getattr(self, "ransac_threshold", 4.0)),
+            )
+            if H_mat is None or mask is None:
+                self.last_match_diagnostics = {
+                    "method": "lightglue",
+                    "matches": int(len(mkpts0)),
+                    "accepted": False,
+                    "reason": "homography_failed",
+                }
                 return None
 
-            inlier_count = int(np.sum(mask)) if mask is not None else len(mkpts0)
-            inlier_ratio = inlier_count / len(mkpts0) if len(mkpts0) > 0 else 0
-
-            if inlier_count < self.min_inliers or inlier_ratio < self.min_inlier_ratio:
+            bbox, diagnostics = self._validate_homography_projection(
+                src_pts,
+                dst_pts,
+                H_mat,
+                mask,
+                ref_feats.get(
+                    'shape', (frame_img.shape[0], frame_img.shape[1])
+                ),
+                frame_img.shape[:2],
+                "lightglue",
+            )
+            self.last_match_diagnostics = diagnostics
+            if bbox is None:
                 self.logger.debug(
-                    "LightGlue homography reddedildi: inliers=%d/%d ratio=%.3f",
-                    inlier_count,
-                    len(mkpts0),
-                    inlier_ratio,
+                    "LightGlue homography reddedildi: reason=%s inliers=%s/%s ratio=%.3f",
+                    diagnostics.get("reason"),
+                    diagnostics.get("inliers", 0),
+                    diagnostics.get("matches", 0),
+                    diagnostics.get("inlier_ratio", 0.0),
                 )
                 return None
 
-            # Referans görüntünün dört köşesini frame'e dönüştür
-            ref_h, ref_w = ref_feats.get('shape', (frame_img.shape[0], frame_img.shape[1]))
-            corners = np.array([
-                [0, 0],
-                [ref_w - 1, 0],
-                [ref_w - 1, ref_h - 1],
-                [0, ref_h - 1],
-            ], dtype=np.float32).reshape(-1, 1, 2)
-
-            transformed = cv2.perspectiveTransform(corners, H_mat)
-            transformed = transformed.squeeze()
-
-            # Bbox hesapla
-            x1 = np.min(transformed[:, 0])
-            y1 = np.min(transformed[:, 1])
-            x2 = np.max(transformed[:, 0])
-            y2 = np.max(transformed[:, 1])
-
-            # Frame sınırlarına clip et
-            H, W = frame_img.shape[:2]
-            x1 = max(0, min(x1, W - 1))
-            y1 = max(0, min(y1, H - 1))
-            x2 = max(0, min(x2, W - 1))
-            y2 = max(0, min(y2, H - 1))
-
-            if x1 >= x2 or y1 >= y2:
-                return None
-
             self.logger.debug(
-                f"LightGlue match: {inlier_count}/{len(mkpts0)} inliers, "
-                f"ratio={inlier_ratio:.3f}, bbox=({x1:.0f},{y1:.0f},{x2:.0f},{y2:.0f})"
+                "LightGlue match: %d/%d inliers, ratio=%.3f, bbox=(%.0f,%.0f,%.0f,%.0f)",
+                diagnostics["inliers"],
+                diagnostics["matches"],
+                diagnostics["inlier_ratio"],
+                *bbox,
             )
-            return (x1, y1, x2, y2)
+            return bbox
 
         except Exception as e:
+            self.last_match_diagnostics = {
+                "method": "lightglue",
+                "accepted": False,
+                "reason": f"exception:{type(e).__name__}",
+            }
             self.logger.warning(f"LightGlue match hatası: {e}")
             return None
 
@@ -337,10 +573,17 @@ class ReferenceMatcher:
             (x1, y1, x2, y2) bbox veya None
         """
         if 'orb' not in ref_features:
+            self.last_match_diagnostics = {
+                "method": "orb", "accepted": False, "reason": "orb_unavailable"
+            }
             return None
 
         ref_kp, ref_des = ref_features['orb']
         if ref_des is None or len(ref_kp) < 4:
+            self.last_match_diagnostics = {
+                "method": "orb", "accepted": False,
+                "reason": "insufficient_reference_features",
+            }
             return None
 
         processed = self._preprocess_for_matching(frame_img)
@@ -348,6 +591,10 @@ class ReferenceMatcher:
         frame_kp, frame_des = orb.detectAndCompute(processed, None)
 
         if frame_des is None or len(frame_kp) < 4:
+            self.last_match_diagnostics = {
+                "method": "orb", "accepted": False,
+                "reason": "insufficient_frame_features",
+            }
             return None
 
         # BFMatcher
@@ -356,40 +603,41 @@ class ReferenceMatcher:
         matches = sorted(matches, key=lambda x: x.distance)[:100]
 
         if len(matches) < self.min_matches:
+            self.last_match_diagnostics = {
+                "method": "orb", "matches": len(matches), "accepted": False,
+                "reason": "too_few_matches",
+            }
             return None
 
         src_pts = np.float32([ref_kp[m.queryIdx].pt for m in matches]).reshape(-1, 1, 2)
         dst_pts = np.float32([frame_kp[m.trainIdx].pt for m in matches]).reshape(-1, 1, 2)
 
-        H_mat, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.0)
-        if H_mat is None:
+        H_mat, mask = cv2.findHomography(
+            src_pts,
+            dst_pts,
+            cv2.RANSAC,
+            float(getattr(self, "ransac_threshold", 4.0)),
+        )
+        if H_mat is None or mask is None:
+            self.last_match_diagnostics = {
+                "method": "orb", "matches": len(matches), "accepted": False,
+                "reason": "homography_failed",
+            }
             return None
 
-        inlier_count = np.sum(mask) if mask is not None else len(matches)
-        inlier_ratio = inlier_count / len(matches) if len(matches) > 0 else 0
-
-        if inlier_ratio < 0.2:
-            return None
-
-        # Referans köşelerini dönüştür
-        ref_h, ref_w = ref_features.get('shape', (frame_img.shape[0], frame_img.shape[1]))
-        corners = np.array([
-            [0, 0], [ref_w - 1, 0],
-            [ref_w - 1, ref_h - 1], [0, ref_h - 1],
-        ], dtype=np.float32).reshape(-1, 1, 2)
-
-        transformed = cv2.perspectiveTransform(corners, H_mat).squeeze()
-
-        H, W = frame_img.shape[:2]
-        x1 = max(0, min(np.min(transformed[:, 0]), W - 1))
-        y1 = max(0, min(np.min(transformed[:, 1]), H - 1))
-        x2 = max(0, min(np.max(transformed[:, 0]), W - 1))
-        y2 = max(0, min(np.max(transformed[:, 1]), H - 1))
-
-        if x1 >= x2 or y1 >= y2:
-            return None
-
-        return (x1, y1, x2, y2)
+        bbox, diagnostics = self._validate_homography_projection(
+            src_pts,
+            dst_pts,
+            H_mat,
+            mask,
+            ref_features.get(
+                'shape', (frame_img.shape[0], frame_img.shape[1])
+            ),
+            frame_img.shape[:2],
+            "orb",
+        )
+        self.last_match_diagnostics = diagnostics
+        return bbox
 
     def match(self, ref_url: str, ref_path: str, frame_img: np.ndarray) -> tuple | None:
         """Referans görüntüyü frame içinde bul.
@@ -411,14 +659,17 @@ class ReferenceMatcher:
             return None
 
         features = cache_entry['features']
+        self.last_match_attempts = []
 
         # 1. LightGlue
         bbox = self._match_lightglue(features, frame_img)
+        self.last_match_attempts.append(dict(self.last_match_diagnostics or {}))
         if bbox is not None:
             return bbox
 
         # 2. ORB fallback
         bbox = self._match_orb(features, frame_img)
+        self.last_match_attempts.append(dict(self.last_match_diagnostics or {}))
         if bbox is not None:
             return bbox
 

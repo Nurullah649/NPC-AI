@@ -162,6 +162,70 @@ class ConnectionHandler:
         logging.error("get_current_translation failed after multiple retries.")
         return None
 
+    @staticmethod
+    def _record_key(record):
+        """Sunucudan gelen kaydı yeniden denemelerde tekilleştiren anahtar."""
+        return record.get('image_url') or record.get('url')
+
+    def _save_session_record(self, filename, record):
+        """Bir API kaydını oturum klasöründeki JSON listesine ekle/güncelle."""
+        if not isinstance(record, dict):
+            logging.warning(f"{filename} kaydedilemedi: kayıt dict değil.")
+            return None
+        if not self.video_name:
+            logging.warning(f"video_name not set; cannot cache {filename} yet.")
+            return None
+
+        session_dir = os.path.join(self.img_save_path, self.video_name)
+        os.makedirs(session_dir, exist_ok=True)
+        output_path = os.path.join(session_dir, filename)
+
+        records = []
+        if os.path.exists(output_path):
+            try:
+                with open(output_path, 'r') as f:
+                    loaded = json.load(f)
+                if isinstance(loaded, list):
+                    records = loaded
+                else:
+                    logging.warning(f"{output_path} bir JSON listesi değil; yeniden oluşturuluyor.")
+            except (OSError, ValueError) as e:
+                logging.warning(f"{output_path} okunamadı; yeniden oluşturuluyor: {e}")
+
+        record_key = self._record_key(record)
+        match_index = None
+        if record_key is not None:
+            match_index = next(
+                (index for index, saved in enumerate(records)
+                 if isinstance(saved, dict) and self._record_key(saved) == record_key),
+                None,
+            )
+        elif record in records:
+            match_index = records.index(record)
+
+        if match_index is None:
+            records.append(record)
+        else:
+            records[match_index] = record
+
+        # Yarım yazılmış JSON bırakmamak için önce geçici dosyaya yazıp atomik taşı.
+        temp_path = output_path + '.tmp'
+        try:
+            with open(temp_path, 'w') as f:
+                json.dump(records, f, indent=2, ensure_ascii=False)
+            os.replace(temp_path, output_path)
+            logging.info(f"API record saved to {output_path}")
+            return output_path
+        except OSError as e:
+            logging.warning(f"Failed to cache {filename}: {e}")
+            return None
+
+    def save_frame_to_file(self, frame):
+        return self._save_session_record("frames.json", frame)
+
+    def save_translation_to_file(self, translation):
+        return self._save_session_record("translations.json", translation)
+
     def send_prediction(self, prediction, retries=5, initial_wait_time=0.1):
         """
         Dikkat: Sunucu tarafinda tahmin gonderimi icin dakikalik bir istek limiti vardir

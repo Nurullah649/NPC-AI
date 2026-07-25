@@ -122,6 +122,19 @@ class RoiReferenceMatcher:
         self.discovery_max_color_bhattacharyya = float(
             cfg.get("discovery_max_color_bhattacharyya", 0.55)
         )
+        self.tile_discovery_enabled = bool(
+            cfg.get("tile_discovery_enabled", True)
+        )
+        self.tile_grids = [
+            tuple(int(value) for value in grid)
+            for grid in cfg.get("tile_grids", [[2, 2], [3, 2]])
+            if len(grid) == 2 and int(grid[0]) > 0 and int(grid[1]) > 0
+        ]
+        self.tile_overlap = float(cfg.get("tile_overlap", 0.20))
+        self.tile_frame_step = max(1, int(cfg.get("tile_frame_step", 3)))
+        self.local_validation_expand_ratio = float(
+            cfg.get("local_validation_expand_ratio", 0.20)
+        )
         crossmodal_cfg = cfg.get("crossmodal", {})
         self.crossmodal_window_sizes = [
             tuple(int(value) for value in size)
@@ -166,11 +179,16 @@ class RoiReferenceMatcher:
         return self.base.match(ref_url, ref_path, frame)
 
     def _deduplicate_candidates(self, detections: list[dict]) -> list[tuple[int, dict]]:
+        """Sınıftan bağımsız, yüksek güvenli YOLO bölgelerini hazırla.
+
+        Referans bir araç, insan, UAP veya UAI olabilir; detector sınıfını
+        önceden bilmediğimiz için sınıf filtresi uygulamak yeni oturumlara
+        taşınmayan bir varsayımdır. Son kabulü LightGlue geometrisi yapar.
+        """
         eligible = [
             (index, det)
             for index, det in enumerate(detections)
-            if det.get("cls") == 0
-            and float(det.get("conf", 0.0)) >= self.candidate_min_conf
+            if float(det.get("conf", 0.0)) >= self.candidate_min_conf
             and det.get("bbox") is not None
         ]
         eligible.sort(key=lambda item: float(item[1].get("conf", 0.0)), reverse=True)
@@ -245,7 +263,7 @@ class RoiReferenceMatcher:
             source.reshape(-1, 1, 2),
             destination.reshape(-1, 1, 2),
             cv2.RANSAC,
-            5.0,
+            float(getattr(self.base, "ransac_threshold", 4.0)),
         )
         if homography is None or mask is None:
             diagnostics.reject_reason = "homography_failed"
@@ -254,42 +272,33 @@ class RoiReferenceMatcher:
         inlier_mask = mask.reshape(-1).astype(bool)
         diagnostics.inliers = int(inlier_mask.sum())
         diagnostics.inlier_ratio = diagnostics.inliers / max(1, diagnostics.matches)
-        if diagnostics.inliers:
-            projected_inliers = cv2.perspectiveTransform(
-                source[inlier_mask].reshape(-1, 1, 2), homography
-            ).reshape(-1, 2)
-            errors = np.linalg.norm(projected_inliers - destination[inlier_mask], axis=1)
-            diagnostics.reprojection_error = float(np.median(errors))
-
         ref_height, ref_width = ref_features.get("shape", probe.shape[:2])
         probe_height, probe_width = probe.shape[:2]
-        diagnostics.reference_hull_coverage = _hull_coverage(
-            source[inlier_mask], ref_width, ref_height
+        robust_bbox, robust = self.base._validate_homography_projection(
+            source,
+            destination,
+            homography,
+            mask,
+            (ref_height, ref_width),
+            (probe_height, probe_width),
+            "roi_lightglue",
         )
-        diagnostics.roi_hull_coverage = _hull_coverage(
-            destination[inlier_mask], probe_width, probe_height
+        diagnostics.reprojection_error = float(
+            robust.get("reprojection_error", float("inf"))
         )
-
-        corners = np.array(
-            [[0, 0], [ref_width - 1, 0], [ref_width - 1, ref_height - 1], [0, ref_height - 1]],
-            dtype=np.float32,
-        ).reshape(-1, 1, 2)
-        transformed = cv2.perspectiveTransform(corners, homography).reshape(-1, 2)
-        if not np.isfinite(transformed).all():
-            diagnostics.reject_reason = "non_finite_projection"
+        diagnostics.reference_hull_coverage = float(
+            robust.get("reference_hull_coverage", 0.0)
+        )
+        diagnostics.roi_hull_coverage = float(
+            robust.get("frame_hull_coverage", 0.0)
+        )
+        if robust_bbox is None:
+            diagnostics.reject_reason = str(robust.get("reason", "invalid_geometry"))
             return diagnostics
 
-        x1 = float(np.clip(transformed[:, 0].min(), 0, probe_width - 1))
-        y1 = float(np.clip(transformed[:, 1].min(), 0, probe_height - 1))
-        x2 = float(np.clip(transformed[:, 0].max(), 0, probe_width - 1))
-        y2 = float(np.clip(transformed[:, 1].max(), 0, probe_height - 1))
-        if x1 >= x2 or y1 >= y2:
-            diagnostics.reject_reason = "empty_projection"
-            return diagnostics
-
-        diagnostics.projected_bbox = (x1, y1, x2, y2)
-        projected_width = x2 - x1
-        projected_height = y2 - y1
+        diagnostics.projected_bbox = tuple(float(value) for value in robust_bbox)
+        projected_width = robust_bbox[2] - robust_bbox[0]
+        projected_height = robust_bbox[3] - robust_bbox[1]
         diagnostics.projection_coverage = (
             projected_width * projected_height / max(1.0, float(probe_width * probe_height))
         )
@@ -416,6 +425,157 @@ class RoiReferenceMatcher:
             "accepted": [item.to_dict() for item in accepted],
             "candidates": [item.to_dict() for item in candidate_results],
         }
+
+    @staticmethod
+    def _map_local_bbox(local_bbox, offset_x: int, offset_y: int):
+        if local_bbox is None:
+            return None
+        x1, y1, x2, y2 = [float(value) for value in local_bbox]
+        return (
+            x1 + float(offset_x),
+            y1 + float(offset_y),
+            x2 + float(offset_x),
+            y2 + float(offset_y),
+        )
+
+    @staticmethod
+    def _diagnostic_score(diagnostics: dict) -> float:
+        return float(
+            diagnostics.get("inliers", 0)
+            + 10.0 * diagnostics.get("inlier_ratio", 0.0)
+            + 2.0 * diagnostics.get("reference_hull_coverage", 0.0)
+            + 2.0 * diagnostics.get("projected_visible_ratio", 0.0)
+            - 0.25 * diagnostics.get("reprojection_error", 99.0)
+        )
+
+    def _match_lightglue_probe(
+        self,
+        ref_url: str,
+        ref_path: str,
+        probe: np.ndarray,
+        offset_x: int,
+        offset_y: int,
+        source: str,
+        metadata: dict | None = None,
+    ) -> dict:
+        features = self.prepare_reference(ref_url, ref_path)
+        if features is None or probe is None or probe.size == 0:
+            return {
+                "bbox": None,
+                "source": source,
+                "accepted": False,
+                "reason": "invalid_probe",
+            }
+        local_bbox = self.base._match_lightglue(features, probe)
+        diagnostics = dict(getattr(self.base, "last_match_diagnostics", {}) or {})
+        result = {
+            "bbox": self._map_local_bbox(local_bbox, offset_x, offset_y),
+            "local_bbox": None if local_bbox is None else list(local_bbox),
+            "source": source,
+            "accepted": local_bbox is not None,
+            "reason": diagnostics.get("reason", "no_match"),
+            "score": self._diagnostic_score(diagnostics),
+            "diagnostics": diagnostics,
+        }
+        if metadata:
+            result.update(metadata)
+        return result
+
+    def _iter_grid_tiles(self, frame: np.ndarray):
+        height, width = frame.shape[:2]
+        overlap = float(np.clip(self.tile_overlap, 0.0, 0.80))
+        seen = set()
+        for cols, rows in self.tile_grids:
+            tile_width = min(
+                width,
+                max(1, int(round(width / (cols - (cols - 1) * overlap)))),
+            )
+            tile_height = min(
+                height,
+                max(1, int(round(height / (rows - (rows - 1) * overlap)))),
+            )
+            x_positions = np.linspace(0, width - tile_width, cols).round().astype(int)
+            y_positions = np.linspace(0, height - tile_height, rows).round().astype(int)
+            for row, y1 in enumerate(y_positions):
+                for col, x1 in enumerate(x_positions):
+                    key = (int(x1), int(y1), tile_width, tile_height)
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    x2 = int(x1) + tile_width
+                    y2 = int(y1) + tile_height
+                    yield {
+                        "grid": [cols, rows],
+                        "col": col,
+                        "row": row,
+                        "crop_bbox": [int(x1), int(y1), x2, y2],
+                        "image": frame[int(y1):y2, int(x1):x2],
+                    }
+
+    def match_tiles(
+        self,
+        ref_url: str,
+        ref_path: str,
+        frame: np.ndarray,
+    ) -> dict:
+        """YOLO sınıfından bağımsız, örtüşmeli çok-ölçekli karo araması."""
+        if not self.tile_discovery_enabled:
+            return {"bbox": None, "accepted": [], "candidates": []}
+        candidates = []
+        for tile in self._iter_grid_tiles(frame):
+            x1, y1, _, _ = tile["crop_bbox"]
+            result = self._match_lightglue_probe(
+                ref_url,
+                ref_path,
+                tile["image"],
+                x1,
+                y1,
+                "tile",
+                {
+                    "grid": tile["grid"],
+                    "col": tile["col"],
+                    "row": tile["row"],
+                    "crop_bbox": tile["crop_bbox"],
+                },
+            )
+            candidates.append(result)
+        accepted = sorted(
+            (item for item in candidates if item["accepted"]),
+            key=lambda item: item["score"],
+            reverse=True,
+        )
+        return {
+            "bbox": accepted[0]["bbox"] if accepted else None,
+            "accepted": accepted,
+            "candidates": candidates,
+        }
+
+    def validate_bbox(
+        self,
+        ref_url: str,
+        ref_path: str,
+        frame: np.ndarray,
+        bbox,
+    ) -> dict:
+        """Tracker kutusunun çevresinde referansı yeniden doğrula."""
+        height, width = frame.shape[:2]
+        x1, y1, x2, y2 = [float(value) for value in bbox]
+        pad_x = max(1.0, x2 - x1) * self.local_validation_expand_ratio
+        pad_y = max(1.0, y2 - y1) * self.local_validation_expand_ratio
+        crop_x1 = max(0, int(np.floor(x1 - pad_x)))
+        crop_y1 = max(0, int(np.floor(y1 - pad_y)))
+        crop_x2 = min(width, int(np.ceil(x2 + pad_x)))
+        crop_y2 = min(height, int(np.ceil(y2 + pad_y)))
+        probe = frame[crop_y1:crop_y2, crop_x1:crop_x2]
+        return self._match_lightglue_probe(
+            ref_url,
+            ref_path,
+            probe,
+            crop_x1,
+            crop_y1,
+            "local_validation",
+            {"crop_bbox": [crop_x1, crop_y1, crop_x2, crop_y2]},
+        )
 
     @staticmethod
     def _axis_positions(length: int, window: int, stride: int) -> list[int]:

@@ -139,7 +139,8 @@ def save_annotated_prediction(predictions, evaluation_server_url, frame_image_pa
         cv2.rectangle(image, (x1, y1), (x2, y2), color, 3)
         _draw_label(image, text, x1, y1, color)
 
-    for ref in payload.get("reference_predictions", []):
+    local_references = getattr(predictions, "reference_predictions", [])
+    for ref_index, ref in enumerate(payload.get("reference_predictions", [])):
         try:
             x1 = int(float(ref["top_left_x"]))
             y1 = int(float(ref["top_left_y"]))
@@ -149,7 +150,14 @@ def save_annotated_prediction(predictions, evaluation_server_url, frame_image_pa
             continue
         color = COLORS["ref"]
         cv2.rectangle(image, (x1, y1), (x2, y2), color, 3)
-        _draw_label(image, f"REF#{_ref_id_from_url(ref.get('reference', ''))}", x1, y1, color)
+        source = (
+            getattr(local_references[ref_index], "source", None)
+            if ref_index < len(local_references) else None
+        )
+        label = f"REF#{_ref_id_from_url(ref.get('reference', ''))}"
+        if source:
+            label += f" {source}"
+        _draw_label(image, label, x1, y1, color)
 
     max_width = int(debug_cfg.get("visual_max_width", 0) or 0)
     if max_width > 0 and image.shape[1] > max_width:
@@ -286,6 +294,9 @@ def run():
                 print("\n✅ Session tamamlandı veya aktif session yok.")
                 break
 
+            if debug_cfg.get("save_payloads", False):
+                server.save_frame_to_file(frame)
+
             image_url = frame.get('image_url', '')
             if image_url == stuck_image_url:
                 stuck_count += 1
@@ -303,6 +314,8 @@ def run():
                 gt_x = gt_y = gt_z = None
                 logger.warning("Translation alınamadı, detection-only gönderilecek.")
             else:
+                if debug_cfg.get("save_payloads", False):
+                    server.save_translation_to_file(translation)
                 health_status = translation.get('health_status')
                 gt_x = translation.get('translation_x')
                 gt_y = translation.get('translation_y')

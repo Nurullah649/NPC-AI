@@ -1,0 +1,5 @@
+width: 1920
+height: 1080
+# fx, fy, cx, cy, k1, k2, p1, p2 from the official THYZ RGB profile.
+calibration: [1389.7, 1387.1, 954.007, 558.896, 0.1378, -0.2564, 0.0, 0.0]
+

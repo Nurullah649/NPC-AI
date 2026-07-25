@@ -85,12 +85,16 @@ class TestReferencePrediction:
 
     def test_payload_keys(self):
         """Official API uses 'reference' and 'frame' keys."""
-        r = ReferencePrediction("ref/1/", "frame/1/", 10.0, 20.0, 100.0, 200.0)
+        r = ReferencePrediction(
+            "ref/1/", "frame/1/", 10.0, 20.0, 100.0, 200.0,
+            source="tracker_revalidated",
+        )
         payload = r.create_payload()
         assert 'reference' in payload
         assert 'frame' in payload
         assert payload['reference'] == "ref/1/"
         assert payload['frame'] == "frame/1/"
+        assert 'source' not in payload
 
 
 class TestFramePredictions:

@@ -406,7 +406,12 @@ class ObjectDetectionModel:
                         match_source = 'legacy'
                     if bbox is not None:
                         prediction.add_reference_prediction(
-                            ReferencePrediction(ref_url, prediction.frame_url, *bbox)
+                            ReferencePrediction(
+                                ref_url,
+                                prediction.frame_url,
+                                *bbox,
+                                source=match_source,
+                            )
                         )
                         self.logger.debug(
                             "Referans eşleşti: %s source=%s bbox=%s",

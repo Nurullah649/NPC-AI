@@ -13,6 +13,7 @@ class ReferencePrediction:
                  top_left_y: float,
                  bottom_right_x: float,
                  bottom_right_y: float,
+                 source: str | None = None,
                  ):
         self.reference_url = reference_url
         self.frame_url = frame_url
@@ -20,6 +21,8 @@ class ReferencePrediction:
         self.top_left_y = top_left_y
         self.bottom_right_x = bottom_right_x
         self.bottom_right_y = bottom_right_y
+        # Yalnız yerel anotasyon/debug içindir; yarışma payload'ına eklenmez.
+        self.source = source
 
     def create_payload(self, evaulation_server=None):
         return {

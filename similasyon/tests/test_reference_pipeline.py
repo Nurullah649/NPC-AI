@@ -11,8 +11,14 @@ def _bare_pipeline():
     pipeline.full_max_frame_coverage = 0.85
     pipeline.full_max_frame_coverage_by_order = {5: 0.45}
     pipeline.scene_track_min_visible_ratio = 0.50
+    pipeline.seed_confirmation_frames = 2
+    pipeline.seed_confirmation_max_gap = 5
+    pipeline.seed_confirmation_min_iou = 0.20
     pipeline._last_processed_frame = {}
     pipeline._last_results = {}
+    pipeline._pending_seeds = {}
+    pipeline._last_tracker_validation = {}
+    pipeline._tracker_validation_failures = {}
     pipeline.last_diagnostics = {}
     return pipeline
 
@@ -78,3 +84,39 @@ def test_well_visible_scene_match_seeds_tracker():
 
     assert result.source == "scene_seed"
     assert tracker.seed_called is True
+
+
+def test_direct_match_requires_two_consistent_nearby_frames_before_tracker_seed():
+    pipeline = _bare_pipeline()
+    tracker = StubTracker()
+    frame = np.zeros((100, 200, 3), dtype=np.uint8)
+
+    first = pipeline._confirm_and_seed(
+        "ref", 100, frame, tracker, (20, 20, 80, 80), "full", 1, {}
+    )
+    second = pipeline._confirm_and_seed(
+        "ref", 104, frame, tracker, (22, 21, 82, 81), "full", 1, {}
+    )
+
+    assert first.bbox is None
+    assert first.reason == "awaiting_seed_confirmation"
+    assert tracker.seed_called is True
+    assert second.bbox == (22.0, 21.0, 82.0, 81.0)
+    assert second.source == "full_seed"
+
+
+def test_inconsistent_second_match_does_not_seed_tracker():
+    pipeline = _bare_pipeline()
+    tracker = StubTracker()
+    frame = np.zeros((100, 200, 3), dtype=np.uint8)
+
+    pipeline._confirm_and_seed(
+        "ref", 100, frame, tracker, (10, 10, 50, 50), "tile", 1, {}
+    )
+    result = pipeline._confirm_and_seed(
+        "ref", 101, frame, tracker, (120, 40, 180, 90), "tile", 1, {}
+    )
+
+    assert result.bbox is None
+    assert result.details["seed_confirmation"]["hits"] == 1
+    assert tracker.seed_called is False

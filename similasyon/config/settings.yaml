@@ -148,13 +148,28 @@ preprocessing:
 reference:
   device: auto
   extractor: aliked
+  # ALIKED/LightGlue doğal yoğunluk yapısında daha kararlı; Sobel kenarları
+  # tekrarlı yapılarda sahte homografileri kuvvetlendirebiliyor.
+  input_mode: grayscale
+  max_num_keypoints: 2048
   matcher: lightglue
-  min_inlier_ratio: 0.25
+  min_matches: 12
+  # Geometri tek başına seed üretmez: düşük dokulu hedefler için 8 inlier'a
+  # izin verilir, fakat iki tutarlı kare zorunludur.
   min_inliers: 8
-  min_matches: 10
+  min_inlier_ratio: 0.20
+  ransac_threshold: 4.0
+  max_reprojection_error: 4.0
+  min_reference_hull_coverage: 0.01
+  min_frame_hull_coverage: 0.001
+  min_projected_area_ratio: 0.0001
+  max_projected_area_ratio: 0.65
+  min_projected_visible_ratio: 0.35
+  max_corner_margin_ratio: 0.75
+  max_bbox_aspect_ratio: 12.0
   use_dinov2_fallback: false
 reference_roi_experiment:
-  # Ana simulasyon Gorev 3 pipeline'i. Eslestirme yoksa bbox uretmez.
+  # Ana simulasyon Gorev 3 pipeline'i. Eslesme yoksa bbox uretmez.
   enabled: true
   precompute_all_references: true
   scene_keyframe_step: 3
@@ -163,34 +178,41 @@ reference_roi_experiment:
   # Kismi sahne eslesmesi o karede raporlanabilir; tracker ancak nesnenin en
   # az yarisi gorunuyorsa baslatilir. Cikista zeminin takip edilmesini onler.
   scene_track_min_visible_ratio: 0.50
-  # Ref-5 termal/RGB dogrudan eslesmesi guvenli degil; sahne hafizasi
-  # reddederse daha zayif matcher'lar o karede devreye giremez.
   scene_alias_requires_validation: true
   persist_scene_memory: true
   scene_memory_filename: _reference_scene_memory.json
   full_min_frame_coverage: 0.0005
-  full_max_frame_coverage: 0.85
-  full_max_frame_coverage_by_order:
-    "5": 0.45
-  # Bu oturumda Ref-1 ve Ref-5 ayni sabit bicerdöverin RGB/termal
-  # gorunumleridir. Baska oturumda ayni-nesne bagi dogrulanmadan eklenmemeli.
-  scene_aliases:
-    "5": 1
-  # YOLO Ref-1'de yalniz ana govdeyi buldugu icin bicme tablasini da kapsa.
-  roi_seed_expansion_by_order:
-    "1":
-      left: 0.25
-      right: 0.55
-      top: 0.25
-      bottom: 0.25
+  full_max_frame_coverage: 0.70
+  # Oturum/referans sırasına bağlı varsayım yok. Aynı nesne bağı gelecekte
+  # metadata ile doğrulanırsa açıkça eklenebilir.
+  full_max_frame_coverage_by_order: {}
+  scene_aliases: {}
+  roi_seed_expansion_by_order: {}
+  # Tek karelik yanlış homografi tracker'a aktarılmaz; birbirini tutan iki
+  # bağımsız kare gerekir ve takip sırasında referans düzenli doğrulanır.
+  seed_confirmation_frames: 2
+  seed_confirmation_max_gap: 5
+  seed_confirmation_min_iou: 0.20
+  tracker_revalidate_every: 10
+  tracker_revalidate_min_iou: 0.15
+  tracker_max_validation_failures: 2
+  # YOLO sınıfından bağımsız örtüşmeli karolar, bilinmeyen yapı/nesnelerde de
+  # tam-kare eşleşmesine genel bir ölçek alternatifi sağlar.
+  tile_discovery_enabled: true
+  tile_grids:
+    - [2, 2]
+    - [3, 2]
+  tile_overlap: 0.20
+  tile_frame_step: 3
+  local_validation_expand_ratio: 0.20
   expand_ratio: 0.25
   target_long_side: 360
   max_scale: 4
   candidate_min_conf: 0.25
   duplicate_iou: 0.85
-  min_matches: 10
-  min_inliers: 8
-  min_inlier_ratio: 0.15
+  min_matches: 12
+  min_inliers: 12
+  min_inlier_ratio: 0.20
   max_reprojection_error: 5.0
   min_projection_coverage: 0.30
   max_projection_coverage: 1.00

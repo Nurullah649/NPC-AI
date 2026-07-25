@@ -100,6 +100,43 @@ def test_lightglue_rejects_too_few_ransac_inliers(monkeypatch):
     assert bbox is None
 
 
+def test_geometry_gate_rejects_large_projection_before_clipping():
+    matcher = ReferenceMatcher.__new__(ReferenceMatcher)
+    matcher.min_matches = 10
+    matcher.min_inliers = 8
+    matcher.min_inlier_ratio = 0.25
+
+    source = np.array(
+        [
+            [10, 10], [40, 10], [70, 10], [100, 10],
+            [10, 40], [40, 40], [70, 40], [100, 40],
+            [10, 70], [40, 70], [70, 70], [100, 70],
+        ],
+        dtype=np.float32,
+    )
+    homography = np.array(
+        [[5.0, 0.0, 100.0], [0.0, 5.0, 50.0], [0.0, 0.0, 1.0]],
+        dtype=np.float64,
+    )
+    destination = cv2.perspectiveTransform(
+        source.reshape(-1, 1, 2), homography
+    ).reshape(-1, 2)
+
+    bbox, diagnostics = matcher._validate_homography_projection(
+        source,
+        destination,
+        homography,
+        np.ones((len(source), 1), dtype=np.uint8),
+        (80, 120),
+        (240, 320),
+        "test",
+    )
+
+    assert bbox is None
+    assert diagnostics["reason"] == "projection_too_large"
+    assert diagnostics["projected_area_ratio"] > 1.0
+
+
 def test_initialized_lightglue_uses_one_device():
     matcher = ReferenceMatcher({'reference': {'device': 'cpu'}})
     if not matcher._lightglue_available:
